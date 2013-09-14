@@ -1,3 +1,8 @@
+.. image:: ../../../elasticsearch-langdetect/raw/master/speechbubble.png
+
+by `CurtiveArticide <http://www.softicons.com/free-icons/designers/curtivearticide>`_
+`CC Attribution-NonCommercial 3.0 Unported <http://creativecommons.org/licenses/by-nc/3.0/>`_
+
 Elasticsearch Langdetect Plugin
 ===============================
 
