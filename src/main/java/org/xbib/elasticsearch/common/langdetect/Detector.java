@@ -1,53 +1,145 @@
-/*
- * Licensed to Elastic Search and Shay Banon under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership. Elastic Search licenses this
- * file to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
+
 package org.xbib.elasticsearch.common.langdetect;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.Character.UnicodeBlock;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
-public class Detector {
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.elasticsearch.common.component.AbstractLifecycleComponent;
+import org.elasticsearch.common.inject.Inject;
+import org.elasticsearch.common.settings.ImmutableSettings;
+import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.ElasticSearchException;
+
+public class Detector extends AbstractLifecycleComponent<Detector> {
 
     private static final double ALPHA_DEFAULT = 0.5;
-    private static final double ALPHA_WIDTH = 0.05;
-    private static final int ITERATION_LIMIT = 1000;
-    private static final double PROB_THRESHOLD = 0.1;
-    private static final double CONV_THRESHOLD = 0.99999;
-    private static final int BASE_FREQ = 10000;
-    private static final String UNKNOWN_LANG = "unknown";
-    private static final Pattern URL_REGEX = Pattern.compile("https?://[-_.?&~;+=/#0-9A-Za-z]+");
-    private static final Pattern MAIL_REGEX = Pattern.compile("[-_.0-9A-Za-z]+@[-_0-9A-Za-z]+[-_.0-9A-Za-z]+");
-    private final Map<String, double[]> wordLangProbMap;
-    private final List<String> langlist;
-    private double alpha;
-    private int n_trial;
-    private double[] priorMap;
-    private Long seed = 0L;
 
-    public Detector(Map<String, double[]> wordLangProbMap, List<String> langlist) {
-        this.wordLangProbMap = wordLangProbMap;
-        this.langlist = langlist;
+    private static final double ALPHA_WIDTH = 0.05;
+
+    private static final int ITERATION_LIMIT = 1000;
+
+    private static final double PROB_THRESHOLD = 0.1;
+
+    private static final double CONV_THRESHOLD = 0.99999;
+
+    private static final int BASE_FREQ = 10000;
+
+    private static final String UNKNOWN_LANG = "unknown";
+
+    private static final Pattern URL_REGEX = Pattern.compile("https?://[-_.?&~;+=/#0-9A-Za-z]+");
+
+    private static final Pattern MAIL_REGEX = Pattern.compile("[-_.0-9A-Za-z]+@[-_0-9A-Za-z]+[-_.0-9A-Za-z]+");
+
+    private Map<String, double[]> wordLangProbMap = new HashMap<String, double[]>();
+
+    private List<String> langlist = new LinkedList<String>();
+
+    private double alpha;
+
+    private int n_trial;
+
+    private double[] priorMap;
+
+    public Detector() {
+        super(ImmutableSettings.EMPTY);
+    }
+
+    @Inject
+    public Detector(Settings settings) {
+        super(settings);
+        try {
+            loadDefaultProfiles();
+        } catch (IOException e) {
+            throw new ElasticSearchException(e.getMessage());
+        }
         reset();
+    }
+
+    @Override
+    protected void doStart() throws ElasticSearchException {
+    }
+
+    @Override
+    protected void doStop() throws ElasticSearchException {
+    }
+
+    @Override
+    protected void doClose() throws ElasticSearchException {
+    }
+
+    public void loadDefaultProfiles() throws IOException {
+        load(ResourceBundle.getBundle(getClass().getPackage().getName() + ".languages"));
+        reset();
+    }
+
+    public void loadProfiles(String bundleName) throws IOException {
+        load(ResourceBundle.getBundle(bundleName));
+    }
+
+    public void load(ResourceBundle bundle) throws IOException {
+        Enumeration<String> en = bundle.getKeys();
+        int index = 0;
+        int size = bundle.keySet().size();
+        while (en.hasMoreElements()) {
+            String line = en.nextElement();
+            InputStream in = getClass().getResourceAsStream(line);
+            if (in == null) {
+                throw new IOException("i/o error in profile locading");
+            }
+            loadProfile(in, index++, size);
+        }
+    }
+
+    public void loadProfile(InputStream in, int index, int langsize) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        LangProfile profile = mapper.readValue(in, LangProfile.class);
+        addProfile(profile, index, langsize);
+        index++;
+    }
+
+    public void addProfile(LangProfile profile, int index, int langsize) throws IOException {
+        String lang = profile.name;
+        if (langlist.contains(lang)) {
+            throw new IOException("duplicate the same language profile");
+        }
+        langlist.add(lang);
+        for (String word : profile.freq.keySet()) {
+            if (!wordLangProbMap.containsKey(word)) {
+                wordLangProbMap.put(word, new double[langsize]);
+            }
+            int length = word.length();
+            if (length >= 1 && length <= 3) {
+                double prob = profile.freq.get(word).doubleValue() / profile.n_words[length - 1];
+                wordLangProbMap.get(word)[index] = prob;
+            }
+        }
+    }
+
+    public Detector setWordLangProbMap(Map<String, double[]> wordLangProbMap) {
+        this.wordLangProbMap = wordLangProbMap;
+        return this;
+    }
+
+    public Detector setLangList(List<String> langlist) {
+        this.langlist = langlist;
+        return this;
+    }
+
+    public List<String> getLangList() {
+        return Collections.unmodifiableList(langlist);
     }
 
     public final void reset() {
@@ -70,7 +162,7 @@ public class Detector {
      * Set prior information about language probabilities.
      *
      * @param priorMap the priorMap to set
-     * @throws LangDetectException
+     * @throws LanguageDetectionException
      */
     public void setPriorMap(HashMap<String, Double> priorMap) throws LanguageDetectionException {
         this.priorMap = new double[langlist.size()];
@@ -80,14 +172,14 @@ public class Detector {
             if (priorMap.containsKey(lang)) {
                 double p = priorMap.get(lang);
                 if (p < 0) {
-                    throw new LanguageDetectionException("Prior probability must be non-negative.");
+                    throw new LanguageDetectionException("Prior probability must be non-negative");
                 }
                 this.priorMap[i] = p;
                 sump += p;
             }
         }
         if (sump <= 0) {
-            throw new LanguageDetectionException("More one of prior probability must be non-zero.");
+            throw new LanguageDetectionException("More one of prior probability must be non-zero");
         }
         for (int i = 0; i < this.priorMap.length; ++i) {
             this.priorMap[i] /= sump;
@@ -99,7 +191,7 @@ public class Detector {
      * the highest probability.
      *
      * @return detected language name which has most probability.
-     * @throws LangDetectException 
+     * @throws LanguageDetectionException
      */
     public String detect(String text) throws LanguageDetectionException {
         List<Language> probabilities = detectAll(normalize(text));
@@ -121,6 +213,7 @@ public class Detector {
         }
         double[] langprob = new double[langlist.size()];
         Random rand = new Random();
+        Long seed = 0L;
         if (seed != null) {
             rand.setSeed(seed);
         }
@@ -158,7 +251,7 @@ public class Detector {
     }
 
     private List<String> extractNGrams(String text) {
-        List<String> list = new ArrayList();
+        List<String> list = new ArrayList<String>();
         NGram ngram = new NGram();
         for (int i = 0; i < text.length(); ++i) {
             ngram.addChar(text.charAt(i));

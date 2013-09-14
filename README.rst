@@ -13,24 +13,103 @@ Currently, it does not provide automatic language-aware indexing. It is just `"s
 Installation
 ------------
 
-The current version of the plugin is **1.0.0**
+The current version of the plugin is **1.1.0** (Sep 13, 2013)
 
-In order to install the plugin, please run
+Prerequisites::
 
-``bin/plugin -install jprante/elasticsearch-langdetect/1.0.0``.
+  Elasticsearch 0.90.3+
 
-Be aware, in case the version number is omitted, you will have the source code installed for manual compilation.
+Bintray:
+
+https://bintray.com/pkg/show/general/jprante/elasticsearch-plugins/elasticsearch-langdetect
+
+`Direct download <http://dl.bintray.com/jprante/elasticsearch-plugins/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/1.1.0/elasticsearch-knapsack-2.0.1.zip>`_
+
+Command::
+
+  ./bin/plugin -url ... -install langdetect
 
 ================= ================
 Langdetect Plugin ElasticSearch
 ================= ================
-master            0.20.x -> master
+master            0.90.x -> master
+1.1.0             0.90.x
 1.0.0             0.20.x           
 ================= ================
 
+Language detection mapping example
+==================================
 
-Example
-=======
+::
+
+        curl -XDELETE 'localhost:9200/test'
+
+        curl -XPUT 'localhost:9200/test'
+
+        curl -XPOST 'localhost:9200/test/article/_mapping' -d '
+        {
+          "article" : {
+            "properties" : {
+               "content" : { "type" : "langdetect" }
+            }
+          }
+        }
+        '
+
+        curl -XPUT 'localhost:9200/test/article/1' -d '
+        {
+          "title" : "Some title",
+          "content" : "Oh, say can you see by the dawn`s early light, What so proudly we hailed at the twilight`s last gleaming?"
+        }
+        '
+
+        curl -XPUT 'localhost:9200/test/article/2' -d '
+        {
+          "title" : "Ein Titel",
+          "content" : "Einigkeit und Recht und Freiheit für das deutsche Vaterland!"
+        }
+        '
+
+        curl -XPUT 'localhost:9200/test/article/3' -d '
+        {
+          "title" : "Un titre",
+          "content" : "Allons enfants de la Patrie, Le jour de gloire est arrivé!"
+        }
+        '
+
+        curl -XGET 'localhost:9200/test/_refresh'
+
+        curl -XPOST 'localhost:9200/test/_search' -d '
+        {
+           "query" : {
+               "term" : {
+                    "content.lang" : "en"
+               }
+           }
+        }
+        '
+        curl -XPOST 'localhost:9200/test/_search' -d '
+        {
+           "query" : {
+               "term" : {
+                    "content.lang" : "de"
+               }
+           }
+        }
+        '
+
+        curl -XPOST 'localhost:9200/test/_search' -d '
+        {
+           "query" : {
+               "term" : {
+                    "content.lang" : "fr"
+               }
+           }
+        }
+        '
+
+Language detection API example
+==============================
 
 ::
 
@@ -66,6 +145,7 @@ Example
         "probability" : 0.14285706984044144
       } ]
     }
+
 
 License
 =======

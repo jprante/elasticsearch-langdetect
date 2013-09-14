@@ -7,9 +7,10 @@ public class SimpleDetectorTest extends Assert {
 
     @Test
     public final void testDetector() throws Exception {
-        DetectorFactory factory = DetectorFactory.newInstance();
-        Detector detect = factory.createDefaultDetector();
-        assertEquals("de", detect.detect("Das kann deutsch sein"));        
+
+        Detector detect = new Detector();
+        detect.loadDefaultProfiles();
+        assertEquals("de", detect.detect("Das kann deutsch sein"));
         detect.reset();
         assertEquals("en", detect.detect("This is a very small test"));
     }
