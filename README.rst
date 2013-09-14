@@ -14,6 +14,62 @@ The field can be queried for language codes.
 The plugin offers also a REST endpoint, where a short text can be posted to in UTF-8, and the plugin responds
 with a list of recognized languages.
 
+Here is a list of languages code recognized:
+af
+ar
+bg
+bn
+cs
+da
+de
+el
+en
+es
+et
+fa
+fi
+fr
+gu
+he
+hi
+hr
+hu
+id
+it
+ja
+kn
+ko
+lt
+lv
+mk
+ml
+mr
+ne
+nl
+no
+pa
+pl
+pt
+ro
+ru
+sk
+sl
+so
+sq
+sv
+sw
+ta
+te
+th
+tl
+tr
+uk
+ur
+vi
+zh-cn
+zh-tw
+
+
 Thanks to Alexander Reelsen for his OpenNLP plugin, from where I have copied and adapted the mapping type analysis code.
 
 
