@@ -13,7 +13,7 @@ Currently, it does not provide automatic language-aware indexing. It is just `"s
 Installation
 ------------
 
-The current version of the plugin is **1.1.0** (Sep 13, 2013)
+The current version of the plugin is **1.2.0** (Sep 14, 2013)
 
 Prerequisites::
 
@@ -23,18 +23,18 @@ Bintray:
 
 https://bintray.com/pkg/show/general/jprante/elasticsearch-plugins/elasticsearch-langdetect
 
-`Direct download <http://dl.bintray.com/jprante/elasticsearch-plugins/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/1.1.0/elasticsearch-knapsack-2.0.1.zip>`_
+`Direct download <http://dl.bintray.com/jprante/elasticsearch-plugins/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/1.2.0/elasticsearch-langdetect-1.2.0.zip>`_
 
 Command::
 
-  ./bin/plugin -url ... -install langdetect
+  ./bin/plugin -url http://bit.ly/19RBF3b -install langdetect
 
 ================= ================
 Langdetect Plugin ElasticSearch
 ================= ================
-master            0.90.x -> master
-1.1.0             0.90.x
-1.0.0             0.20.x           
+master            0.90.3.x -> master
+1.2.0             0.90.3+
+1.0.0             0.20.x
 ================= ================
 
 Language detection mapping example
@@ -108,8 +108,8 @@ Language detection mapping example
         }
         '
 
-Language detection API example
-==============================
+Language detection REST API example
+===================================
 
 ::
 
