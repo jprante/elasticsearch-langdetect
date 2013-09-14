@@ -4,11 +4,18 @@ Elasticsearch Langdetect Plugin
 This is an implementation of a plugin for `Elasticsearch <http://github.com/elasticsearch/elasticsearch>`_ using the 
 implementation of Nakatani Shuyo's `language detector <http://code.google.com/p/language-detection/>`_.
 
-It uses 3-gram character and a Bayesian filter with various normalizations and feature sampling. The precision is over 99% for 53 languages.
+It uses 3-gram character and a Bayesian filter with various normalizations and feature sampling.
+The precision is over 99% for 53 languages.
 
-The plugin offers a REST endpoint where a short text can be posted in UTF-8, and Elasticsearch responds with a list of recognized languages.
+The plugin offers a mapping type to specify fields where you want to enable language deetction.
+Detected languages are indexed into a subfield of the field named 'lang', as you can see in the example.
+The field can be queried for language codes.
 
-Currently, it does not provide automatic language-aware indexing. It is just `"sugar coating" <https://github.com/elasticsearch/elasticsearch/issues/489>`_. You have to evaluate the response by yourself and take the appropriate language-dependent action.
+The plugin offers also a REST endpoint, where a short text can be posted to in UTF-8, and the plugin responds
+with a list of recognized languages.
+
+Thanks to Alexander Reelsen for his OpenNLP plugin, from where I have copied and adapted the mapping type analysis code.
+
 
 Installation
 ------------
