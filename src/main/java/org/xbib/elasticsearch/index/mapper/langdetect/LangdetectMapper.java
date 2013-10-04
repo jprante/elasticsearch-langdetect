@@ -80,6 +80,9 @@ public class LangdetectMapper implements Mapper {
                 LangAnalyser existing = (LangAnalyser) this.langAnalysers.get(language);
                 if (existing != null) {
                     existing.mapper.parse(context);
+               } else {
+                    // consume context external value
+                     context.externalValue();
                }
            }
 
@@ -248,7 +251,7 @@ public class LangdetectMapper implements Mapper {
                 langMapper.parse(context);
             }
         } catch(LanguageDetectionException e) {
-            throw new IOException(e);
+            // language detection failed, continue
         }
         if (langs !=null && !langs.isEmpty())
         {
