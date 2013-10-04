@@ -1,8 +1,25 @@
 {
-    "someType" : {
-        "properties" : {
-            "someField":{ "type" : "langdetect" },
-            "someFieldAnalyzed":{ "type" : "langdetect" }
+    "someType": {
+        "properties": {
+            "someField": {
+                "type": "langdetect",
+		"analyzer": "keyword",
+                "fields": {
+                    "fr": {
+                        "type": "string",
+                        "index": "analyzed",
+                        "analyzer": "french"
+                    },
+                    "en": {
+                        "type": "string",
+                        "index": "analyzed",
+                        "analyzer": "english"
+                    }
+                }
+            },
+            "someFieldAnalyzed": {
+                "type": "string"
+            }
         }
     }
 }

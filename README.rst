@@ -12,12 +12,16 @@ implementation of Nakatani Shuyo's `language detector <http://code.google.com/p/
 It uses 3-gram character and a Bayesian filter with various normalizations and feature sampling.
 The precision is over 99% for 53 languages.
 
-The plugin offers a mapping type to specify fields where you want to enable language deetction.
+The plugin offers a mapping type to specify fields where you want to enable language detection.
 Detected languages are indexed into a subfield of the field named 'lang', as you can see in the example.
 The field can be queried for language codes.
 
 The plugin offers also a REST endpoint, where a short text can be posted to in UTF-8, and the plugin responds
 with a list of recognized languages.
+
+The plugin allows to specify analysers to be used for each detected languages. By doing this, content field is 
+additionaly indexed into a subfield of the field named using the highest probability detected language code. (see example) 
+
 
 Here is a list of languages code recognized:
 af
@@ -213,6 +217,106 @@ Language detection REST API example
         "probability" : 0.14285706984044144
       } ]
     }
+
+
+================= ================
+
+Language auto mapping example
+==================================
+
+
+::
+
+        curl -XDELETE 'localhost:9200/test'
+
+        curl -XPUT 'localhost:9200/test'
+
+        curl -XPOST 'localhost:9200/test/article/_mapping' -d '
+        {
+	    "article": {
+		"properties": {
+		    "content": {
+			"type": "langdetect",
+			"analyzer": "keyword",
+			"fields": {
+			    "fr": {
+				"type": "string",
+				"index": "analyzed",
+				"analyzer": "french"
+			    },
+			    "en": {
+				"type": "string",
+				"index": "analyzed",
+				"analyzer": "english"
+			    }
+			}
+		    }
+		}
+	    }
+	}
+        '
+
+
+        curl -XPUT 'localhost:9200/test/article/1' -d '
+        {
+          "content" : "pretty cows in the meadows"
+        }
+        '
+
+        curl -XPUT 'localhost:9200/test/article/2' -d '
+        {
+          "content" : "les jolies vaches sont dans les prés"
+        }
+        '
+
+        curl -XGET 'localhost:9200/test/_refresh'
+
+        curl -XPOST 'localhost:9200/test/_search' -d '
+        {
+           "query" : {
+               "term" : {
+                    "content.lang" : "en"
+               }
+           }
+        }
+        '
+        curl -XPOST 'localhost:9200/test/_search' -d '
+        {
+           "query" : {
+               "term" : {
+                    "content.lang" : "fr"
+               }
+           }
+        }
+        '
+
+        curl -XPOST 'localhost:9200/test/_search' -d '
+	{
+	  "query": {
+	    "text": {
+	      "content.fr": "vache"
+	    }
+	  }
+	}
+
+	curl -XPOST 'localhost:9200/test/_search' -d '
+	{
+	  "query": {
+	    "text": {
+	      "content": "vache"
+	    }
+	  }
+	}
+
+	curl -XPOST 'localhost:9200/test/_search' -d '
+	{
+	  "query": {
+	    "text": {
+	      "content": "vaches"
+	    }
+	  }
+	}
+        '
 
 
 License
