@@ -90,8 +90,8 @@ Prerequisites::
 =============  =========  =================  =============================================================
 ES version     Plugin     Release date       Command
 -------------  ---------  -----------------  -------------------------------------------------------------
-0.90.3         1.2.0      Sep 14, 2013       ./bin/plugin --install baseform --url http://bit.ly/19RBF3b
-0.90.5         **2.0.0**  Oct 22, 2013       ./bin/plugin --install baseform --url http://bit.ly/1djTYCS
+0.90.3         1.2.0      Sep 14, 2013       ./bin/plugin --install langdetect --url http://bit.ly/19RBF3b
+0.90.5         **2.0.0**  Oct 22, 2013       ./bin/plugin --install langdetect --url http://bit.ly/1djTYCS
 =============  =========  =================  =============================================================
 
 Bintray:
