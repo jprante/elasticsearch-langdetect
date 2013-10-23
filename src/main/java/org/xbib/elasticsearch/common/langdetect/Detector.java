@@ -3,7 +3,6 @@ package org.xbib.elasticsearch.common.langdetect;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.Character.UnicodeBlock;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -38,10 +37,6 @@ public class Detector extends AbstractLifecycleComponent<Detector> {
     private static final int BASE_FREQ = 10000;
 
     private static final String UNKNOWN_LANG = "unknown";
-
-    private static final Pattern URL_REGEX = Pattern.compile("https?://[-_.?&~;+=/#0-9A-Za-z]+");
-
-    private static final Pattern MAIL_REGEX = Pattern.compile("[-_.0-9A-Za-z]+@[-_0-9A-Za-z]+[-_.0-9A-Za-z]+");
 
     private Map<String, double[]> wordLangProbMap = new HashMap<String, double[]>();
 
@@ -107,7 +102,6 @@ public class Detector extends AbstractLifecycleComponent<Detector> {
         ObjectMapper mapper = new ObjectMapper();
         LangProfile profile = mapper.readValue(in, LangProfile.class);
         addProfile(profile, index, langsize);
-        index++;
     }
 
     public void addProfile(LangProfile profile, int index, int langsize) throws IOException {
@@ -186,6 +180,8 @@ public class Detector extends AbstractLifecycleComponent<Detector> {
         }
     }
 
+    private final static Pattern word = Pattern.compile("[\\P{IsWord}]", Pattern.UNICODE_CHARACTER_CLASS);
+
     /**
      * Detect language of the target text and return the language name which has
      * the highest probability.
@@ -194,7 +190,9 @@ public class Detector extends AbstractLifecycleComponent<Detector> {
      * @throws LanguageDetectionException
      */
     public String detect(String text) throws LanguageDetectionException {
-        List<Language> probabilities = detectAll(normalize(text));
+        List<Language> probabilities =
+                detectAll(text.replaceAll(word.pattern(), " "));
+              //detectAll(normalize(text));
         if (probabilities.size() > 0) {
             return probabilities.get(0).getLanguage();
         }
@@ -202,14 +200,14 @@ public class Detector extends AbstractLifecycleComponent<Detector> {
     }
 
     public List<Language> detectAll(String text) throws LanguageDetectionException {
-        return sortProbability(detectBlock(normalize(text)));
+        return sortProbability(detectBlock(/*normalize(text)*/text.replaceAll(word.pattern(), " ")));
     }
 
     private double[] detectBlock(String text) throws LanguageDetectionException {
-        text = clean(text);
+        //text = clean(text);
         List<String> ngrams = extractNGrams(text);
         if (ngrams.isEmpty()) {
-            throw new LanguageDetectionException( "no features in text");
+            throw new LanguageDetectionException("no features in text");
         }
         double[] langprob = new double[langlist.size()];
         Random rand = new Random();
@@ -308,41 +306,4 @@ public class Detector extends AbstractLifecycleComponent<Detector> {
         return list;
     }
 
-    private String normalize(String text) {
-        StringBuilder sb = new StringBuilder();
-        text = URL_REGEX.matcher(text).replaceAll(" ");
-        text = MAIL_REGEX.matcher(text).replaceAll(" ");
-        char pre = 0;
-        for (int i = 0; i < text.length(); ++i) {
-            char c = NGram.normalize(text.charAt(i));
-            if (c != ' ' || pre != ' ') {
-                sb.append(c);
-            }
-            pre = c;
-        }
-        return sb.toString();
-    }
-
-    private String clean(String text) {
-        int latinCount = 0, nonLatinCount = 0;
-        for (int i = 0; i < text.length(); ++i) {
-            char c = text.charAt(i);
-            if (c <= 'z' && c >= 'A') {
-                ++latinCount;
-            } else if (c >= '\u0300' && UnicodeBlock.of(c) != UnicodeBlock.LATIN_EXTENDED_ADDITIONAL) {
-                ++nonLatinCount;
-            }
-        }
-        if (latinCount * 2 < nonLatinCount) {
-            StringBuilder textWithoutLatin = new StringBuilder();
-            for (int i = 0; i < text.length(); ++i) {
-                char c = text.charAt(i);
-                if (c > 'z' || c < 'A') {
-                    textWithoutLatin.append(c);
-                }
-            }
-            text = textWithoutLatin.toString();
-        }
-        return text;
-    }    
 }

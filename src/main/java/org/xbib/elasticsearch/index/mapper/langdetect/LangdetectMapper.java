@@ -87,10 +87,6 @@ public class LangdetectMapper implements Mapper {
                         }
                     }
                 }
-                if (fieldName.equals("person_analyzer")) {
-                    builder.langBuilder.searchAnalyzer(analysisService.analyzer(fieldNode.toString()));
-                    builder.langBuilder.indexAnalyzer(analysisService.analyzer(fieldNode.toString()));
-                }
             }
 
             return builder;
@@ -135,7 +131,8 @@ public class LangdetectMapper implements Mapper {
                 langMapper.parse(context);
             }
         } catch(LanguageDetectionException e) {
-            throw new IOException(e);
+            context.externalValue("unknown");
+            langMapper.parse(context);
         }
     }
 

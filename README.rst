@@ -1,7 +1,6 @@
 .. image:: ../../../elasticsearch-langdetect/raw/master/speechbubble_green.png
 
-by `CurtiveArticide <http://www.softicons.com/free-icons/designers/curtivearticide>`_
-`CC Attribution-NonCommercial 3.0 Unported <http://creativecommons.org/licenses/by-nc/3.0/>`_
+Image by `CurtiveArticide <http://www.softicons.com/free-icons/designers/curtivearticide>`_ `CC Attribution-NonCommercial 3.0 Unported <http://creativecommons.org/licenses/by-nc/3.0/>`_
 
 Elasticsearch Langdetect Plugin
 ===============================
@@ -81,29 +80,23 @@ Thanks to Alexander Reelsen for his OpenNLP plugin, from where I have copied and
 Installation
 ------------
 
-The current version of the plugin is **1.2.0** (Sep 14, 2013)
+Current version of the plugin is **2.0.0** (Oct 23, 2013)
 
 Prerequisites::
 
-  Elasticsearch 0.90.3+
+  **Java JDK 7**
+  Elasticsearch 0.90+
+
+-------------  ---------  -----------------  -------------------------------------------------------------
+ES version     Plugin     Release date       Command
+-------------  ---------  -----------------  -------------------------------------------------------------
+0.90.3         1.2.0      Sep 14, 2013       ./bin/plugin --install baseform --url http://bit.ly/19RBF3b
+0.90.5         **2.0.0**  Oct 22, 2013       ./bin/plugin --install baseform --url http://bit.ly/1djTYCS
+-------------  ---------  -----------------  -------------------------------------------------------------
 
 Bintray:
 
 https://bintray.com/pkg/show/general/jprante/elasticsearch-plugins/elasticsearch-langdetect
-
-`Direct download <http://dl.bintray.com/jprante/elasticsearch-plugins/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/1.2.0/elasticsearch-langdetect-1.2.0.zip>`_
-
-Command::
-
-  ./bin/plugin -url http://bit.ly/19RBF3b -install langdetect
-
-================= ================
-Langdetect Plugin ElasticSearch
-================= ================
-master            0.90.3.x -> master
-1.2.0             0.90.3+
-1.0.0             0.20.x
-================= ================
 
 Language detection mapping example
 ==================================

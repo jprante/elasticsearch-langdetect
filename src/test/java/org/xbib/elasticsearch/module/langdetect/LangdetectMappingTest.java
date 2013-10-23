@@ -57,7 +57,7 @@ public class LangdetectMappingTest extends Assert {
         String mapping = copyToStringFromClasspath("/test-mapping.json");
         DocumentMapper docMapper = mapperParser.parse(mapping);
 
-        String sampleText = copyToStringFromClasspath("/sample-text.txt");
+        String sampleText = copyToStringFromClasspath("/english.txt");
         BytesReference json = jsonBuilder().startObject().field("_id", 1).field("someField", sampleText).endObject().bytes();
         Document doc = docMapper.parse(json).rootDoc();
 

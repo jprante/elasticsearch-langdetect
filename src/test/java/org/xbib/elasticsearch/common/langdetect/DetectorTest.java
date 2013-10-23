@@ -74,4 +74,10 @@ public class DetectorTest extends Assert {
         assertEquals(langList.get(2), "ja");
     }
 
+    @Test(expectedExceptions = LanguageDetectionException.class)
+    public void testPunctuation() throws LanguageDetectionException {
+        assertEquals(detect.detect("..."), "none");
+    }
+
+
 }

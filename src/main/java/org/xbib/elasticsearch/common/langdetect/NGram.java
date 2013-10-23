@@ -3,10 +3,11 @@ package org.xbib.elasticsearch.common.langdetect;
 
 import java.lang.Character.UnicodeBlock;
 import java.util.HashMap;
+import java.util.Map;
 
 public class NGram {
 
-    public final static HashMap<Character, Character> cjk_map = new HashMap<Character, Character>();
+    public final static Map<Character, Character> cjk_map = new HashMap<Character, Character>();
 
     public final static int N_GRAM = 3;
 
