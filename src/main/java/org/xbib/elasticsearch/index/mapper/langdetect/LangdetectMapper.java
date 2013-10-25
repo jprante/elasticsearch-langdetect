@@ -11,6 +11,7 @@ import org.xbib.elasticsearch.common.langdetect.Language;
 import org.xbib.elasticsearch.common.langdetect.LanguageDetectionException;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
@@ -55,11 +56,9 @@ public class LangdetectMapper implements Mapper {
 
     public static class TypeParser implements Mapper.TypeParser {
 
-        private AnalysisService analysisService;
         private Detector detector;
 
-        public TypeParser(AnalysisService analysisService, Detector detector) {
-            this.analysisService = analysisService;
+        public TypeParser(Detector detector) {
             this.detector = detector;
         }
 
@@ -118,7 +117,15 @@ public class LangdetectMapper implements Mapper {
         XContentParser.Token token = parser.currentToken();
 
         if (token == XContentParser.Token.VALUE_STRING) {
+            // try decode UTF-8 base64 (e.g. from attachment mapper plugin)
             content = parser.text();
+            try {
+                byte[] b = parser.binaryValue();
+                if (b != null && b.length > 0) {
+                    content = new String(b, Charset.forName("UTF-8"));
+                }
+            } catch (Exception e) {
+            }
         }
 
         context.externalValue(content);

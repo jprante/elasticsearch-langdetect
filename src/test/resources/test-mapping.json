@@ -1,8 +1,0 @@
-{
-    "someType" : {
-        "properties" : {
-            "someField":{ "type" : "langdetect" },
-            "someFieldAnalyzed":{ "type" : "langdetect" }
-        }
-    }
-}

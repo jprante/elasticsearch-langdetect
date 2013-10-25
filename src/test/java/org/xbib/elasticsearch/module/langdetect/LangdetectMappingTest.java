@@ -36,7 +36,6 @@ public class LangdetectMappingTest extends Assert {
     @BeforeClass
     public void setupMapperParser() throws IOException {
         Index index = new Index("test");
-
         Map<String, AnalyzerProviderFactory> analyzerFactoryFactories = Maps.newHashMap();
         analyzerFactoryFactories.put("keyword",
                 new PreBuiltAnalyzerProviderFactory("keyword", AnalyzerScope.INDEX, new KeywordAnalyzer()));
@@ -49,12 +48,12 @@ public class LangdetectMappingTest extends Assert {
         Detector detector = new Detector(settings);
         detector.start();
         mapperParser.putTypeParser(LangdetectMapper.CONTENT_TYPE,
-                new LangdetectMapper.TypeParser(analysisService, detector));
+                new LangdetectMapper.TypeParser(detector));
     }
 
     @Test
     public void testSimpleMappings() throws Exception {
-        String mapping = copyToStringFromClasspath("/test-mapping.json");
+        String mapping = copyToStringFromClasspath("/simple-mapping.json");
         DocumentMapper docMapper = mapperParser.parse(mapping);
 
         String sampleText = copyToStringFromClasspath("/english.txt");
@@ -62,7 +61,33 @@ public class LangdetectMappingTest extends Assert {
         Document doc = docMapper.parse(json).rootDoc();
 
         assertEquals(doc.get(docMapper.mappers().smartName("someField").mapper().names().indexName()), sampleText);
+        assertEquals(doc.getFields("someField.lang").length, 1);
+        assertEquals(doc.getFields("someField.lang")[0].stringValue(), "en");
 
+        // re-parse it
+        String builtMapping = docMapper.mappingSource().string();
+        docMapper = mapperParser.parse(builtMapping);
+
+        json = jsonBuilder().startObject().field("_id", 1).field("someField", sampleText).endObject().bytes();
+        doc = docMapper.parse(json).rootDoc();
+
+        assertEquals(doc.get(docMapper.mappers().smartName("someField").mapper().names().indexName()), sampleText);
+        assertEquals(doc.getFields("someField.lang").length, 1);
+        assertEquals(doc.getFields("someField.lang")[0].stringValue(), "en");
+    }
+
+    @Test
+    public void testBase64() throws Exception {
+        String mapping = copyToStringFromClasspath("/base64-mapping.json");
+        DocumentMapper docMapper = mapperParser.parse(mapping);
+
+        String sampleBinary = copyToStringFromClasspath("/base64.txt");
+        String sampleText = copyToStringFromClasspath("/base64-decoded.txt");
+        
+        BytesReference json = jsonBuilder().startObject().field("_id", 1).field("someField", sampleBinary).endObject().bytes();
+        Document doc = docMapper.parse(json).rootDoc();
+
+        assertEquals(doc.get(docMapper.mappers().smartName("someField").mapper().names().indexName()), sampleText);
         assertEquals(doc.getFields("someField.lang").length, 1);
         assertEquals(doc.getFields("someField.lang")[0].stringValue(), "en");
 
