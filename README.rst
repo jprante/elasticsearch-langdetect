@@ -11,9 +11,12 @@ implementation of Nakatani Shuyo's `language detector <http://code.google.com/p/
 It uses 3-gram character and a Bayesian filter with various normalizations and feature sampling.
 The precision is over 99% for 53 languages.
 
-The plugin offers a mapping type to specify fields where you want to enable language deetction.
+The plugin offers a mapping type to specify fields where you want to enable language detection.
 Detected languages are indexed into a subfield of the field named 'lang', as you can see in the example.
 The field can be queried for language codes.
+
+You can use the multi_field mapping type to combine this plugin with the attachment mapper plugin, to
+enable language detection in base64-encoded binary data. Currently, UTF-8 texts are supported only.
 
 The plugin offers also a REST endpoint, where a short text can be posted to in UTF-8, and the plugin responds
 with a list of recognized languages.
@@ -80,7 +83,7 @@ Thanks to Alexander Reelsen for his OpenNLP plugin, from where I have copied and
 Installation
 ------------
 
-Current version of the plugin is **2.0.0** (Oct 23, 2013)
+Current version of the plugin is **2.0.1** (Oct 25, 2013)
 
 Prerequisites::
 
@@ -91,7 +94,8 @@ Prerequisites::
 ES version     Plugin     Release date       Command
 -------------  ---------  -----------------  -------------------------------------------------------------
 0.90.3         1.2.0      Sep 14, 2013       ./bin/plugin --install langdetect --url http://bit.ly/19RBF3b
-0.90.5         **2.0.0**  Oct 22, 2013       ./bin/plugin --install langdetect --url http://bit.ly/1djTYCS
+0.90.5         2.0.0      Oct 22, 2013       ./bin/plugin --install langdetect --url http://bit.ly/1djTYCS
+0.90.5         **2.0.1**  Oct 25, 2013       ./bin/plugin --install langdetect --url http://bit.ly/16861yL
 =============  =========  =================  =============================================================
 
 Bintray:
@@ -168,6 +172,69 @@ Language detection mapping example
            }
         }
         '
+
+Language detection with attachment mapper plugin
+================================================
+
+::
+
+	curl -XDELETE 'localhost:9200/test'
+
+	curl -XPUT 'localhost:9200/test'  -d '
+	{
+	  "mappings" : {
+		"_default_" : {
+		  "properties" : {
+			"content" : {
+			  "type" : "attachment",
+			  "fields" : {
+				"content" : {
+				  "type" : "multi_field",
+				  "fields" : {
+					"content" : { "type" : "string" },
+					"language" : { "type" : "langdetect" }
+				  }
+				}
+			  }
+			}
+		  }
+		}
+	  }
+	}
+	'
+
+	rm index.tmp
+	echo -n '{"content":"' >> index.tmp
+	echo "This is a very simple text in plain english" | base64  >> index.tmp
+	echo -n '"}' >> index.tmp
+	curl -XPOST --data-binary "@index.tmp" 'localhost:9200/test/docs/1'
+	rm index.tmp
+
+	curl -XPOST 'localhost:9200/test/_refresh'
+
+	curl -XGET 'localhost:9200/test/docs/_mapping?pretty'
+
+	curl -XPOST 'localhost:9200/test/docs/_search?pretty' -d '
+	{
+	 "query" : {
+		  "match" : {
+			 "content" : "very simple"
+		  }
+	   }
+	}
+	'
+
+	curl -XPOST 'localhost:9200/test/docs/_search?pretty' -d '
+	{
+	 "query" : {
+		  "term" : {
+			 "content.language.lang" : "en"
+		  }
+	   }
+	}
+	'
+
+
 
 Language detection REST API example
 ===================================
