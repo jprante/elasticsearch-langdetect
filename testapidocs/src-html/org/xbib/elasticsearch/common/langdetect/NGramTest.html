@@ -1,0 +1,192 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package org.xbib.elasticsearch.common.langdetect;<a name="line.1"></a>
+<span class="sourceLineNo">002</span><a name="line.2"></a>
+<span class="sourceLineNo">003</span>import org.testng.Assert;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import org.testng.annotations.Test;<a name="line.4"></a>
+<span class="sourceLineNo">005</span><a name="line.5"></a>
+<span class="sourceLineNo">006</span>public class NGramTest extends Assert {<a name="line.6"></a>
+<span class="sourceLineNo">007</span><a name="line.7"></a>
+<span class="sourceLineNo">008</span>    @Test<a name="line.8"></a>
+<span class="sourceLineNo">009</span>    public final void testConstants() {<a name="line.9"></a>
+<span class="sourceLineNo">010</span>        assertEquals(NGram.N_GRAM, 3);<a name="line.10"></a>
+<span class="sourceLineNo">011</span>    }<a name="line.11"></a>
+<span class="sourceLineNo">012</span><a name="line.12"></a>
+<span class="sourceLineNo">013</span>    @Test<a name="line.13"></a>
+<span class="sourceLineNo">014</span>    public final void testNormalizeWithLatin() {<a name="line.14"></a>
+<span class="sourceLineNo">015</span>        assertEquals(NGram.normalize('\u0000'), ' ');<a name="line.15"></a>
+<span class="sourceLineNo">016</span>        assertEquals(NGram.normalize('\u0009'), ' ');<a name="line.16"></a>
+<span class="sourceLineNo">017</span>        assertEquals(NGram.normalize('\u0020'), ' ');<a name="line.17"></a>
+<span class="sourceLineNo">018</span>        assertEquals(NGram.normalize('\u0030'), ' ');<a name="line.18"></a>
+<span class="sourceLineNo">019</span>        assertEquals(NGram.normalize('\u0040'), ' ');<a name="line.19"></a>
+<span class="sourceLineNo">020</span>        assertEquals(NGram.normalize('\u0041'), '\u0041');<a name="line.20"></a>
+<span class="sourceLineNo">021</span>        assertEquals(NGram.normalize('\u005a'), '\u005a');<a name="line.21"></a>
+<span class="sourceLineNo">022</span>        assertEquals(NGram.normalize('\u005b'), ' ');<a name="line.22"></a>
+<span class="sourceLineNo">023</span>        assertEquals(NGram.normalize('\u0060'), ' ');<a name="line.23"></a>
+<span class="sourceLineNo">024</span>        assertEquals(NGram.normalize('\u0061'), '\u0061');<a name="line.24"></a>
+<span class="sourceLineNo">025</span>        assertEquals(NGram.normalize('\u007a'), '\u007a');<a name="line.25"></a>
+<span class="sourceLineNo">026</span>        assertEquals(NGram.normalize('\u007b'), ' ');<a name="line.26"></a>
+<span class="sourceLineNo">027</span>        assertEquals(NGram.normalize('\u007f'), ' ');<a name="line.27"></a>
+<span class="sourceLineNo">028</span>        assertEquals(NGram.normalize('\u0080'), '\u0080');<a name="line.28"></a>
+<span class="sourceLineNo">029</span>        assertEquals(NGram.normalize('\u00a0'), ' ');<a name="line.29"></a>
+<span class="sourceLineNo">030</span>        assertEquals(NGram.normalize('\u00a1'), '\u00a1');<a name="line.30"></a>
+<span class="sourceLineNo">031</span>    }<a name="line.31"></a>
+<span class="sourceLineNo">032</span><a name="line.32"></a>
+<span class="sourceLineNo">033</span>    /**<a name="line.33"></a>
+<span class="sourceLineNo">034</span>     * Test method for {@link NGram#normalize(char)} with CJK Kanji characters<a name="line.34"></a>
+<span class="sourceLineNo">035</span>     */<a name="line.35"></a>
+<span class="sourceLineNo">036</span>    @Test<a name="line.36"></a>
+<span class="sourceLineNo">037</span>    public final void testNormalizeWithCJKKanji() {<a name="line.37"></a>
+<span class="sourceLineNo">038</span>        assertEquals(NGram.normalize('\u4E00'), '\u4E00');<a name="line.38"></a>
+<span class="sourceLineNo">039</span>        assertEquals(NGram.normalize('\u4E01'), '\u4E01');<a name="line.39"></a>
+<span class="sourceLineNo">040</span>        assertEquals(NGram.normalize('\u4E02'), '\u4E02');<a name="line.40"></a>
+<span class="sourceLineNo">041</span>        assertEquals(NGram.normalize('\u4E03'), '\u4E01');<a name="line.41"></a>
+<span class="sourceLineNo">042</span>        assertEquals(NGram.normalize('\u4E04'), '\u4E04');<a name="line.42"></a>
+<span class="sourceLineNo">043</span>        assertEquals(NGram.normalize('\u4E05'), '\u4E05');<a name="line.43"></a>
+<span class="sourceLineNo">044</span>        assertEquals(NGram.normalize('\u4E06'), '\u4E06');<a name="line.44"></a>
+<span class="sourceLineNo">045</span>        assertEquals(NGram.normalize('\u4E07'), '\u4E07');<a name="line.45"></a>
+<span class="sourceLineNo">046</span>        assertEquals(NGram.normalize('\u4E08'), '\u4E08');<a name="line.46"></a>
+<span class="sourceLineNo">047</span>        assertEquals(NGram.normalize('\u4E09'), '\u4E09');<a name="line.47"></a>
+<span class="sourceLineNo">048</span>        assertEquals(NGram.normalize('\u4E10'), '\u4E10');<a name="line.48"></a>
+<span class="sourceLineNo">049</span>        assertEquals(NGram.normalize('\u4E11'), '\u4E11');<a name="line.49"></a>
+<span class="sourceLineNo">050</span>        assertEquals(NGram.normalize('\u4E12'), '\u4E12');<a name="line.50"></a>
+<span class="sourceLineNo">051</span>        assertEquals(NGram.normalize('\u4E13'), '\u4E13');<a name="line.51"></a>
+<span class="sourceLineNo">052</span>        assertEquals(NGram.normalize('\u4E14'), '\u4E14');<a name="line.52"></a>
+<span class="sourceLineNo">053</span>        assertEquals(NGram.normalize('\u4E15'), '\u4E15');<a name="line.53"></a>
+<span class="sourceLineNo">054</span>        assertEquals(NGram.normalize('\u4E1e'), '\u4E1e');<a name="line.54"></a>
+<span class="sourceLineNo">055</span>        assertEquals(NGram.normalize('\u4E1f'), '\u4E1f');<a name="line.55"></a>
+<span class="sourceLineNo">056</span>        assertEquals(NGram.normalize('\u4E20'), '\u4E20');<a name="line.56"></a>
+<span class="sourceLineNo">057</span>        assertEquals(NGram.normalize('\u4E21'), '\u4E21');<a name="line.57"></a>
+<span class="sourceLineNo">058</span>        assertEquals(NGram.normalize('\u4E22'), '\u4E22');<a name="line.58"></a>
+<span class="sourceLineNo">059</span>        assertEquals(NGram.normalize('\u4E23'), '\u4E23');<a name="line.59"></a>
+<span class="sourceLineNo">060</span>        assertEquals(NGram.normalize('\u4E24'), '\u4E13');<a name="line.60"></a>
+<span class="sourceLineNo">061</span>        assertEquals(NGram.normalize('\u4E25'), '\u4E13');<a name="line.61"></a>
+<span class="sourceLineNo">062</span>        assertEquals(NGram.normalize('\u4E30'), '\u4E30');<a name="line.62"></a>
+<span class="sourceLineNo">063</span>    }<a name="line.63"></a>
+<span class="sourceLineNo">064</span><a name="line.64"></a>
+<span class="sourceLineNo">065</span>    /**<a name="line.65"></a>
+<span class="sourceLineNo">066</span>     * Test method for {@link NGram#get(int)} and {@link NGram#addChar(char)}<a name="line.66"></a>
+<span class="sourceLineNo">067</span>     */<a name="line.67"></a>
+<span class="sourceLineNo">068</span>    @Test<a name="line.68"></a>
+<span class="sourceLineNo">069</span>    public final void testNGram() {<a name="line.69"></a>
+<span class="sourceLineNo">070</span>        NGram ngram = new NGram();<a name="line.70"></a>
+<span class="sourceLineNo">071</span>        assertEquals(ngram.get(0), null);<a name="line.71"></a>
+<span class="sourceLineNo">072</span>        assertEquals(ngram.get(1), null);<a name="line.72"></a>
+<span class="sourceLineNo">073</span>        assertEquals(ngram.get(2), null);<a name="line.73"></a>
+<span class="sourceLineNo">074</span>        assertEquals(ngram.get(3), null);<a name="line.74"></a>
+<span class="sourceLineNo">075</span>        assertEquals(ngram.get(4), null);<a name="line.75"></a>
+<span class="sourceLineNo">076</span>        ngram.addChar(' ');<a name="line.76"></a>
+<span class="sourceLineNo">077</span>        assertEquals(ngram.get(1), null);<a name="line.77"></a>
+<span class="sourceLineNo">078</span>        assertEquals(ngram.get(2), null);<a name="line.78"></a>
+<span class="sourceLineNo">079</span>        assertEquals(ngram.get(3), null);<a name="line.79"></a>
+<span class="sourceLineNo">080</span>        ngram.addChar('A');<a name="line.80"></a>
+<span class="sourceLineNo">081</span>        assertEquals(ngram.get(1), "A");<a name="line.81"></a>
+<span class="sourceLineNo">082</span>        assertEquals(ngram.get(2), " A");<a name="line.82"></a>
+<span class="sourceLineNo">083</span>        assertEquals(ngram.get(3), null);<a name="line.83"></a>
+<span class="sourceLineNo">084</span>        ngram.addChar('\u06cc');<a name="line.84"></a>
+<span class="sourceLineNo">085</span>        assertEquals(ngram.get(1), "\u064a");<a name="line.85"></a>
+<span class="sourceLineNo">086</span>        assertEquals(ngram.get(2), "A\u064a");<a name="line.86"></a>
+<span class="sourceLineNo">087</span>        assertEquals(ngram.get(3), " A\u064a");<a name="line.87"></a>
+<span class="sourceLineNo">088</span>        ngram.addChar('\u1ea0');<a name="line.88"></a>
+<span class="sourceLineNo">089</span>        assertEquals(ngram.get(1), "\u1ec3");<a name="line.89"></a>
+<span class="sourceLineNo">090</span>        assertEquals(ngram.get(2), "\u064a\u1ec3");<a name="line.90"></a>
+<span class="sourceLineNo">091</span>        assertEquals(ngram.get(3), "A\u064a\u1ec3");<a name="line.91"></a>
+<span class="sourceLineNo">092</span>        ngram.addChar('\u3044');<a name="line.92"></a>
+<span class="sourceLineNo">093</span>        assertEquals(ngram.get(1), "\u3042");<a name="line.93"></a>
+<span class="sourceLineNo">094</span>        assertEquals(ngram.get(2), "\u1ec3\u3042");<a name="line.94"></a>
+<span class="sourceLineNo">095</span>        assertEquals(ngram.get(3), "\u064a\u1ec3\u3042");<a name="line.95"></a>
+<span class="sourceLineNo">096</span><a name="line.96"></a>
+<span class="sourceLineNo">097</span>        ngram.addChar('\u30a4');<a name="line.97"></a>
+<span class="sourceLineNo">098</span>        assertEquals(ngram.get(1), "\u30a2");<a name="line.98"></a>
+<span class="sourceLineNo">099</span>        assertEquals(ngram.get(2), "\u3042\u30a2");<a name="line.99"></a>
+<span class="sourceLineNo">100</span>        assertEquals(ngram.get(3), "\u1ec3\u3042\u30a2");<a name="line.100"></a>
+<span class="sourceLineNo">101</span>        ngram.addChar('\u3106');<a name="line.101"></a>
+<span class="sourceLineNo">102</span>        assertEquals(ngram.get(1), "\u3105");<a name="line.102"></a>
+<span class="sourceLineNo">103</span>        assertEquals(ngram.get(2), "\u30a2\u3105");<a name="line.103"></a>
+<span class="sourceLineNo">104</span>        assertEquals(ngram.get(3), "\u3042\u30a2\u3105");<a name="line.104"></a>
+<span class="sourceLineNo">105</span>        ngram.addChar('\uac01');<a name="line.105"></a>
+<span class="sourceLineNo">106</span>        assertEquals(ngram.get(1), "\uac00");<a name="line.106"></a>
+<span class="sourceLineNo">107</span>        assertEquals(ngram.get(2), "\u3105\uac00");<a name="line.107"></a>
+<span class="sourceLineNo">108</span>        assertEquals(ngram.get(3), "\u30a2\u3105\uac00");<a name="line.108"></a>
+<span class="sourceLineNo">109</span>        ngram.addChar('\u2010');<a name="line.109"></a>
+<span class="sourceLineNo">110</span>        assertEquals(ngram.get(1), null);<a name="line.110"></a>
+<span class="sourceLineNo">111</span>        assertEquals(ngram.get(2), "\uac00 ");<a name="line.111"></a>
+<span class="sourceLineNo">112</span>        assertEquals(ngram.get(3), "\u3105\uac00 ");<a name="line.112"></a>
+<span class="sourceLineNo">113</span><a name="line.113"></a>
+<span class="sourceLineNo">114</span>        ngram.addChar('a');<a name="line.114"></a>
+<span class="sourceLineNo">115</span>        assertEquals(ngram.get(1), "a");<a name="line.115"></a>
+<span class="sourceLineNo">116</span>        assertEquals(ngram.get(2), " a");<a name="line.116"></a>
+<span class="sourceLineNo">117</span>        assertEquals(ngram.get(3), null);<a name="line.117"></a>
+<span class="sourceLineNo">118</span><a name="line.118"></a>
+<span class="sourceLineNo">119</span>    }<a name="line.119"></a>
+<span class="sourceLineNo">120</span>}<a name="line.120"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>
