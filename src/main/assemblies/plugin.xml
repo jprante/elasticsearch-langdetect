@@ -11,7 +11,8 @@
             <useProjectArtifact>true</useProjectArtifact>
             <useTransitiveFiltering>true</useTransitiveFiltering>
             <excludes>
-                <exclude>org.elasticsearch:elasticsearch</exclude>
+                <exclude>org.elasticsearch</exclude>
+                <exclude>log4j</exclude>
             </excludes>
         </dependencySet>
         <dependencySet>

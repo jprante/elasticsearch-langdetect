@@ -1,4 +1,4 @@
-.. image:: ../../../elasticsearch-langdetect/raw/master/speechbubble_green.png
+.. image:: ../../../elasticsearch-langdetect/raw/master/src/site/resources/speechbubble_green.png
 
 Image by `CurtiveArticide <http://www.softicons.com/free-icons/designers/curtivearticide>`_ `CC Attribution-NonCommercial 3.0 Unported <http://creativecommons.org/licenses/by-nc/3.0/>`_
 
@@ -98,9 +98,18 @@ ES version     Plugin     Release date       Command
 0.90.5         **2.0.1**  Oct 25, 2013       ./bin/plugin --install langdetect --url http://bit.ly/16861yL
 =============  =========  =================  =============================================================
 
-Bintray:
+Do not forget to restart the node after installing.
 
-https://bintray.com/pkg/show/general/jprante/elasticsearch-plugins/elasticsearch-langdetect
+Project docs
+------------
+
+The Maven project site is available at `Github <http://jprante.github.io/elasticsearch-langdetect>`_
+
+Binaries
+--------
+
+Binaries are available at `Bintray <https://bintray.com/pkg/show/general/jprante/elasticsearch-plugins/elasticsearch-langdetect>`_
+
 
 Language detection mapping example
 ==================================
