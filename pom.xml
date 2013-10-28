@@ -5,7 +5,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.xbib.elasticsearch</groupId>
+    <groupId>org.xbib.elasticsearch.plugin</groupId>
     <artifactId>elasticsearch-langdetect</artifactId>
     <version>2.0.1</version>
 
@@ -26,11 +26,24 @@
         </license>
     </licenses>
 
+    <developers>
+        <developer>
+            <id>jprante</id>
+            <name>Jörg Prante</name>
+            <url>https://github.com/jprante</url>
+        </developer>
+    </developers>
+
     <scm>
         <connection>scm:git:git@github.com:jprante/elasticsearch-langdetect.git</connection>
         <developerConnection>scm:git:git@github.com:jprante/elasticsearch-langdetect.git</developerConnection>
         <url>http://github.com/jprante/elasticsearch-langdetect</url>
     </scm>
+
+    <issueManagement>
+        <system>Github Issue Tracker</system>
+        <url>https://github.com/jprante/elasticsearch-langdetect/issues</url>
+    </issueManagement>
 
     <distributionManagement>
         <repository>
@@ -39,6 +52,19 @@
             <url>https://api.bintray.com/maven/jprante/elasticsearch-plugins/elasticsearch-langdetect</url>
         </repository>
     </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>bintray-elasticsearch-plugins</id>
+            <url>http://dl.bintray.com/jprante/elasticsearch-plugins</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <properties>
         <github.global.server>github</github.global.server>
@@ -89,7 +115,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
@@ -102,7 +127,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.15</version>
                 <configuration>
@@ -113,7 +137,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>2.2.1</version>
                 <executions>

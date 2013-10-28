@@ -85,6 +85,8 @@ Installation
 
 Current version of the plugin is **2.0.1** (Oct 25, 2013)
 
+.. image:: https://travis-ci.org/jprante/elasticsearch-langdetect.png
+
 Prerequisites::
 
   Java JDK 7
@@ -93,9 +95,7 @@ Prerequisites::
 =============  =========  =================  =============================================================
 ES version     Plugin     Release date       Command
 -------------  ---------  -----------------  -------------------------------------------------------------
-0.90.3         1.2.0      Sep 14, 2013       ./bin/plugin --install langdetect --url http://bit.ly/19RBF3b
-0.90.5         2.0.0      Oct 22, 2013       ./bin/plugin --install langdetect --url http://bit.ly/1djTYCS
-0.90.5         **2.0.1**  Oct 25, 2013       ./bin/plugin --install langdetect --url http://bit.ly/16861yL
+0.90.5         **2.0.1**  Oct 25, 2013       ./bin/plugin --install langdetect --url http://bit.ly/1cmf8AL
 =============  =========  =================  =============================================================
 
 Do not forget to restart the node after installing.
