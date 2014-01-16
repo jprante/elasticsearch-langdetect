@@ -1,6 +1,7 @@
 
 package org.xbib.elasticsearch.index.mapper.langdetect;
 
+import org.apache.lucene.util.ToStringUtils;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentParser;
 import org.elasticsearch.index.analysis.AnalysisService;
@@ -130,6 +131,10 @@ public class LangdetectMapper implements Mapper {
 
         context.externalValue(content);
         contentMapper.parse(context);
+
+        if (content == null) {
+            return;
+        }
 
         try {
             List<Language> langs = detector.detectAll(content);

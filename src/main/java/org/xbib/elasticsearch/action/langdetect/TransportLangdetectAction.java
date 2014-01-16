@@ -3,7 +3,7 @@ package org.xbib.elasticsearch.action.langdetect;
 
 import java.util.List;
 
-import org.elasticsearch.ElasticSearchException;
+import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.support.single.custom.TransportSingleCustomOperationAction;
 import org.elasticsearch.cluster.ClusterService;
 import org.elasticsearch.cluster.ClusterState;
@@ -66,12 +66,12 @@ public class TransportLangdetectAction extends TransportSingleCustomOperationAct
     }
 
     @Override
-    protected LangdetectResponse shardOperation(LangdetectRequest request, int shardId) throws ElasticSearchException {
+    protected LangdetectResponse shardOperation(LangdetectRequest request, int shardId) throws ElasticsearchException {
         try {
             List<Language> langs = detector.detectAll(request.getText().toUtf8());
             return new LangdetectResponse(langs);
         } catch (LanguageDetectionException e) {
-            throw new ElasticSearchException(e.getMessage(), e);
+            throw new ElasticsearchException(e.getMessage(), e);
         }
     }
 }
