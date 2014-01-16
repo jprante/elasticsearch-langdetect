@@ -28,7 +28,7 @@
 <span class="sourceLineNo">020</span>import org.elasticsearch.common.inject.Inject;<a name="line.20"></a>
 <span class="sourceLineNo">021</span>import org.elasticsearch.common.settings.ImmutableSettings;<a name="line.21"></a>
 <span class="sourceLineNo">022</span>import org.elasticsearch.common.settings.Settings;<a name="line.22"></a>
-<span class="sourceLineNo">023</span>import org.elasticsearch.ElasticSearchException;<a name="line.23"></a>
+<span class="sourceLineNo">023</span>import org.elasticsearch.ElasticsearchException;<a name="line.23"></a>
 <span class="sourceLineNo">024</span><a name="line.24"></a>
 <span class="sourceLineNo">025</span>public class Detector extends AbstractLifecycleComponent&lt;Detector&gt; {<a name="line.25"></a>
 <span class="sourceLineNo">026</span><a name="line.26"></a>
@@ -66,21 +66,21 @@
 <span class="sourceLineNo">058</span>        try {<a name="line.58"></a>
 <span class="sourceLineNo">059</span>            loadDefaultProfiles();<a name="line.59"></a>
 <span class="sourceLineNo">060</span>        } catch (IOException e) {<a name="line.60"></a>
-<span class="sourceLineNo">061</span>            throw new ElasticSearchException(e.getMessage());<a name="line.61"></a>
+<span class="sourceLineNo">061</span>            throw new ElasticsearchException(e.getMessage());<a name="line.61"></a>
 <span class="sourceLineNo">062</span>        }<a name="line.62"></a>
 <span class="sourceLineNo">063</span>        reset();<a name="line.63"></a>
 <span class="sourceLineNo">064</span>    }<a name="line.64"></a>
 <span class="sourceLineNo">065</span><a name="line.65"></a>
 <span class="sourceLineNo">066</span>    @Override<a name="line.66"></a>
-<span class="sourceLineNo">067</span>    protected void doStart() throws ElasticSearchException {<a name="line.67"></a>
+<span class="sourceLineNo">067</span>    protected void doStart() throws ElasticsearchException {<a name="line.67"></a>
 <span class="sourceLineNo">068</span>    }<a name="line.68"></a>
 <span class="sourceLineNo">069</span><a name="line.69"></a>
 <span class="sourceLineNo">070</span>    @Override<a name="line.70"></a>
-<span class="sourceLineNo">071</span>    protected void doStop() throws ElasticSearchException {<a name="line.71"></a>
+<span class="sourceLineNo">071</span>    protected void doStop() throws ElasticsearchException {<a name="line.71"></a>
 <span class="sourceLineNo">072</span>    }<a name="line.72"></a>
 <span class="sourceLineNo">073</span><a name="line.73"></a>
 <span class="sourceLineNo">074</span>    @Override<a name="line.74"></a>
-<span class="sourceLineNo">075</span>    protected void doClose() throws ElasticSearchException {<a name="line.75"></a>
+<span class="sourceLineNo">075</span>    protected void doClose() throws ElasticsearchException {<a name="line.75"></a>
 <span class="sourceLineNo">076</span>    }<a name="line.76"></a>
 <span class="sourceLineNo">077</span><a name="line.77"></a>
 <span class="sourceLineNo">078</span>    public void loadDefaultProfiles() throws IOException {<a name="line.78"></a>

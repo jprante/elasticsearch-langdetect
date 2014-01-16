@@ -11,7 +11,7 @@
 <span class="sourceLineNo">003</span><a name="line.3"></a>
 <span class="sourceLineNo">004</span>import java.util.List;<a name="line.4"></a>
 <span class="sourceLineNo">005</span><a name="line.5"></a>
-<span class="sourceLineNo">006</span>import org.elasticsearch.ElasticSearchException;<a name="line.6"></a>
+<span class="sourceLineNo">006</span>import org.elasticsearch.ElasticsearchException;<a name="line.6"></a>
 <span class="sourceLineNo">007</span>import org.elasticsearch.action.support.single.custom.TransportSingleCustomOperationAction;<a name="line.7"></a>
 <span class="sourceLineNo">008</span>import org.elasticsearch.cluster.ClusterService;<a name="line.8"></a>
 <span class="sourceLineNo">009</span>import org.elasticsearch.cluster.ClusterState;<a name="line.9"></a>
@@ -74,12 +74,12 @@
 <span class="sourceLineNo">066</span>    }<a name="line.66"></a>
 <span class="sourceLineNo">067</span><a name="line.67"></a>
 <span class="sourceLineNo">068</span>    @Override<a name="line.68"></a>
-<span class="sourceLineNo">069</span>    protected LangdetectResponse shardOperation(LangdetectRequest request, int shardId) throws ElasticSearchException {<a name="line.69"></a>
+<span class="sourceLineNo">069</span>    protected LangdetectResponse shardOperation(LangdetectRequest request, int shardId) throws ElasticsearchException {<a name="line.69"></a>
 <span class="sourceLineNo">070</span>        try {<a name="line.70"></a>
 <span class="sourceLineNo">071</span>            List&lt;Language&gt; langs = detector.detectAll(request.getText().toUtf8());<a name="line.71"></a>
 <span class="sourceLineNo">072</span>            return new LangdetectResponse(langs);<a name="line.72"></a>
 <span class="sourceLineNo">073</span>        } catch (LanguageDetectionException e) {<a name="line.73"></a>
-<span class="sourceLineNo">074</span>            throw new ElasticSearchException(e.getMessage(), e);<a name="line.74"></a>
+<span class="sourceLineNo">074</span>            throw new ElasticsearchException(e.getMessage(), e);<a name="line.74"></a>
 <span class="sourceLineNo">075</span>        }<a name="line.75"></a>
 <span class="sourceLineNo">076</span>    }<a name="line.76"></a>
 <span class="sourceLineNo">077</span>}<a name="line.77"></a>

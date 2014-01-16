@@ -9,182 +9,187 @@
 <pre><span class="sourceLineNo">001</span><a name="line.1"></a>
 <span class="sourceLineNo">002</span>package org.xbib.elasticsearch.index.mapper.langdetect;<a name="line.2"></a>
 <span class="sourceLineNo">003</span><a name="line.3"></a>
-<span class="sourceLineNo">004</span>import org.elasticsearch.common.xcontent.XContentBuilder;<a name="line.4"></a>
-<span class="sourceLineNo">005</span>import org.elasticsearch.common.xcontent.XContentParser;<a name="line.5"></a>
-<span class="sourceLineNo">006</span>import org.elasticsearch.index.analysis.AnalysisService;<a name="line.6"></a>
-<span class="sourceLineNo">007</span>import org.elasticsearch.index.mapper.*;<a name="line.7"></a>
-<span class="sourceLineNo">008</span>import org.elasticsearch.index.mapper.core.StringFieldMapper;<a name="line.8"></a>
-<span class="sourceLineNo">009</span>import org.xbib.elasticsearch.common.langdetect.Detector;<a name="line.9"></a>
-<span class="sourceLineNo">010</span>import org.xbib.elasticsearch.common.langdetect.Language;<a name="line.10"></a>
-<span class="sourceLineNo">011</span>import org.xbib.elasticsearch.common.langdetect.LanguageDetectionException;<a name="line.11"></a>
-<span class="sourceLineNo">012</span><a name="line.12"></a>
-<span class="sourceLineNo">013</span>import java.io.IOException;<a name="line.13"></a>
-<span class="sourceLineNo">014</span>import java.nio.charset.Charset;<a name="line.14"></a>
-<span class="sourceLineNo">015</span>import java.util.List;<a name="line.15"></a>
-<span class="sourceLineNo">016</span>import java.util.Map;<a name="line.16"></a>
-<span class="sourceLineNo">017</span><a name="line.17"></a>
-<span class="sourceLineNo">018</span>import static org.elasticsearch.index.mapper.MapperBuilders.stringField;<a name="line.18"></a>
-<span class="sourceLineNo">019</span><a name="line.19"></a>
-<span class="sourceLineNo">020</span>public class LangdetectMapper implements Mapper {<a name="line.20"></a>
-<span class="sourceLineNo">021</span><a name="line.21"></a>
-<span class="sourceLineNo">022</span>    public static final String CONTENT_TYPE = "langdetect";<a name="line.22"></a>
-<span class="sourceLineNo">023</span><a name="line.23"></a>
-<span class="sourceLineNo">024</span>    public static class Builder extends Mapper.Builder&lt;Builder, LangdetectMapper&gt; {<a name="line.24"></a>
-<span class="sourceLineNo">025</span><a name="line.25"></a>
-<span class="sourceLineNo">026</span>        private StringFieldMapper.Builder contentBuilder;<a name="line.26"></a>
-<span class="sourceLineNo">027</span>        private StringFieldMapper.Builder langBuilder = stringField("lang");<a name="line.27"></a>
-<span class="sourceLineNo">028</span>        private Detector detector;<a name="line.28"></a>
-<span class="sourceLineNo">029</span><a name="line.29"></a>
-<span class="sourceLineNo">030</span>        public Builder(String name, Detector detector) {<a name="line.30"></a>
-<span class="sourceLineNo">031</span>            super(name);<a name="line.31"></a>
-<span class="sourceLineNo">032</span>            this.detector = detector;<a name="line.32"></a>
-<span class="sourceLineNo">033</span>            this.contentBuilder = stringField(name);<a name="line.33"></a>
-<span class="sourceLineNo">034</span>            this.builder = this;<a name="line.34"></a>
-<span class="sourceLineNo">035</span>        }<a name="line.35"></a>
-<span class="sourceLineNo">036</span><a name="line.36"></a>
-<span class="sourceLineNo">037</span>        public Builder content(StringFieldMapper.Builder content) {<a name="line.37"></a>
-<span class="sourceLineNo">038</span>            this.contentBuilder = content;<a name="line.38"></a>
-<span class="sourceLineNo">039</span>            return this;<a name="line.39"></a>
-<span class="sourceLineNo">040</span>        }<a name="line.40"></a>
-<span class="sourceLineNo">041</span><a name="line.41"></a>
-<span class="sourceLineNo">042</span>        public Builder lang(StringFieldMapper.Builder lang) {<a name="line.42"></a>
-<span class="sourceLineNo">043</span>            this.langBuilder = lang;<a name="line.43"></a>
-<span class="sourceLineNo">044</span>            return this;<a name="line.44"></a>
-<span class="sourceLineNo">045</span>        }<a name="line.45"></a>
-<span class="sourceLineNo">046</span><a name="line.46"></a>
-<span class="sourceLineNo">047</span>        @Override<a name="line.47"></a>
-<span class="sourceLineNo">048</span>        public LangdetectMapper build(BuilderContext context) {<a name="line.48"></a>
-<span class="sourceLineNo">049</span>            context.path().add(name);<a name="line.49"></a>
-<span class="sourceLineNo">050</span>            StringFieldMapper contentMapper = contentBuilder.build(context);<a name="line.50"></a>
-<span class="sourceLineNo">051</span>            StringFieldMapper langMapper = langBuilder.build(context);<a name="line.51"></a>
-<span class="sourceLineNo">052</span>            context.path().remove();<a name="line.52"></a>
-<span class="sourceLineNo">053</span>            return new LangdetectMapper(name, detector, contentMapper, langMapper);<a name="line.53"></a>
-<span class="sourceLineNo">054</span>        }<a name="line.54"></a>
-<span class="sourceLineNo">055</span>    }<a name="line.55"></a>
-<span class="sourceLineNo">056</span><a name="line.56"></a>
-<span class="sourceLineNo">057</span>    public static class TypeParser implements Mapper.TypeParser {<a name="line.57"></a>
-<span class="sourceLineNo">058</span><a name="line.58"></a>
-<span class="sourceLineNo">059</span>        private Detector detector;<a name="line.59"></a>
-<span class="sourceLineNo">060</span><a name="line.60"></a>
-<span class="sourceLineNo">061</span>        public TypeParser(Detector detector) {<a name="line.61"></a>
-<span class="sourceLineNo">062</span>            this.detector = detector;<a name="line.62"></a>
-<span class="sourceLineNo">063</span>        }<a name="line.63"></a>
-<span class="sourceLineNo">064</span><a name="line.64"></a>
-<span class="sourceLineNo">065</span>        @SuppressWarnings({"unchecked","rawtypes"})<a name="line.65"></a>
-<span class="sourceLineNo">066</span>        @Override<a name="line.66"></a>
-<span class="sourceLineNo">067</span>        public Mapper.Builder parse(String name, Map&lt;String, Object&gt; node, ParserContext parserContext)<a name="line.67"></a>
-<span class="sourceLineNo">068</span>                throws MapperParsingException {<a name="line.68"></a>
-<span class="sourceLineNo">069</span>            LangdetectMapper.Builder builder = new Builder(name, detector);<a name="line.69"></a>
-<span class="sourceLineNo">070</span>            for (Map.Entry&lt;String, Object&gt; entry : node.entrySet()) {<a name="line.70"></a>
-<span class="sourceLineNo">071</span>                String fieldName = entry.getKey();<a name="line.71"></a>
-<span class="sourceLineNo">072</span>                Object fieldNode = entry.getValue();<a name="line.72"></a>
-<span class="sourceLineNo">073</span><a name="line.73"></a>
-<span class="sourceLineNo">074</span>                if (fieldName.equals("fields")) {<a name="line.74"></a>
-<span class="sourceLineNo">075</span>                    Map&lt;String, Object&gt; fieldsNode = (Map&lt;String, Object&gt;) fieldNode;<a name="line.75"></a>
-<span class="sourceLineNo">076</span>                    for (Map.Entry&lt;String, Object&gt; fieldsEntry : fieldsNode.entrySet()) {<a name="line.76"></a>
-<span class="sourceLineNo">077</span>                        String propName = fieldsEntry.getKey();<a name="line.77"></a>
-<span class="sourceLineNo">078</span>                        Object propNode = fieldsEntry.getValue();<a name="line.78"></a>
-<span class="sourceLineNo">079</span><a name="line.79"></a>
-<span class="sourceLineNo">080</span>                        if (name.equals(propName)) {<a name="line.80"></a>
-<span class="sourceLineNo">081</span>                            builder.content((StringFieldMapper.Builder) parserContext.typeParser("string").parse(name,<a name="line.81"></a>
-<span class="sourceLineNo">082</span>                                    (Map&lt;String, Object&gt;) propNode, parserContext));<a name="line.82"></a>
-<span class="sourceLineNo">083</span>                        } else if ("lang".equals(propName)) {<a name="line.83"></a>
-<span class="sourceLineNo">084</span>                            builder.lang((StringFieldMapper.Builder) parserContext.typeParser("string").parse("lang",<a name="line.84"></a>
-<span class="sourceLineNo">085</span>                                    (Map&lt;String, Object&gt;) propNode, parserContext));<a name="line.85"></a>
-<span class="sourceLineNo">086</span>                        }<a name="line.86"></a>
-<span class="sourceLineNo">087</span>                    }<a name="line.87"></a>
-<span class="sourceLineNo">088</span>                }<a name="line.88"></a>
-<span class="sourceLineNo">089</span>            }<a name="line.89"></a>
-<span class="sourceLineNo">090</span><a name="line.90"></a>
-<span class="sourceLineNo">091</span>            return builder;<a name="line.91"></a>
-<span class="sourceLineNo">092</span>        }<a name="line.92"></a>
-<span class="sourceLineNo">093</span>    }<a name="line.93"></a>
-<span class="sourceLineNo">094</span><a name="line.94"></a>
-<span class="sourceLineNo">095</span>    private final String name;<a name="line.95"></a>
-<span class="sourceLineNo">096</span>    private final Detector detector;<a name="line.96"></a>
-<span class="sourceLineNo">097</span>    private final StringFieldMapper contentMapper;<a name="line.97"></a>
-<span class="sourceLineNo">098</span>    private final StringFieldMapper langMapper;<a name="line.98"></a>
-<span class="sourceLineNo">099</span><a name="line.99"></a>
-<span class="sourceLineNo">100</span>    public LangdetectMapper(String name, Detector detector, StringFieldMapper contentMapper, StringFieldMapper langMapper) {<a name="line.100"></a>
-<span class="sourceLineNo">101</span>        this.name = name;<a name="line.101"></a>
-<span class="sourceLineNo">102</span>        this.detector = detector;<a name="line.102"></a>
-<span class="sourceLineNo">103</span>        this.contentMapper = contentMapper;<a name="line.103"></a>
-<span class="sourceLineNo">104</span>        this.langMapper = langMapper;<a name="line.104"></a>
-<span class="sourceLineNo">105</span>    }<a name="line.105"></a>
-<span class="sourceLineNo">106</span><a name="line.106"></a>
-<span class="sourceLineNo">107</span>    @Override<a name="line.107"></a>
-<span class="sourceLineNo">108</span>    public String name() {<a name="line.108"></a>
-<span class="sourceLineNo">109</span>        return name;<a name="line.109"></a>
-<span class="sourceLineNo">110</span>    }<a name="line.110"></a>
-<span class="sourceLineNo">111</span><a name="line.111"></a>
-<span class="sourceLineNo">112</span>    @Override<a name="line.112"></a>
-<span class="sourceLineNo">113</span>    public void parse(ParseContext context) throws IOException {<a name="line.113"></a>
-<span class="sourceLineNo">114</span>        String content = null;<a name="line.114"></a>
-<span class="sourceLineNo">115</span><a name="line.115"></a>
-<span class="sourceLineNo">116</span>        XContentParser parser = context.parser();<a name="line.116"></a>
-<span class="sourceLineNo">117</span>        XContentParser.Token token = parser.currentToken();<a name="line.117"></a>
-<span class="sourceLineNo">118</span><a name="line.118"></a>
-<span class="sourceLineNo">119</span>        if (token == XContentParser.Token.VALUE_STRING) {<a name="line.119"></a>
-<span class="sourceLineNo">120</span>            // try decode UTF-8 base64 (e.g. from attachment mapper plugin)<a name="line.120"></a>
-<span class="sourceLineNo">121</span>            content = parser.text();<a name="line.121"></a>
-<span class="sourceLineNo">122</span>            try {<a name="line.122"></a>
-<span class="sourceLineNo">123</span>                byte[] b = parser.binaryValue();<a name="line.123"></a>
-<span class="sourceLineNo">124</span>                if (b != null &amp;&amp; b.length &gt; 0) {<a name="line.124"></a>
-<span class="sourceLineNo">125</span>                    content = new String(b, Charset.forName("UTF-8"));<a name="line.125"></a>
-<span class="sourceLineNo">126</span>                }<a name="line.126"></a>
-<span class="sourceLineNo">127</span>            } catch (Exception e) {<a name="line.127"></a>
-<span class="sourceLineNo">128</span>            }<a name="line.128"></a>
-<span class="sourceLineNo">129</span>        }<a name="line.129"></a>
-<span class="sourceLineNo">130</span><a name="line.130"></a>
-<span class="sourceLineNo">131</span>        context.externalValue(content);<a name="line.131"></a>
-<span class="sourceLineNo">132</span>        contentMapper.parse(context);<a name="line.132"></a>
-<span class="sourceLineNo">133</span><a name="line.133"></a>
-<span class="sourceLineNo">134</span>        try {<a name="line.134"></a>
-<span class="sourceLineNo">135</span>            List&lt;Language&gt; langs = detector.detectAll(content);<a name="line.135"></a>
-<span class="sourceLineNo">136</span>            for (Language lang : langs) {<a name="line.136"></a>
-<span class="sourceLineNo">137</span>                context.externalValue(lang.getLanguage());<a name="line.137"></a>
-<span class="sourceLineNo">138</span>                langMapper.parse(context);<a name="line.138"></a>
-<span class="sourceLineNo">139</span>            }<a name="line.139"></a>
-<span class="sourceLineNo">140</span>        } catch(LanguageDetectionException e) {<a name="line.140"></a>
-<span class="sourceLineNo">141</span>            context.externalValue("unknown");<a name="line.141"></a>
-<span class="sourceLineNo">142</span>            langMapper.parse(context);<a name="line.142"></a>
-<span class="sourceLineNo">143</span>        }<a name="line.143"></a>
-<span class="sourceLineNo">144</span>    }<a name="line.144"></a>
-<span class="sourceLineNo">145</span><a name="line.145"></a>
-<span class="sourceLineNo">146</span>    @Override<a name="line.146"></a>
-<span class="sourceLineNo">147</span>    public void merge(Mapper mergeWith, MergeContext mergeContext) throws MergeMappingException {<a name="line.147"></a>
-<span class="sourceLineNo">148</span>    }<a name="line.148"></a>
-<span class="sourceLineNo">149</span><a name="line.149"></a>
-<span class="sourceLineNo">150</span>    @Override<a name="line.150"></a>
-<span class="sourceLineNo">151</span>    public void traverse(FieldMapperListener fieldMapperListener) {<a name="line.151"></a>
-<span class="sourceLineNo">152</span>        contentMapper.traverse(fieldMapperListener);<a name="line.152"></a>
-<span class="sourceLineNo">153</span>        langMapper.traverse(fieldMapperListener);<a name="line.153"></a>
-<span class="sourceLineNo">154</span>    }<a name="line.154"></a>
-<span class="sourceLineNo">155</span><a name="line.155"></a>
-<span class="sourceLineNo">156</span>    @Override<a name="line.156"></a>
-<span class="sourceLineNo">157</span>    public void traverse(ObjectMapperListener objectMapperListener) {<a name="line.157"></a>
-<span class="sourceLineNo">158</span>    }<a name="line.158"></a>
-<span class="sourceLineNo">159</span><a name="line.159"></a>
-<span class="sourceLineNo">160</span>    @Override<a name="line.160"></a>
-<span class="sourceLineNo">161</span>    public void close() {<a name="line.161"></a>
-<span class="sourceLineNo">162</span>        contentMapper.close();<a name="line.162"></a>
-<span class="sourceLineNo">163</span>        langMapper.close();<a name="line.163"></a>
-<span class="sourceLineNo">164</span>    }<a name="line.164"></a>
-<span class="sourceLineNo">165</span><a name="line.165"></a>
-<span class="sourceLineNo">166</span>    @Override<a name="line.166"></a>
-<span class="sourceLineNo">167</span>    public XContentBuilder toXContent(XContentBuilder builder, Params params) throws IOException {<a name="line.167"></a>
-<span class="sourceLineNo">168</span>        builder.startObject(name);<a name="line.168"></a>
-<span class="sourceLineNo">169</span>        builder.field("type", CONTENT_TYPE);<a name="line.169"></a>
+<span class="sourceLineNo">004</span>import org.apache.lucene.util.ToStringUtils;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import org.elasticsearch.common.xcontent.XContentBuilder;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import org.elasticsearch.common.xcontent.XContentParser;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import org.elasticsearch.index.analysis.AnalysisService;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import org.elasticsearch.index.mapper.*;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import org.elasticsearch.index.mapper.core.StringFieldMapper;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import org.xbib.elasticsearch.common.langdetect.Detector;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import org.xbib.elasticsearch.common.langdetect.Language;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import org.xbib.elasticsearch.common.langdetect.LanguageDetectionException;<a name="line.12"></a>
+<span class="sourceLineNo">013</span><a name="line.13"></a>
+<span class="sourceLineNo">014</span>import java.io.IOException;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import java.nio.charset.Charset;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>import java.util.List;<a name="line.16"></a>
+<span class="sourceLineNo">017</span>import java.util.Map;<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>import static org.elasticsearch.index.mapper.MapperBuilders.stringField;<a name="line.19"></a>
+<span class="sourceLineNo">020</span><a name="line.20"></a>
+<span class="sourceLineNo">021</span>public class LangdetectMapper implements Mapper {<a name="line.21"></a>
+<span class="sourceLineNo">022</span><a name="line.22"></a>
+<span class="sourceLineNo">023</span>    public static final String CONTENT_TYPE = "langdetect";<a name="line.23"></a>
+<span class="sourceLineNo">024</span><a name="line.24"></a>
+<span class="sourceLineNo">025</span>    public static class Builder extends Mapper.Builder&lt;Builder, LangdetectMapper&gt; {<a name="line.25"></a>
+<span class="sourceLineNo">026</span><a name="line.26"></a>
+<span class="sourceLineNo">027</span>        private StringFieldMapper.Builder contentBuilder;<a name="line.27"></a>
+<span class="sourceLineNo">028</span>        private StringFieldMapper.Builder langBuilder = stringField("lang");<a name="line.28"></a>
+<span class="sourceLineNo">029</span>        private Detector detector;<a name="line.29"></a>
+<span class="sourceLineNo">030</span><a name="line.30"></a>
+<span class="sourceLineNo">031</span>        public Builder(String name, Detector detector) {<a name="line.31"></a>
+<span class="sourceLineNo">032</span>            super(name);<a name="line.32"></a>
+<span class="sourceLineNo">033</span>            this.detector = detector;<a name="line.33"></a>
+<span class="sourceLineNo">034</span>            this.contentBuilder = stringField(name);<a name="line.34"></a>
+<span class="sourceLineNo">035</span>            this.builder = this;<a name="line.35"></a>
+<span class="sourceLineNo">036</span>        }<a name="line.36"></a>
+<span class="sourceLineNo">037</span><a name="line.37"></a>
+<span class="sourceLineNo">038</span>        public Builder content(StringFieldMapper.Builder content) {<a name="line.38"></a>
+<span class="sourceLineNo">039</span>            this.contentBuilder = content;<a name="line.39"></a>
+<span class="sourceLineNo">040</span>            return this;<a name="line.40"></a>
+<span class="sourceLineNo">041</span>        }<a name="line.41"></a>
+<span class="sourceLineNo">042</span><a name="line.42"></a>
+<span class="sourceLineNo">043</span>        public Builder lang(StringFieldMapper.Builder lang) {<a name="line.43"></a>
+<span class="sourceLineNo">044</span>            this.langBuilder = lang;<a name="line.44"></a>
+<span class="sourceLineNo">045</span>            return this;<a name="line.45"></a>
+<span class="sourceLineNo">046</span>        }<a name="line.46"></a>
+<span class="sourceLineNo">047</span><a name="line.47"></a>
+<span class="sourceLineNo">048</span>        @Override<a name="line.48"></a>
+<span class="sourceLineNo">049</span>        public LangdetectMapper build(BuilderContext context) {<a name="line.49"></a>
+<span class="sourceLineNo">050</span>            context.path().add(name);<a name="line.50"></a>
+<span class="sourceLineNo">051</span>            StringFieldMapper contentMapper = contentBuilder.build(context);<a name="line.51"></a>
+<span class="sourceLineNo">052</span>            StringFieldMapper langMapper = langBuilder.build(context);<a name="line.52"></a>
+<span class="sourceLineNo">053</span>            context.path().remove();<a name="line.53"></a>
+<span class="sourceLineNo">054</span>            return new LangdetectMapper(name, detector, contentMapper, langMapper);<a name="line.54"></a>
+<span class="sourceLineNo">055</span>        }<a name="line.55"></a>
+<span class="sourceLineNo">056</span>    }<a name="line.56"></a>
+<span class="sourceLineNo">057</span><a name="line.57"></a>
+<span class="sourceLineNo">058</span>    public static class TypeParser implements Mapper.TypeParser {<a name="line.58"></a>
+<span class="sourceLineNo">059</span><a name="line.59"></a>
+<span class="sourceLineNo">060</span>        private Detector detector;<a name="line.60"></a>
+<span class="sourceLineNo">061</span><a name="line.61"></a>
+<span class="sourceLineNo">062</span>        public TypeParser(Detector detector) {<a name="line.62"></a>
+<span class="sourceLineNo">063</span>            this.detector = detector;<a name="line.63"></a>
+<span class="sourceLineNo">064</span>        }<a name="line.64"></a>
+<span class="sourceLineNo">065</span><a name="line.65"></a>
+<span class="sourceLineNo">066</span>        @SuppressWarnings({"unchecked","rawtypes"})<a name="line.66"></a>
+<span class="sourceLineNo">067</span>        @Override<a name="line.67"></a>
+<span class="sourceLineNo">068</span>        public Mapper.Builder parse(String name, Map&lt;String, Object&gt; node, ParserContext parserContext)<a name="line.68"></a>
+<span class="sourceLineNo">069</span>                throws MapperParsingException {<a name="line.69"></a>
+<span class="sourceLineNo">070</span>            LangdetectMapper.Builder builder = new Builder(name, detector);<a name="line.70"></a>
+<span class="sourceLineNo">071</span>            for (Map.Entry&lt;String, Object&gt; entry : node.entrySet()) {<a name="line.71"></a>
+<span class="sourceLineNo">072</span>                String fieldName = entry.getKey();<a name="line.72"></a>
+<span class="sourceLineNo">073</span>                Object fieldNode = entry.getValue();<a name="line.73"></a>
+<span class="sourceLineNo">074</span><a name="line.74"></a>
+<span class="sourceLineNo">075</span>                if (fieldName.equals("fields")) {<a name="line.75"></a>
+<span class="sourceLineNo">076</span>                    Map&lt;String, Object&gt; fieldsNode = (Map&lt;String, Object&gt;) fieldNode;<a name="line.76"></a>
+<span class="sourceLineNo">077</span>                    for (Map.Entry&lt;String, Object&gt; fieldsEntry : fieldsNode.entrySet()) {<a name="line.77"></a>
+<span class="sourceLineNo">078</span>                        String propName = fieldsEntry.getKey();<a name="line.78"></a>
+<span class="sourceLineNo">079</span>                        Object propNode = fieldsEntry.getValue();<a name="line.79"></a>
+<span class="sourceLineNo">080</span><a name="line.80"></a>
+<span class="sourceLineNo">081</span>                        if (name.equals(propName)) {<a name="line.81"></a>
+<span class="sourceLineNo">082</span>                            builder.content((StringFieldMapper.Builder) parserContext.typeParser("string").parse(name,<a name="line.82"></a>
+<span class="sourceLineNo">083</span>                                    (Map&lt;String, Object&gt;) propNode, parserContext));<a name="line.83"></a>
+<span class="sourceLineNo">084</span>                        } else if ("lang".equals(propName)) {<a name="line.84"></a>
+<span class="sourceLineNo">085</span>                            builder.lang((StringFieldMapper.Builder) parserContext.typeParser("string").parse("lang",<a name="line.85"></a>
+<span class="sourceLineNo">086</span>                                    (Map&lt;String, Object&gt;) propNode, parserContext));<a name="line.86"></a>
+<span class="sourceLineNo">087</span>                        }<a name="line.87"></a>
+<span class="sourceLineNo">088</span>                    }<a name="line.88"></a>
+<span class="sourceLineNo">089</span>                }<a name="line.89"></a>
+<span class="sourceLineNo">090</span>            }<a name="line.90"></a>
+<span class="sourceLineNo">091</span><a name="line.91"></a>
+<span class="sourceLineNo">092</span>            return builder;<a name="line.92"></a>
+<span class="sourceLineNo">093</span>        }<a name="line.93"></a>
+<span class="sourceLineNo">094</span>    }<a name="line.94"></a>
+<span class="sourceLineNo">095</span><a name="line.95"></a>
+<span class="sourceLineNo">096</span>    private final String name;<a name="line.96"></a>
+<span class="sourceLineNo">097</span>    private final Detector detector;<a name="line.97"></a>
+<span class="sourceLineNo">098</span>    private final StringFieldMapper contentMapper;<a name="line.98"></a>
+<span class="sourceLineNo">099</span>    private final StringFieldMapper langMapper;<a name="line.99"></a>
+<span class="sourceLineNo">100</span><a name="line.100"></a>
+<span class="sourceLineNo">101</span>    public LangdetectMapper(String name, Detector detector, StringFieldMapper contentMapper, StringFieldMapper langMapper) {<a name="line.101"></a>
+<span class="sourceLineNo">102</span>        this.name = name;<a name="line.102"></a>
+<span class="sourceLineNo">103</span>        this.detector = detector;<a name="line.103"></a>
+<span class="sourceLineNo">104</span>        this.contentMapper = contentMapper;<a name="line.104"></a>
+<span class="sourceLineNo">105</span>        this.langMapper = langMapper;<a name="line.105"></a>
+<span class="sourceLineNo">106</span>    }<a name="line.106"></a>
+<span class="sourceLineNo">107</span><a name="line.107"></a>
+<span class="sourceLineNo">108</span>    @Override<a name="line.108"></a>
+<span class="sourceLineNo">109</span>    public String name() {<a name="line.109"></a>
+<span class="sourceLineNo">110</span>        return name;<a name="line.110"></a>
+<span class="sourceLineNo">111</span>    }<a name="line.111"></a>
+<span class="sourceLineNo">112</span><a name="line.112"></a>
+<span class="sourceLineNo">113</span>    @Override<a name="line.113"></a>
+<span class="sourceLineNo">114</span>    public void parse(ParseContext context) throws IOException {<a name="line.114"></a>
+<span class="sourceLineNo">115</span>        String content = null;<a name="line.115"></a>
+<span class="sourceLineNo">116</span><a name="line.116"></a>
+<span class="sourceLineNo">117</span>        XContentParser parser = context.parser();<a name="line.117"></a>
+<span class="sourceLineNo">118</span>        XContentParser.Token token = parser.currentToken();<a name="line.118"></a>
+<span class="sourceLineNo">119</span><a name="line.119"></a>
+<span class="sourceLineNo">120</span>        if (token == XContentParser.Token.VALUE_STRING) {<a name="line.120"></a>
+<span class="sourceLineNo">121</span>            // try decode UTF-8 base64 (e.g. from attachment mapper plugin)<a name="line.121"></a>
+<span class="sourceLineNo">122</span>            content = parser.text();<a name="line.122"></a>
+<span class="sourceLineNo">123</span>            try {<a name="line.123"></a>
+<span class="sourceLineNo">124</span>                byte[] b = parser.binaryValue();<a name="line.124"></a>
+<span class="sourceLineNo">125</span>                if (b != null &amp;&amp; b.length &gt; 0) {<a name="line.125"></a>
+<span class="sourceLineNo">126</span>                    content = new String(b, Charset.forName("UTF-8"));<a name="line.126"></a>
+<span class="sourceLineNo">127</span>                }<a name="line.127"></a>
+<span class="sourceLineNo">128</span>            } catch (Exception e) {<a name="line.128"></a>
+<span class="sourceLineNo">129</span>            }<a name="line.129"></a>
+<span class="sourceLineNo">130</span>        }<a name="line.130"></a>
+<span class="sourceLineNo">131</span><a name="line.131"></a>
+<span class="sourceLineNo">132</span>        context.externalValue(content);<a name="line.132"></a>
+<span class="sourceLineNo">133</span>        contentMapper.parse(context);<a name="line.133"></a>
+<span class="sourceLineNo">134</span><a name="line.134"></a>
+<span class="sourceLineNo">135</span>        if (content == null) {<a name="line.135"></a>
+<span class="sourceLineNo">136</span>            return;<a name="line.136"></a>
+<span class="sourceLineNo">137</span>        }<a name="line.137"></a>
+<span class="sourceLineNo">138</span><a name="line.138"></a>
+<span class="sourceLineNo">139</span>        try {<a name="line.139"></a>
+<span class="sourceLineNo">140</span>            List&lt;Language&gt; langs = detector.detectAll(content);<a name="line.140"></a>
+<span class="sourceLineNo">141</span>            for (Language lang : langs) {<a name="line.141"></a>
+<span class="sourceLineNo">142</span>                context.externalValue(lang.getLanguage());<a name="line.142"></a>
+<span class="sourceLineNo">143</span>                langMapper.parse(context);<a name="line.143"></a>
+<span class="sourceLineNo">144</span>            }<a name="line.144"></a>
+<span class="sourceLineNo">145</span>        } catch(LanguageDetectionException e) {<a name="line.145"></a>
+<span class="sourceLineNo">146</span>            context.externalValue("unknown");<a name="line.146"></a>
+<span class="sourceLineNo">147</span>            langMapper.parse(context);<a name="line.147"></a>
+<span class="sourceLineNo">148</span>        }<a name="line.148"></a>
+<span class="sourceLineNo">149</span>    }<a name="line.149"></a>
+<span class="sourceLineNo">150</span><a name="line.150"></a>
+<span class="sourceLineNo">151</span>    @Override<a name="line.151"></a>
+<span class="sourceLineNo">152</span>    public void merge(Mapper mergeWith, MergeContext mergeContext) throws MergeMappingException {<a name="line.152"></a>
+<span class="sourceLineNo">153</span>    }<a name="line.153"></a>
+<span class="sourceLineNo">154</span><a name="line.154"></a>
+<span class="sourceLineNo">155</span>    @Override<a name="line.155"></a>
+<span class="sourceLineNo">156</span>    public void traverse(FieldMapperListener fieldMapperListener) {<a name="line.156"></a>
+<span class="sourceLineNo">157</span>        contentMapper.traverse(fieldMapperListener);<a name="line.157"></a>
+<span class="sourceLineNo">158</span>        langMapper.traverse(fieldMapperListener);<a name="line.158"></a>
+<span class="sourceLineNo">159</span>    }<a name="line.159"></a>
+<span class="sourceLineNo">160</span><a name="line.160"></a>
+<span class="sourceLineNo">161</span>    @Override<a name="line.161"></a>
+<span class="sourceLineNo">162</span>    public void traverse(ObjectMapperListener objectMapperListener) {<a name="line.162"></a>
+<span class="sourceLineNo">163</span>    }<a name="line.163"></a>
+<span class="sourceLineNo">164</span><a name="line.164"></a>
+<span class="sourceLineNo">165</span>    @Override<a name="line.165"></a>
+<span class="sourceLineNo">166</span>    public void close() {<a name="line.166"></a>
+<span class="sourceLineNo">167</span>        contentMapper.close();<a name="line.167"></a>
+<span class="sourceLineNo">168</span>        langMapper.close();<a name="line.168"></a>
+<span class="sourceLineNo">169</span>    }<a name="line.169"></a>
 <span class="sourceLineNo">170</span><a name="line.170"></a>
-<span class="sourceLineNo">171</span>        builder.startObject("fields");<a name="line.171"></a>
-<span class="sourceLineNo">172</span>        contentMapper.toXContent(builder, params);<a name="line.172"></a>
-<span class="sourceLineNo">173</span>        langMapper.toXContent(builder, params);<a name="line.173"></a>
-<span class="sourceLineNo">174</span>        builder.endObject();<a name="line.174"></a>
+<span class="sourceLineNo">171</span>    @Override<a name="line.171"></a>
+<span class="sourceLineNo">172</span>    public XContentBuilder toXContent(XContentBuilder builder, Params params) throws IOException {<a name="line.172"></a>
+<span class="sourceLineNo">173</span>        builder.startObject(name);<a name="line.173"></a>
+<span class="sourceLineNo">174</span>        builder.field("type", CONTENT_TYPE);<a name="line.174"></a>
 <span class="sourceLineNo">175</span><a name="line.175"></a>
-<span class="sourceLineNo">176</span>        builder.endObject();<a name="line.176"></a>
-<span class="sourceLineNo">177</span>        return builder;<a name="line.177"></a>
-<span class="sourceLineNo">178</span>    }<a name="line.178"></a>
-<span class="sourceLineNo">179</span>}<a name="line.179"></a>
+<span class="sourceLineNo">176</span>        builder.startObject("fields");<a name="line.176"></a>
+<span class="sourceLineNo">177</span>        contentMapper.toXContent(builder, params);<a name="line.177"></a>
+<span class="sourceLineNo">178</span>        langMapper.toXContent(builder, params);<a name="line.178"></a>
+<span class="sourceLineNo">179</span>        builder.endObject();<a name="line.179"></a>
+<span class="sourceLineNo">180</span><a name="line.180"></a>
+<span class="sourceLineNo">181</span>        builder.endObject();<a name="line.181"></a>
+<span class="sourceLineNo">182</span>        return builder;<a name="line.182"></a>
+<span class="sourceLineNo">183</span>    }<a name="line.183"></a>
+<span class="sourceLineNo">184</span>}<a name="line.184"></a>
 
 
 
