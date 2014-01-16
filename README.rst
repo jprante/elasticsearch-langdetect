@@ -83,8 +83,6 @@ Thanks to Alexander Reelsen for his OpenNLP plugin, from where I have copied and
 Installation
 ------------
 
-Current version of the plugin is **2.0.1** (Oct 25, 2013)
-
 .. image:: https://travis-ci.org/jprante/elasticsearch-langdetect.png
 
 Prerequisites::
@@ -245,10 +243,10 @@ Language detection with attachment mapper plugin
 
 
 
-Language detection REST API example
-===================================
+Language detection REST API
+===========================
 
-::
+Example::
 
     curl -XPOST 'localhost:9200/_langdetect?pretty' -d 'This is a test'
 	{
