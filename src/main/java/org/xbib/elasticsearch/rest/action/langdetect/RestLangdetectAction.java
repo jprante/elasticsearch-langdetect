@@ -6,14 +6,8 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentBuilder;
-import org.elasticsearch.rest.BaseRestHandler;
-import org.elasticsearch.rest.RestChannel;
-import org.elasticsearch.rest.RestController;
-import org.elasticsearch.rest.RestRequest;
-import org.elasticsearch.rest.XContentRestResponse;
-import org.elasticsearch.rest.XContentThrowableRestResponse;
-import org.elasticsearch.rest.action.support.RestXContentBuilder;
-
+import org.elasticsearch.rest.*;
+import org.elasticsearch.rest.action.support.RestBuilderListener;
 import org.xbib.elasticsearch.action.langdetect.LangdetectAction;
 import org.xbib.elasticsearch.action.langdetect.LangdetectRequest;
 import org.xbib.elasticsearch.action.langdetect.LangdetectResponse;
@@ -35,32 +29,21 @@ public class RestLangdetectAction extends BaseRestHandler {
     @Override
     public void handleRequest(final RestRequest request, final RestChannel channel) {
         LangdetectRequest langdetectRequest = new LangdetectRequest().setText(request.content());
-        client.execute(LangdetectAction.INSTANCE, langdetectRequest, new ActionListener<LangdetectResponse>() {
+        client.execute(LangdetectAction.INSTANCE, langdetectRequest, new RestBuilderListener<LangdetectResponse>(channel) {
 
             @Override
-            public void onResponse(LangdetectResponse response) {
-                try {
-                    XContentBuilder builder = RestXContentBuilder.restContentBuilder(request);
-                    builder.startObject();
-                    builder.field("ok", true).startArray("languages");
-                    for (Language lang : response.getLanguages()) {
-                        builder.startObject().field("language", lang.getLanguage())
-                                .field("probability", lang.getProbability()).endObject();
-                    }
-                    builder.endArray().endObject();
-                    channel.sendResponse(new XContentRestResponse(request, OK, builder));
-                } catch (Exception e) {                    
-                    onFailure(e);
+            public RestResponse buildResponse(LangdetectResponse response, XContentBuilder builder) throws Exception {
+                builder.startObject();
+                builder.field("ok", true).startArray("languages");
+                for (Language lang : response.getLanguages()) {
+                    builder.startObject()
+                        .field("language", lang.getLanguage())
+                        .field("probability", lang.getProbability())
+                        .endObject();
                 }
-            }
+                builder.endArray().endObject();
 
-            @Override
-            public void onFailure(Throwable e) {
-                try {
-                    channel.sendResponse(new XContentThrowableRestResponse(request, e));
-                } catch (IOException e1) {
-                    logger.error("Failed to send failure response", e1);
-                }
+                return new BytesRestResponse(RestStatus.OK, builder);
             }
         });
     }
