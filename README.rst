@@ -94,6 +94,7 @@ ES version     Plugin       Release date       Command
 -------------  -----------  -----------------  -------------------------------------------------------------
 0.90.5         **2.0.1**    Oct 25, 2013       ./bin/plugin --install langdetect --url http://bit.ly/1cmf8AL
 1.0.0.RC1      1.0.0.RC1.1  Jan 16, 2014       ./bin/plugin --install langdetect --url http://bit.ly/1du5hqQ
+1.2.1          1.2.1.0
 =============  ===========  =================  =============================================================
 
 Do not forget to restart the node after installing.
