@@ -14,20 +14,18 @@
 <span class="sourceLineNo">006</span>import org.elasticsearch.index.Index;<a name="line.6"></a>
 <span class="sourceLineNo">007</span>import org.elasticsearch.index.mapper.MapperService;<a name="line.7"></a>
 <span class="sourceLineNo">008</span>import org.elasticsearch.index.settings.IndexSettings;<a name="line.8"></a>
-<span class="sourceLineNo">009</span><a name="line.9"></a>
-<span class="sourceLineNo">010</span>import org.xbib.elasticsearch.common.langdetect.Detector;<a name="line.10"></a>
-<span class="sourceLineNo">011</span>import org.xbib.elasticsearch.index.mapper.langdetect.LangdetectMapper;<a name="line.11"></a>
-<span class="sourceLineNo">012</span><a name="line.12"></a>
-<span class="sourceLineNo">013</span>public class RegisterLangdetectType extends AbstractIndexComponent {<a name="line.13"></a>
-<span class="sourceLineNo">014</span><a name="line.14"></a>
-<span class="sourceLineNo">015</span>    @Inject<a name="line.15"></a>
-<span class="sourceLineNo">016</span>    public RegisterLangdetectType(Index index, @IndexSettings Settings indexSettings,<a name="line.16"></a>
-<span class="sourceLineNo">017</span>                                MapperService mapperService, Detector detector) {<a name="line.17"></a>
-<span class="sourceLineNo">018</span>        super(index, indexSettings);<a name="line.18"></a>
-<span class="sourceLineNo">019</span>        mapperService.documentMapperParser().putTypeParser("langdetect",<a name="line.19"></a>
-<span class="sourceLineNo">020</span>                new LangdetectMapper.TypeParser(detector));<a name="line.20"></a>
-<span class="sourceLineNo">021</span>    }<a name="line.21"></a>
-<span class="sourceLineNo">022</span>}<a name="line.22"></a>
+<span class="sourceLineNo">009</span>import org.xbib.elasticsearch.common.langdetect.Detector;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import org.xbib.elasticsearch.index.mapper.langdetect.LangdetectMapper;<a name="line.10"></a>
+<span class="sourceLineNo">011</span><a name="line.11"></a>
+<span class="sourceLineNo">012</span>public class RegisterLangdetectType extends AbstractIndexComponent {<a name="line.12"></a>
+<span class="sourceLineNo">013</span><a name="line.13"></a>
+<span class="sourceLineNo">014</span>    @Inject<a name="line.14"></a>
+<span class="sourceLineNo">015</span>    public RegisterLangdetectType(Index index, @IndexSettings Settings indexSettings,<a name="line.15"></a>
+<span class="sourceLineNo">016</span>                                  MapperService mapperService, Detector detector) {<a name="line.16"></a>
+<span class="sourceLineNo">017</span>        super(index, indexSettings);<a name="line.17"></a>
+<span class="sourceLineNo">018</span>        mapperService.documentMapperParser().putTypeParser("langdetect", new LangdetectMapper.TypeParser(detector));<a name="line.18"></a>
+<span class="sourceLineNo">019</span>    }<a name="line.19"></a>
+<span class="sourceLineNo">020</span>}<a name="line.20"></a>
 
 
 
