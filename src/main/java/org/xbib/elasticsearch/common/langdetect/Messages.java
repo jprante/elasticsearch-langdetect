@@ -1,4 +1,3 @@
-
 package org.xbib.elasticsearch.common.langdetect;
 
 import java.util.MissingResourceException;

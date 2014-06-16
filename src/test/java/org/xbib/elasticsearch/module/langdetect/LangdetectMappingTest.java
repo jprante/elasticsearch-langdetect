@@ -42,6 +42,7 @@ public class LangdetectMappingTest extends Assert {
         Settings settings = ImmutableSettings.Builder.EMPTY_SETTINGS;
         AnalysisService analysisService = new AnalysisService(index, settings, null, analyzerFactoryFactories, null, null, null);
         mapperParser = new DocumentMapperParser(index,
+                settings,
                 analysisService,
                 new PostingsFormatService(index),
                 new DocValuesFormatService(index),

@@ -33,7 +33,7 @@ public class DetectLanguageTest extends Assert {
     }
 
     private void testLanguage(String path, String lang) throws IOException {
-        Reader reader = new InputStreamReader(getClass().getResourceAsStream(path));
+        Reader reader = new InputStreamReader(getClass().getResourceAsStream(path), "UTF-8");
         Writer writer = new StringWriter();
         Streams.copy(reader, writer);
         reader.close();

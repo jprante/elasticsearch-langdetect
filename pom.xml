@@ -7,7 +7,7 @@
 
     <groupId>org.xbib.elasticsearch.plugin</groupId>
     <artifactId>elasticsearch-langdetect</artifactId>
-    <version>1.0.0.RC1.1</version>
+    <version>1.2.1.0</version>
 
     <packaging>jar</packaging>
 
@@ -47,21 +47,20 @@
 
     <distributionManagement>
         <repository>
-            <id>bintray-jprante-elasticsearch-plugins-elasticsearch-langdetect</id>
-            <name>jprante-elasticsearch-plugins-elasticsearch-langdetect</name>
-            <url>https://api.bintray.com/maven/jprante/elasticsearch-plugins/elasticsearch-langdetect</url>
+            <id>xbib.org</id>
+            <url>scpexe://xbib.org/repository</url>
         </repository>
     </distributionManagement>
 
     <repositories>
         <repository>
-            <id>bintray-elasticsearch-plugins</id>
-            <url>http://dl.bintray.com/jprante/elasticsearch-plugins</url>
+            <id>xbib</id>
+            <url>http://xbib.org/repository</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
             <snapshots>
-                <enabled>false</enabled>
+                <enabled>true</enabled>
             </snapshots>
         </repository>
     </repositories>
@@ -69,7 +68,8 @@
     <properties>
         <github.global.server>github</github.global.server>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <elasticsearch.version>1.0.0.RC1</elasticsearch.version>
+        <java.compile.version>1.7</java.compile.version>
+        <elasticsearch.version>1.2.1</elasticsearch.version>
     </properties>
 
     <dependencies>
@@ -85,7 +85,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.2.2</version>
+            <version>2.3.3</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
@@ -101,7 +101,7 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>6.8.7</version>
+            <version>6.8.8</version>
             <type>jar</type>
             <scope>test</scope>
         </dependency>
@@ -123,8 +123,8 @@
                 <version>3.1</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>${java.compile.version}</source>
+                    <target>${java.compile.version}</target>
                     <compilerArgument>-Xlint:all</compilerArgument>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
@@ -132,7 +132,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.15</version>
+                <version>2.17</version>
                 <configuration>
                     <skipTests>false</skipTests>
                     <includes>
@@ -243,7 +243,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.15</version>
+                <version>2.17</version>
             </plugin>
         </plugins>
     </reporting>

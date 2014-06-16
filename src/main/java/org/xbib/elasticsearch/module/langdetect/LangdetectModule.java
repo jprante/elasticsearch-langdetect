@@ -1,4 +1,3 @@
-
 package org.xbib.elasticsearch.module.langdetect;
 
 import org.elasticsearch.common.inject.Binder;

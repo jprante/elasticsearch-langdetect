@@ -1,4 +1,3 @@
-
 package org.xbib.elasticsearch.common.langdetect;
 
 import java.util.HashMap;
@@ -51,7 +50,7 @@ public class LangProfile {
         }
         Set<String> keys = freq.keySet();
         int roman = 0;
-        for (Iterator<String> i = keys.iterator(); i.hasNext();) {
+        for (Iterator<String> i = keys.iterator(); i.hasNext(); ) {
             String key = i.next();
             int count = freq.get(key);
             if (count <= threshold) {
@@ -65,7 +64,7 @@ public class LangProfile {
         }
         if (roman < n_words[0] / 3) {
             Set<String> keys2 = freq.keySet();
-            for (Iterator<String> i = keys2.iterator(); i.hasNext();) {
+            for (Iterator<String> i = keys2.iterator(); i.hasNext(); ) {
                 String key = i.next();
                 if (key.matches(".*[A-Za-z].*")) {
                     n_words[key.length() - 1] -= freq.get(key);

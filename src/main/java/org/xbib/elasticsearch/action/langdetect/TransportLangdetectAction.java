@@ -1,7 +1,4 @@
-
 package org.xbib.elasticsearch.action.langdetect;
-
-import java.util.List;
 
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.support.single.custom.TransportSingleCustomOperationAction;
@@ -14,18 +11,19 @@ import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.threadpool.ThreadPool;
 import org.elasticsearch.transport.TransportService;
-
 import org.xbib.elasticsearch.common.langdetect.Detector;
 import org.xbib.elasticsearch.common.langdetect.Language;
 import org.xbib.elasticsearch.common.langdetect.LanguageDetectionException;
+
+import java.util.List;
 
 public class TransportLangdetectAction extends TransportSingleCustomOperationAction<LangdetectRequest, LangdetectResponse> {
 
     private final Detector detector;
 
     @Inject
-    public TransportLangdetectAction(Settings settings, ThreadPool threadPool, 
-            ClusterService clusterService, TransportService transportService) {
+    public TransportLangdetectAction(Settings settings, ThreadPool threadPool,
+                                     ClusterService clusterService, TransportService transportService) {
         super(settings, threadPool, clusterService, transportService);
         this.detector = new Detector(settings);
     }

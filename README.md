@@ -1,12 +1,11 @@
-.. image:: ../../../elasticsearch-langdetect/raw/master/src/site/resources/speechbubble_green.png
+![Speechbubble](https://github.com/jprante/elasticsearch-langdetect/raw/master/src/site/resources/speechbubble_green.png)
 
-Image by `CurtiveArticide <http://www.softicons.com/free-icons/designers/curtivearticide>`_ `CC Attribution-NonCommercial 3.0 Unported <http://creativecommons.org/licenses/by-nc/3.0/>`_
+Image by [CurtiveArticide](http://www.softicons.com/free-icons/designers/curtivearticide>`_ `CC Attribution-NonCommercial 3.0 Unported <http://creativecommons.org/licenses/by-nc/3.0/)
 
-Elasticsearch Langdetect Plugin
-===============================
+# Elasticsearch Langdetect Plugin
 
-This is an implementation of a plugin for `Elasticsearch <http://github.com/elasticsearch/elasticsearch>`_ using the 
-implementation of Nakatani Shuyo's `language detector <http://code.google.com/p/language-detection/>`_.
+This is an implementation of a plugin for [Elasticsearch](http://github.com/elasticsearch/elasticsearch) using the 
+implementation of Nakatani Shuyo's [language detector](http://code.google.com/p/language-detection/).
 
 It uses 3-gram character and a Bayesian filter with various normalizations and feature sampling.
 The precision is over 99% for 53 languages.
@@ -22,6 +21,7 @@ The plugin offers also a REST endpoint, where a short text can be posted to in U
 with a list of recognized languages.
 
 Here is a list of languages code recognized:
+
 af
 ar
 bg
@@ -77,42 +77,29 @@ zh-cn
 zh-tw
 
 
-Thanks to Alexander Reelsen for his OpenNLP plugin, from where I have copied and adapted the mapping type analysis code.
+
+## Versions
+
+![Travis](https://travis-ci.org/jprante/elasticsearch-langdetect.png)
+
+| Elasticsearch  |   Plugin       | Release date |
+| -------------- | -------------- | ------------ |
+| 1.2.1          | 1.2.1.0        | Jun 16, 2014 |
 
 
-Installation
-------------
+## Installation
 
-.. image:: https://travis-ci.org/jprante/elasticsearch-langdetect.png
-
-Prerequisites::
-
-  Java JDK 7
-
-=============  ===========  =================  =============================================================
-ES version     Plugin       Release date       Command
--------------  -----------  -----------------  -------------------------------------------------------------
-0.90.5         **2.0.1**    Oct 25, 2013       ./bin/plugin --install langdetect --url http://bit.ly/1cmf8AL
-1.0.0.RC1      1.0.0.RC1.1  Jan 16, 2014       ./bin/plugin --install langdetect --url http://bit.ly/1du5hqQ
-=============  ===========  =================  =============================================================
+    ./bin/plugin -install langdetect -url http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/1.2.1.0/elasticsearch-langdetect-1.2.1.0-plugin.zip
 
 Do not forget to restart the node after installing.
 
-Project docs
-------------
+## Project docs
 
-The Maven project site is available at `Github <http://jprante.github.io/elasticsearch-langdetect>`_
+The Maven project site is available at [Github](http://jprante.github.io/elasticsearch-langdetect)
 
-Binaries
---------
+# Examples
 
-Binaries are available at `Bintray <https://bintray.com/pkg/show/general/jprante/elasticsearch-plugins/elasticsearch-langdetect>`_
-
-
-Language detection mapping example
-==================================
-
-::
+## Language detection mapping example
 
         curl -XDELETE 'localhost:9200/test'
 
@@ -180,10 +167,7 @@ Language detection mapping example
         }
         '
 
-Language detection with attachment mapper plugin
-================================================
-
-::
+## Language detection with attachment mapper plugin example
 
 	curl -XDELETE 'localhost:9200/test'
 
@@ -241,12 +225,7 @@ Language detection with attachment mapper plugin
 	}
 	'
 
-
-
-Language detection REST API
-===========================
-
-Example::
+## Language detection REST API Example
 
     curl -XPOST 'localhost:9200/_langdetect?pretty' -d 'This is a test'
 	{
@@ -282,8 +261,11 @@ Example::
     }
 
 
-License
-=======
+# Credits
+
+Thanks to Alexander Reelsen for his OpenNLP plugin, from where I have copied and adapted the mapping type analysis code.
+
+# License
 
 Elasticsearch Langdetect Plugin
 

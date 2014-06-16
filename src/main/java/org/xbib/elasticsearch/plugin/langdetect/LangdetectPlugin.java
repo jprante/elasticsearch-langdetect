@@ -1,12 +1,10 @@
-
 package org.xbib.elasticsearch.plugin.langdetect;
 
 import org.elasticsearch.action.ActionModule;
-import org.elasticsearch.plugins.AbstractPlugin;
-import org.elasticsearch.rest.RestModule;
 import org.elasticsearch.common.component.LifecycleComponent;
 import org.elasticsearch.common.inject.Module;
 import org.elasticsearch.plugins.AbstractPlugin;
+import org.elasticsearch.rest.RestModule;
 import org.xbib.elasticsearch.action.langdetect.LangdetectAction;
 import org.xbib.elasticsearch.action.langdetect.TransportLangdetectAction;
 import org.xbib.elasticsearch.common.langdetect.Detector;
@@ -21,7 +19,9 @@ public class LangdetectPlugin extends AbstractPlugin {
 
     @Override
     public String name() {
-        return "langdetect";
+        return "langdetect-" +
+                Build.getInstance().getVersion() + "-" +
+                Build.getInstance().getShortHash();
     }
 
     @Override
@@ -34,7 +34,7 @@ public class LangdetectPlugin extends AbstractPlugin {
     }
 
     public void onModule(ActionModule module) {
-        module.registerAction(LangdetectAction.INSTANCE, TransportLangdetectAction.class);        
+        module.registerAction(LangdetectAction.INSTANCE, TransportLangdetectAction.class);
     }
 
     @SuppressWarnings("rawtypes")

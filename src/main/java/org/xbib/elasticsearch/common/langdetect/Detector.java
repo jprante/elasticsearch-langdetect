@@ -1,5 +1,11 @@
-
 package org.xbib.elasticsearch.common.langdetect;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.elasticsearch.ElasticsearchException;
+import org.elasticsearch.common.component.AbstractLifecycleComponent;
+import org.elasticsearch.common.inject.Inject;
+import org.elasticsearch.common.settings.ImmutableSettings;
+import org.elasticsearch.common.settings.Settings;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,14 +19,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.elasticsearch.common.component.AbstractLifecycleComponent;
-import org.elasticsearch.common.inject.Inject;
-import org.elasticsearch.common.settings.ImmutableSettings;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.ElasticsearchException;
 
 public class Detector extends AbstractLifecycleComponent<Detector> {
 
@@ -140,7 +138,7 @@ public class Detector extends AbstractLifecycleComponent<Detector> {
         this.priorMap = null;
         this.alpha = ALPHA_DEFAULT;
         this.n_trial = 7;
-    }    
+    }
 
     /**
      * Set smoothing parameter. The default value is 0.5(i.e. Expected
@@ -192,7 +190,7 @@ public class Detector extends AbstractLifecycleComponent<Detector> {
     public String detect(String text) throws LanguageDetectionException {
         List<Language> probabilities =
                 detectAll(text.replaceAll(word.pattern(), " "));
-              //detectAll(normalize(text));
+        //detectAll(normalize(text));
         if (probabilities.size() > 0) {
             return probabilities.get(0).getLanguage();
         }
@@ -218,7 +216,7 @@ public class Detector extends AbstractLifecycleComponent<Detector> {
         for (int t = 0; t < n_trial; ++t) {
             double[] prob = initProbability();
             double a = this.alpha + rand.nextGaussian() * ALPHA_WIDTH;
-            for (int i = 0;; ++i) {
+            for (int i = 0; ; ++i) {
                 int r = rand.nextInt(ngrams.size());
                 updateLangProb(prob, ngrams.get(r), a);
                 if (i % 5 == 0) {

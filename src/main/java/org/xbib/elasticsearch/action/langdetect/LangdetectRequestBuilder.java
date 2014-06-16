@@ -1,4 +1,3 @@
-
 package org.xbib.elasticsearch.action.langdetect;
 
 import org.elasticsearch.action.ActionListener;
@@ -11,11 +10,11 @@ public class LangdetectRequestBuilder extends SingleCustomOperationRequestBuilde
 
     public LangdetectRequestBuilder(InternalGenericClient client) {
         super(client, new LangdetectRequest());
-    }    
-    
+    }
+
     @Override
     protected void doExecute(ActionListener<LangdetectResponse> listener) {
-        ((Client)client).execute(LangdetectAction.INSTANCE, request, listener);
+        ((Client) client).execute(LangdetectAction.INSTANCE, request, listener);
     }
-    
+
 }

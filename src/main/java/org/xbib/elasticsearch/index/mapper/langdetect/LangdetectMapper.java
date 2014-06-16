@@ -1,11 +1,14 @@
-
 package org.xbib.elasticsearch.index.mapper.langdetect;
 
-import org.apache.lucene.util.ToStringUtils;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentParser;
-import org.elasticsearch.index.analysis.AnalysisService;
-import org.elasticsearch.index.mapper.*;
+import org.elasticsearch.index.mapper.FieldMapperListener;
+import org.elasticsearch.index.mapper.Mapper;
+import org.elasticsearch.index.mapper.MapperParsingException;
+import org.elasticsearch.index.mapper.MergeContext;
+import org.elasticsearch.index.mapper.MergeMappingException;
+import org.elasticsearch.index.mapper.ObjectMapperListener;
+import org.elasticsearch.index.mapper.ParseContext;
 import org.elasticsearch.index.mapper.core.StringFieldMapper;
 import org.xbib.elasticsearch.common.langdetect.Detector;
 import org.xbib.elasticsearch.common.langdetect.Language;
@@ -63,7 +66,7 @@ public class LangdetectMapper implements Mapper {
             this.detector = detector;
         }
 
-        @SuppressWarnings({"unchecked","rawtypes"})
+        @SuppressWarnings({"unchecked", "rawtypes"})
         @Override
         public Mapper.Builder parse(String name, Map<String, Object> node, ParserContext parserContext)
                 throws MapperParsingException {
@@ -126,6 +129,7 @@ public class LangdetectMapper implements Mapper {
                     content = new String(b, Charset.forName("UTF-8"));
                 }
             } catch (Exception e) {
+                // ignore
             }
         }
 
@@ -142,7 +146,7 @@ public class LangdetectMapper implements Mapper {
                 context.externalValue(lang.getLanguage());
                 langMapper.parse(context);
             }
-        } catch(LanguageDetectionException e) {
+        } catch (LanguageDetectionException e) {
             context.externalValue("unknown");
             langMapper.parse(context);
         }
