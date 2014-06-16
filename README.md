@@ -93,9 +93,20 @@ zh-tw
 
 Do not forget to restart the node after installing.
 
+## Checksum
+
+| File                                          | SHA1                                     |
+| --------------------------------------------- | -----------------------------------------|
+| elasticsearch-langdetect-1.2.1.0.zip          | c07b84e798e284ee238554c2b2bc065dfdb9114d |
+
+
 ## Project docs
 
 The Maven project site is available at [Github](http://jprante.github.io/elasticsearch-langdetect)
+
+## Issues
+
+All feedback is welcome! If you find issues, please post them at [Github](https://github.com/jprante/elasticsearch-langdetect/issues)
 
 # Examples
 
