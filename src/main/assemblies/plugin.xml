@@ -13,7 +13,7 @@
         <scope>compile</scope>
         <includes>
             <include>org.xbib.elasticsearch.plugin</include>
-            <include>com.fasterxml.jackson.core:jackson-databind</include>
+            <include>com.fasterxml.jackson.core</include>
         </includes>
     </dependencySet>
 </dependencySets>

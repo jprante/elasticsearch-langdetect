@@ -31,7 +31,7 @@ public class LangdetectResponse extends ActionResponse implements StatusToXConte
         builder.startArray("languages");
         for (Language lang : languages) {
             builder.startObject().field("language", lang.getLanguage())
-                    .field("probability", lang.getProbability());
+                    .field("probability", lang.getProbability()).endObject();
         }
         builder.endArray();
         return builder;

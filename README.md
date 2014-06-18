@@ -84,12 +84,12 @@ zh-tw
 
 | Elasticsearch  |   Plugin       | Release date |
 | -------------- | -------------- | ------------ |
-| 1.2.1          | 1.2.1.0        | Jun 16, 2014 |
+| 1.2.1          | 1.2.1.1        | Jun 18, 2014 |
 
 
 ## Installation
 
-    ./bin/plugin -install langdetect -url http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/1.2.1.0/elasticsearch-langdetect-1.2.1.0-plugin.zip
+    ./bin/plugin -install langdetect -url http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/1.2.1.1/elasticsearch-langdetect-1.2.1.1-plugin.zip
 
 Do not forget to restart the node after installing.
 
@@ -97,6 +97,7 @@ Do not forget to restart the node after installing.
 
 | File                                          | SHA1                                     |
 | --------------------------------------------- | -----------------------------------------|
+| elasticsearch-langdetect-1.2.1.1.zip          | 5bce4bae827f7c248cb3e5310df1b9a86f0152f6 |
 | elasticsearch-langdetect-1.2.1.0.zip          | c07b84e798e284ee238554c2b2bc065dfdb9114d |
 
 
