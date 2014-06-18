@@ -97,7 +97,7 @@ Do not forget to restart the node after installing.
 
 | File                                          | SHA1                                     |
 | --------------------------------------------- | -----------------------------------------|
-| elasticsearch-langdetect-1.2.1.1.zip          | 5bce4bae827f7c248cb3e5310df1b9a86f0152f6 |
+| elasticsearch-langdetect-1.2.1.1-plugin.zip   | cc3a0d5ccecf1210b96771dcb5c9935176e1cc35 |
 | elasticsearch-langdetect-1.2.1.0.zip          | c07b84e798e284ee238554c2b2bc065dfdb9114d |
 
 
