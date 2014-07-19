@@ -64,12 +64,8 @@ public class TransportLangdetectAction extends TransportSingleCustomOperationAct
     }
 
     @Override
-    protected LangdetectResponse shardOperation(LangdetectRequest request, int shardId) throws ElasticsearchException {
-        try {
-            List<Language> langs = detector.detectAll(request.getText().toUtf8());
-            return new LangdetectResponse(langs);
-        } catch (LanguageDetectionException e) {
-            throw new ElasticsearchException(e.getMessage(), e);
-        }
+    protected LangdetectResponse shardOperation(LangdetectRequest request, int shardId) {
+        List<Language> langs = detector.detectAll(request.getText().toUtf8());
+        return new LangdetectResponse(langs);
     }
 }
