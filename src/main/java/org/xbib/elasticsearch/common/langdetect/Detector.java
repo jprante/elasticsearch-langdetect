@@ -185,9 +185,8 @@ public class Detector extends AbstractLifecycleComponent<Detector> {
      * the highest probability.
      *
      * @return detected language name which has most probability.
-     * @throws LanguageDetectionException
      */
-    public String detect(String text) throws LanguageDetectionException {
+    public String detect(String text) {
         List<Language> probabilities =
                 detectAll(text.replaceAll(word.pattern(), " "));
         //detectAll(normalize(text));
@@ -197,22 +196,24 @@ public class Detector extends AbstractLifecycleComponent<Detector> {
         return UNKNOWN_LANG;
     }
 
-    public List<Language> detectAll(String text) throws LanguageDetectionException {
+    public List<Language> detectAll(String text) {
         return sortProbability(detectBlock(/*normalize(text)*/text.replaceAll(word.pattern(), " ")));
     }
 
-    private double[] detectBlock(String text) throws LanguageDetectionException {
+    private static final double[] NO_DOUBLE = {};
+
+    private double[] detectBlock(String text) {
         //text = clean(text);
         List<String> ngrams = extractNGrams(text);
+        // we should allow empty text field, anyway never raise an exception during indexing process
+        // since UNKNOWN_LANG exists
         if (ngrams.isEmpty()) {
-            throw new LanguageDetectionException("no features in text");
+            return NO_DOUBLE;
         }
         double[] langprob = new double[langlist.size()];
         Random rand = new Random();
-        Long seed = 0L;
-        if (seed != null) {
-            rand.setSeed(seed);
-        }
+        rand.setSeed(0L);
+
         for (int t = 0; t < n_trial; ++t) {
             double[] prob = initProbability();
             double a = this.alpha + rand.nextGaussian() * ALPHA_WIDTH;
