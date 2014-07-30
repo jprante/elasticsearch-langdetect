@@ -90,7 +90,7 @@ zh-tw
 
 ## Installation
 
-    ./bin/plugin -install langdetect -url http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/1.2.1.1/elasticsearch-langdetect-1.2.1.1-plugin.zip
+    ./bin/plugin -install langdetect -url http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/1.3.0.0/elasticsearch-langdetect-1.3.0.0-plugin.zip
 
 Do not forget to restart the node after installing.
 
