@@ -1,6 +1,5 @@
 package org.xbib.elasticsearch.action.langdetect;
 
-import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.support.single.custom.TransportSingleCustomOperationAction;
 import org.elasticsearch.cluster.ClusterService;
 import org.elasticsearch.cluster.ClusterState;
@@ -13,7 +12,6 @@ import org.elasticsearch.threadpool.ThreadPool;
 import org.elasticsearch.transport.TransportService;
 import org.xbib.elasticsearch.common.langdetect.Detector;
 import org.xbib.elasticsearch.common.langdetect.Language;
-import org.xbib.elasticsearch.common.langdetect.LanguageDetectionException;
 
 import java.util.List;
 
