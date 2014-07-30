@@ -23,9 +23,9 @@ public class RestLangdetectAction extends BaseRestHandler {
     }
 
     @Override
-    public void handleRequest(final RestRequest request, final RestChannel channel) {
+    public void handleRequest(final RestRequest request, final RestChannel channel, final Client client) {
         LangdetectRequest langdetectRequest = new LangdetectRequest().setText(request.content());
-        client.execute(LangdetectAction.INSTANCE, langdetectRequest, new RestStatusToXContentListener<LangdetectResponse>(channel));
+        client.admin().indices().execute(LangdetectAction.INSTANCE, langdetectRequest, new RestStatusToXContentListener<LangdetectResponse>(channel));
 
     }
 }

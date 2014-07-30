@@ -24,13 +24,8 @@ public class TransportLangdetectAction extends TransportSingleCustomOperationAct
     @Inject
     public TransportLangdetectAction(Settings settings, ThreadPool threadPool,
                                      ClusterService clusterService, TransportService transportService) {
-        super(settings, threadPool, clusterService, transportService);
+        super(settings, LangdetectAction.NAME, threadPool, clusterService, transportService);
         this.detector = new Detector(settings);
-    }
-
-    @Override
-    protected String transportAction() {
-        return LangdetectAction.NAME;
     }
 
     @Override

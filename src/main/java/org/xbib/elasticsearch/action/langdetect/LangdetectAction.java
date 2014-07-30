@@ -1,21 +1,21 @@
 package org.xbib.elasticsearch.action.langdetect;
 
-import org.elasticsearch.action.Action;
-import org.elasticsearch.client.Client;
-import org.elasticsearch.client.internal.InternalGenericClient;
+import org.elasticsearch.action.admin.indices.IndicesAction;
+import org.elasticsearch.client.IndicesAdminClient;
 
-public class LangdetectAction extends Action<LangdetectRequest, LangdetectResponse, LangdetectRequestBuilder> {
+public class LangdetectAction extends IndicesAction<LangdetectRequest, LangdetectResponse, LangdetectRequestBuilder> {
+
+    public static final String NAME = "langdetect";
 
     public static final LangdetectAction INSTANCE = new LangdetectAction();
-    public static final String NAME = "langdetect";
 
     private LangdetectAction() {
         super(NAME);
     }
 
     @Override
-    public LangdetectRequestBuilder newRequestBuilder(Client client) {
-        return new LangdetectRequestBuilder((InternalGenericClient) client);
+    public LangdetectRequestBuilder newRequestBuilder(IndicesAdminClient client) {
+        return new LangdetectRequestBuilder(client);
     }
 
     @Override

@@ -46,7 +46,8 @@ public class LangdetectMappingTest extends Assert {
                 analysisService,
                 new PostingsFormatService(index),
                 new DocValuesFormatService(index),
-                new SimilarityLookupService(index, settings));
+                new SimilarityLookupService(index, settings),
+                null);
         Detector detector = new Detector(settings);
         detector.start();
         mapperParser.putTypeParser(LangdetectMapper.CONTENT_TYPE,
