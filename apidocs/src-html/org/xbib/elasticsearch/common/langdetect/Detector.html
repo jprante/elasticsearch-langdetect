@@ -193,126 +193,127 @@
 <span class="sourceLineNo">185</span>     * the highest probability.<a name="line.185"></a>
 <span class="sourceLineNo">186</span>     *<a name="line.186"></a>
 <span class="sourceLineNo">187</span>     * @return detected language name which has most probability.<a name="line.187"></a>
-<span class="sourceLineNo">188</span>     * @throws LanguageDetectionException<a name="line.188"></a>
-<span class="sourceLineNo">189</span>     */<a name="line.189"></a>
-<span class="sourceLineNo">190</span>    public String detect(String text) throws LanguageDetectionException {<a name="line.190"></a>
-<span class="sourceLineNo">191</span>        List&lt;Language&gt; probabilities =<a name="line.191"></a>
-<span class="sourceLineNo">192</span>                detectAll(text.replaceAll(word.pattern(), " "));<a name="line.192"></a>
-<span class="sourceLineNo">193</span>        //detectAll(normalize(text));<a name="line.193"></a>
-<span class="sourceLineNo">194</span>        if (probabilities.size() &gt; 0) {<a name="line.194"></a>
-<span class="sourceLineNo">195</span>            return probabilities.get(0).getLanguage();<a name="line.195"></a>
-<span class="sourceLineNo">196</span>        }<a name="line.196"></a>
-<span class="sourceLineNo">197</span>        return UNKNOWN_LANG;<a name="line.197"></a>
-<span class="sourceLineNo">198</span>    }<a name="line.198"></a>
-<span class="sourceLineNo">199</span><a name="line.199"></a>
-<span class="sourceLineNo">200</span>    public List&lt;Language&gt; detectAll(String text) throws LanguageDetectionException {<a name="line.200"></a>
-<span class="sourceLineNo">201</span>        return sortProbability(detectBlock(/*normalize(text)*/text.replaceAll(word.pattern(), " ")));<a name="line.201"></a>
-<span class="sourceLineNo">202</span>    }<a name="line.202"></a>
-<span class="sourceLineNo">203</span><a name="line.203"></a>
-<span class="sourceLineNo">204</span>    private double[] detectBlock(String text) throws LanguageDetectionException {<a name="line.204"></a>
-<span class="sourceLineNo">205</span>        //text = clean(text);<a name="line.205"></a>
-<span class="sourceLineNo">206</span>        List&lt;String&gt; ngrams = extractNGrams(text);<a name="line.206"></a>
-<span class="sourceLineNo">207</span>        if (ngrams.isEmpty()) {<a name="line.207"></a>
-<span class="sourceLineNo">208</span>            throw new LanguageDetectionException("no features in text");<a name="line.208"></a>
-<span class="sourceLineNo">209</span>        }<a name="line.209"></a>
-<span class="sourceLineNo">210</span>        double[] langprob = new double[langlist.size()];<a name="line.210"></a>
-<span class="sourceLineNo">211</span>        Random rand = new Random();<a name="line.211"></a>
-<span class="sourceLineNo">212</span>        Long seed = 0L;<a name="line.212"></a>
-<span class="sourceLineNo">213</span>        if (seed != null) {<a name="line.213"></a>
-<span class="sourceLineNo">214</span>            rand.setSeed(seed);<a name="line.214"></a>
-<span class="sourceLineNo">215</span>        }<a name="line.215"></a>
-<span class="sourceLineNo">216</span>        for (int t = 0; t &lt; n_trial; ++t) {<a name="line.216"></a>
-<span class="sourceLineNo">217</span>            double[] prob = initProbability();<a name="line.217"></a>
-<span class="sourceLineNo">218</span>            double a = this.alpha + rand.nextGaussian() * ALPHA_WIDTH;<a name="line.218"></a>
-<span class="sourceLineNo">219</span>            for (int i = 0; ; ++i) {<a name="line.219"></a>
-<span class="sourceLineNo">220</span>                int r = rand.nextInt(ngrams.size());<a name="line.220"></a>
-<span class="sourceLineNo">221</span>                updateLangProb(prob, ngrams.get(r), a);<a name="line.221"></a>
-<span class="sourceLineNo">222</span>                if (i % 5 == 0) {<a name="line.222"></a>
-<span class="sourceLineNo">223</span>                    if (normalizeProb(prob) &gt; CONV_THRESHOLD || i &gt;= ITERATION_LIMIT) {<a name="line.223"></a>
-<span class="sourceLineNo">224</span>                        break;<a name="line.224"></a>
-<span class="sourceLineNo">225</span>                    }<a name="line.225"></a>
-<span class="sourceLineNo">226</span>                }<a name="line.226"></a>
-<span class="sourceLineNo">227</span>            }<a name="line.227"></a>
-<span class="sourceLineNo">228</span>            for (int j = 0; j &lt; langprob.length; ++j) {<a name="line.228"></a>
-<span class="sourceLineNo">229</span>                langprob[j] += prob[j] / n_trial;<a name="line.229"></a>
-<span class="sourceLineNo">230</span>            }<a name="line.230"></a>
-<span class="sourceLineNo">231</span>        }<a name="line.231"></a>
-<span class="sourceLineNo">232</span>        return langprob;<a name="line.232"></a>
-<span class="sourceLineNo">233</span>    }<a name="line.233"></a>
-<span class="sourceLineNo">234</span><a name="line.234"></a>
-<span class="sourceLineNo">235</span>    private double[] initProbability() {<a name="line.235"></a>
-<span class="sourceLineNo">236</span>        double[] prob = new double[langlist.size()];<a name="line.236"></a>
-<span class="sourceLineNo">237</span>        if (priorMap != null) {<a name="line.237"></a>
-<span class="sourceLineNo">238</span>            for (int i = 0; i &lt; prob.length; ++i) {<a name="line.238"></a>
-<span class="sourceLineNo">239</span>                prob[i] = priorMap[i];<a name="line.239"></a>
-<span class="sourceLineNo">240</span>            }<a name="line.240"></a>
-<span class="sourceLineNo">241</span>        } else {<a name="line.241"></a>
-<span class="sourceLineNo">242</span>            for (int i = 0; i &lt; prob.length; ++i) {<a name="line.242"></a>
-<span class="sourceLineNo">243</span>                prob[i] = 1.0 / langlist.size();<a name="line.243"></a>
-<span class="sourceLineNo">244</span>            }<a name="line.244"></a>
-<span class="sourceLineNo">245</span>        }<a name="line.245"></a>
-<span class="sourceLineNo">246</span>        return prob;<a name="line.246"></a>
-<span class="sourceLineNo">247</span>    }<a name="line.247"></a>
-<span class="sourceLineNo">248</span><a name="line.248"></a>
-<span class="sourceLineNo">249</span>    private List&lt;String&gt; extractNGrams(String text) {<a name="line.249"></a>
-<span class="sourceLineNo">250</span>        List&lt;String&gt; list = new ArrayList&lt;String&gt;();<a name="line.250"></a>
-<span class="sourceLineNo">251</span>        NGram ngram = new NGram();<a name="line.251"></a>
-<span class="sourceLineNo">252</span>        for (int i = 0; i &lt; text.length(); ++i) {<a name="line.252"></a>
-<span class="sourceLineNo">253</span>            ngram.addChar(text.charAt(i));<a name="line.253"></a>
-<span class="sourceLineNo">254</span>            for (int n = 1; n &lt;= NGram.N_GRAM; ++n) {<a name="line.254"></a>
-<span class="sourceLineNo">255</span>                String w = ngram.get(n);<a name="line.255"></a>
-<span class="sourceLineNo">256</span>                if (w != null &amp;&amp; wordLangProbMap.containsKey(w)) {<a name="line.256"></a>
-<span class="sourceLineNo">257</span>                    list.add(w);<a name="line.257"></a>
-<span class="sourceLineNo">258</span>                }<a name="line.258"></a>
-<span class="sourceLineNo">259</span>            }<a name="line.259"></a>
-<span class="sourceLineNo">260</span>        }<a name="line.260"></a>
-<span class="sourceLineNo">261</span>        return list;<a name="line.261"></a>
-<span class="sourceLineNo">262</span>    }<a name="line.262"></a>
-<span class="sourceLineNo">263</span><a name="line.263"></a>
-<span class="sourceLineNo">264</span>    private boolean updateLangProb(double[] prob, String word, double alpha) {<a name="line.264"></a>
-<span class="sourceLineNo">265</span>        if (word == null || !wordLangProbMap.containsKey(word)) {<a name="line.265"></a>
-<span class="sourceLineNo">266</span>            return false;<a name="line.266"></a>
-<span class="sourceLineNo">267</span>        }<a name="line.267"></a>
-<span class="sourceLineNo">268</span>        double[] langProbMap = wordLangProbMap.get(word);<a name="line.268"></a>
-<span class="sourceLineNo">269</span>        double weight = alpha / BASE_FREQ;<a name="line.269"></a>
-<span class="sourceLineNo">270</span>        for (int i = 0; i &lt; prob.length; ++i) {<a name="line.270"></a>
-<span class="sourceLineNo">271</span>            prob[i] *= weight + langProbMap[i];<a name="line.271"></a>
-<span class="sourceLineNo">272</span>        }<a name="line.272"></a>
-<span class="sourceLineNo">273</span>        return true;<a name="line.273"></a>
-<span class="sourceLineNo">274</span>    }<a name="line.274"></a>
-<span class="sourceLineNo">275</span><a name="line.275"></a>
-<span class="sourceLineNo">276</span>    private double normalizeProb(double[] prob) {<a name="line.276"></a>
-<span class="sourceLineNo">277</span>        double maxp = 0, sump = 0;<a name="line.277"></a>
-<span class="sourceLineNo">278</span>        for (int i = 0; i &lt; prob.length; ++i) {<a name="line.278"></a>
-<span class="sourceLineNo">279</span>            sump += prob[i];<a name="line.279"></a>
-<span class="sourceLineNo">280</span>        }<a name="line.280"></a>
-<span class="sourceLineNo">281</span>        for (int i = 0; i &lt; prob.length; ++i) {<a name="line.281"></a>
-<span class="sourceLineNo">282</span>            double p = prob[i] / sump;<a name="line.282"></a>
-<span class="sourceLineNo">283</span>            if (maxp &lt; p) {<a name="line.283"></a>
-<span class="sourceLineNo">284</span>                maxp = p;<a name="line.284"></a>
-<span class="sourceLineNo">285</span>            }<a name="line.285"></a>
-<span class="sourceLineNo">286</span>            prob[i] = p;<a name="line.286"></a>
-<span class="sourceLineNo">287</span>        }<a name="line.287"></a>
-<span class="sourceLineNo">288</span>        return maxp;<a name="line.288"></a>
-<span class="sourceLineNo">289</span>    }<a name="line.289"></a>
-<span class="sourceLineNo">290</span><a name="line.290"></a>
-<span class="sourceLineNo">291</span>    private List&lt;Language&gt; sortProbability(double[] prob) {<a name="line.291"></a>
-<span class="sourceLineNo">292</span>        List&lt;Language&gt; list = new ArrayList&lt;Language&gt;();<a name="line.292"></a>
-<span class="sourceLineNo">293</span>        for (int j = 0; j &lt; prob.length; ++j) {<a name="line.293"></a>
-<span class="sourceLineNo">294</span>            double p = prob[j];<a name="line.294"></a>
-<span class="sourceLineNo">295</span>            if (p &gt; PROB_THRESHOLD) {<a name="line.295"></a>
-<span class="sourceLineNo">296</span>                for (int i = 0; i &lt;= list.size(); ++i) {<a name="line.296"></a>
-<span class="sourceLineNo">297</span>                    if (i == list.size() || list.get(i).getProbability() &lt; p) {<a name="line.297"></a>
-<span class="sourceLineNo">298</span>                        list.add(i, new Language(langlist.get(j), p));<a name="line.298"></a>
-<span class="sourceLineNo">299</span>                        break;<a name="line.299"></a>
-<span class="sourceLineNo">300</span>                    }<a name="line.300"></a>
-<span class="sourceLineNo">301</span>                }<a name="line.301"></a>
-<span class="sourceLineNo">302</span>            }<a name="line.302"></a>
-<span class="sourceLineNo">303</span>        }<a name="line.303"></a>
-<span class="sourceLineNo">304</span>        return list;<a name="line.304"></a>
-<span class="sourceLineNo">305</span>    }<a name="line.305"></a>
-<span class="sourceLineNo">306</span><a name="line.306"></a>
-<span class="sourceLineNo">307</span>}<a name="line.307"></a>
+<span class="sourceLineNo">188</span>     */<a name="line.188"></a>
+<span class="sourceLineNo">189</span>    public String detect(String text) {<a name="line.189"></a>
+<span class="sourceLineNo">190</span>        List&lt;Language&gt; probabilities =<a name="line.190"></a>
+<span class="sourceLineNo">191</span>                detectAll(text.replaceAll(word.pattern(), " "));<a name="line.191"></a>
+<span class="sourceLineNo">192</span>        //detectAll(normalize(text));<a name="line.192"></a>
+<span class="sourceLineNo">193</span>        if (probabilities.size() &gt; 0) {<a name="line.193"></a>
+<span class="sourceLineNo">194</span>            return probabilities.get(0).getLanguage();<a name="line.194"></a>
+<span class="sourceLineNo">195</span>        }<a name="line.195"></a>
+<span class="sourceLineNo">196</span>        return UNKNOWN_LANG;<a name="line.196"></a>
+<span class="sourceLineNo">197</span>    }<a name="line.197"></a>
+<span class="sourceLineNo">198</span><a name="line.198"></a>
+<span class="sourceLineNo">199</span>    public List&lt;Language&gt; detectAll(String text) {<a name="line.199"></a>
+<span class="sourceLineNo">200</span>        return sortProbability(detectBlock(/*normalize(text)*/text.replaceAll(word.pattern(), " ")));<a name="line.200"></a>
+<span class="sourceLineNo">201</span>    }<a name="line.201"></a>
+<span class="sourceLineNo">202</span><a name="line.202"></a>
+<span class="sourceLineNo">203</span>    private static final double[] NO_DOUBLE = {};<a name="line.203"></a>
+<span class="sourceLineNo">204</span><a name="line.204"></a>
+<span class="sourceLineNo">205</span>    private double[] detectBlock(String text) {<a name="line.205"></a>
+<span class="sourceLineNo">206</span>        //text = clean(text);<a name="line.206"></a>
+<span class="sourceLineNo">207</span>        List&lt;String&gt; ngrams = extractNGrams(text);<a name="line.207"></a>
+<span class="sourceLineNo">208</span>        // we should allow empty text field, anyway never raise an exception during indexing process<a name="line.208"></a>
+<span class="sourceLineNo">209</span>        // since UNKNOWN_LANG exists<a name="line.209"></a>
+<span class="sourceLineNo">210</span>        if (ngrams.isEmpty()) {<a name="line.210"></a>
+<span class="sourceLineNo">211</span>            return NO_DOUBLE;<a name="line.211"></a>
+<span class="sourceLineNo">212</span>        }<a name="line.212"></a>
+<span class="sourceLineNo">213</span>        double[] langprob = new double[langlist.size()];<a name="line.213"></a>
+<span class="sourceLineNo">214</span>        Random rand = new Random();<a name="line.214"></a>
+<span class="sourceLineNo">215</span>        rand.setSeed(0L);<a name="line.215"></a>
+<span class="sourceLineNo">216</span><a name="line.216"></a>
+<span class="sourceLineNo">217</span>        for (int t = 0; t &lt; n_trial; ++t) {<a name="line.217"></a>
+<span class="sourceLineNo">218</span>            double[] prob = initProbability();<a name="line.218"></a>
+<span class="sourceLineNo">219</span>            double a = this.alpha + rand.nextGaussian() * ALPHA_WIDTH;<a name="line.219"></a>
+<span class="sourceLineNo">220</span>            for (int i = 0; ; ++i) {<a name="line.220"></a>
+<span class="sourceLineNo">221</span>                int r = rand.nextInt(ngrams.size());<a name="line.221"></a>
+<span class="sourceLineNo">222</span>                updateLangProb(prob, ngrams.get(r), a);<a name="line.222"></a>
+<span class="sourceLineNo">223</span>                if (i % 5 == 0) {<a name="line.223"></a>
+<span class="sourceLineNo">224</span>                    if (normalizeProb(prob) &gt; CONV_THRESHOLD || i &gt;= ITERATION_LIMIT) {<a name="line.224"></a>
+<span class="sourceLineNo">225</span>                        break;<a name="line.225"></a>
+<span class="sourceLineNo">226</span>                    }<a name="line.226"></a>
+<span class="sourceLineNo">227</span>                }<a name="line.227"></a>
+<span class="sourceLineNo">228</span>            }<a name="line.228"></a>
+<span class="sourceLineNo">229</span>            for (int j = 0; j &lt; langprob.length; ++j) {<a name="line.229"></a>
+<span class="sourceLineNo">230</span>                langprob[j] += prob[j] / n_trial;<a name="line.230"></a>
+<span class="sourceLineNo">231</span>            }<a name="line.231"></a>
+<span class="sourceLineNo">232</span>        }<a name="line.232"></a>
+<span class="sourceLineNo">233</span>        return langprob;<a name="line.233"></a>
+<span class="sourceLineNo">234</span>    }<a name="line.234"></a>
+<span class="sourceLineNo">235</span><a name="line.235"></a>
+<span class="sourceLineNo">236</span>    private double[] initProbability() {<a name="line.236"></a>
+<span class="sourceLineNo">237</span>        double[] prob = new double[langlist.size()];<a name="line.237"></a>
+<span class="sourceLineNo">238</span>        if (priorMap != null) {<a name="line.238"></a>
+<span class="sourceLineNo">239</span>            for (int i = 0; i &lt; prob.length; ++i) {<a name="line.239"></a>
+<span class="sourceLineNo">240</span>                prob[i] = priorMap[i];<a name="line.240"></a>
+<span class="sourceLineNo">241</span>            }<a name="line.241"></a>
+<span class="sourceLineNo">242</span>        } else {<a name="line.242"></a>
+<span class="sourceLineNo">243</span>            for (int i = 0; i &lt; prob.length; ++i) {<a name="line.243"></a>
+<span class="sourceLineNo">244</span>                prob[i] = 1.0 / langlist.size();<a name="line.244"></a>
+<span class="sourceLineNo">245</span>            }<a name="line.245"></a>
+<span class="sourceLineNo">246</span>        }<a name="line.246"></a>
+<span class="sourceLineNo">247</span>        return prob;<a name="line.247"></a>
+<span class="sourceLineNo">248</span>    }<a name="line.248"></a>
+<span class="sourceLineNo">249</span><a name="line.249"></a>
+<span class="sourceLineNo">250</span>    private List&lt;String&gt; extractNGrams(String text) {<a name="line.250"></a>
+<span class="sourceLineNo">251</span>        List&lt;String&gt; list = new ArrayList&lt;String&gt;();<a name="line.251"></a>
+<span class="sourceLineNo">252</span>        NGram ngram = new NGram();<a name="line.252"></a>
+<span class="sourceLineNo">253</span>        for (int i = 0; i &lt; text.length(); ++i) {<a name="line.253"></a>
+<span class="sourceLineNo">254</span>            ngram.addChar(text.charAt(i));<a name="line.254"></a>
+<span class="sourceLineNo">255</span>            for (int n = 1; n &lt;= NGram.N_GRAM; ++n) {<a name="line.255"></a>
+<span class="sourceLineNo">256</span>                String w = ngram.get(n);<a name="line.256"></a>
+<span class="sourceLineNo">257</span>                if (w != null &amp;&amp; wordLangProbMap.containsKey(w)) {<a name="line.257"></a>
+<span class="sourceLineNo">258</span>                    list.add(w);<a name="line.258"></a>
+<span class="sourceLineNo">259</span>                }<a name="line.259"></a>
+<span class="sourceLineNo">260</span>            }<a name="line.260"></a>
+<span class="sourceLineNo">261</span>        }<a name="line.261"></a>
+<span class="sourceLineNo">262</span>        return list;<a name="line.262"></a>
+<span class="sourceLineNo">263</span>    }<a name="line.263"></a>
+<span class="sourceLineNo">264</span><a name="line.264"></a>
+<span class="sourceLineNo">265</span>    private boolean updateLangProb(double[] prob, String word, double alpha) {<a name="line.265"></a>
+<span class="sourceLineNo">266</span>        if (word == null || !wordLangProbMap.containsKey(word)) {<a name="line.266"></a>
+<span class="sourceLineNo">267</span>            return false;<a name="line.267"></a>
+<span class="sourceLineNo">268</span>        }<a name="line.268"></a>
+<span class="sourceLineNo">269</span>        double[] langProbMap = wordLangProbMap.get(word);<a name="line.269"></a>
+<span class="sourceLineNo">270</span>        double weight = alpha / BASE_FREQ;<a name="line.270"></a>
+<span class="sourceLineNo">271</span>        for (int i = 0; i &lt; prob.length; ++i) {<a name="line.271"></a>
+<span class="sourceLineNo">272</span>            prob[i] *= weight + langProbMap[i];<a name="line.272"></a>
+<span class="sourceLineNo">273</span>        }<a name="line.273"></a>
+<span class="sourceLineNo">274</span>        return true;<a name="line.274"></a>
+<span class="sourceLineNo">275</span>    }<a name="line.275"></a>
+<span class="sourceLineNo">276</span><a name="line.276"></a>
+<span class="sourceLineNo">277</span>    private double normalizeProb(double[] prob) {<a name="line.277"></a>
+<span class="sourceLineNo">278</span>        double maxp = 0, sump = 0;<a name="line.278"></a>
+<span class="sourceLineNo">279</span>        for (int i = 0; i &lt; prob.length; ++i) {<a name="line.279"></a>
+<span class="sourceLineNo">280</span>            sump += prob[i];<a name="line.280"></a>
+<span class="sourceLineNo">281</span>        }<a name="line.281"></a>
+<span class="sourceLineNo">282</span>        for (int i = 0; i &lt; prob.length; ++i) {<a name="line.282"></a>
+<span class="sourceLineNo">283</span>            double p = prob[i] / sump;<a name="line.283"></a>
+<span class="sourceLineNo">284</span>            if (maxp &lt; p) {<a name="line.284"></a>
+<span class="sourceLineNo">285</span>                maxp = p;<a name="line.285"></a>
+<span class="sourceLineNo">286</span>            }<a name="line.286"></a>
+<span class="sourceLineNo">287</span>            prob[i] = p;<a name="line.287"></a>
+<span class="sourceLineNo">288</span>        }<a name="line.288"></a>
+<span class="sourceLineNo">289</span>        return maxp;<a name="line.289"></a>
+<span class="sourceLineNo">290</span>    }<a name="line.290"></a>
+<span class="sourceLineNo">291</span><a name="line.291"></a>
+<span class="sourceLineNo">292</span>    private List&lt;Language&gt; sortProbability(double[] prob) {<a name="line.292"></a>
+<span class="sourceLineNo">293</span>        List&lt;Language&gt; list = new ArrayList&lt;Language&gt;();<a name="line.293"></a>
+<span class="sourceLineNo">294</span>        for (int j = 0; j &lt; prob.length; ++j) {<a name="line.294"></a>
+<span class="sourceLineNo">295</span>            double p = prob[j];<a name="line.295"></a>
+<span class="sourceLineNo">296</span>            if (p &gt; PROB_THRESHOLD) {<a name="line.296"></a>
+<span class="sourceLineNo">297</span>                for (int i = 0; i &lt;= list.size(); ++i) {<a name="line.297"></a>
+<span class="sourceLineNo">298</span>                    if (i == list.size() || list.get(i).getProbability() &lt; p) {<a name="line.298"></a>
+<span class="sourceLineNo">299</span>                        list.add(i, new Language(langlist.get(j), p));<a name="line.299"></a>
+<span class="sourceLineNo">300</span>                        break;<a name="line.300"></a>
+<span class="sourceLineNo">301</span>                    }<a name="line.301"></a>
+<span class="sourceLineNo">302</span>                }<a name="line.302"></a>
+<span class="sourceLineNo">303</span>            }<a name="line.303"></a>
+<span class="sourceLineNo">304</span>        }<a name="line.304"></a>
+<span class="sourceLineNo">305</span>        return list;<a name="line.305"></a>
+<span class="sourceLineNo">306</span>    }<a name="line.306"></a>
+<span class="sourceLineNo">307</span><a name="line.307"></a>
+<span class="sourceLineNo">308</span>}<a name="line.308"></a>
 
 
 
