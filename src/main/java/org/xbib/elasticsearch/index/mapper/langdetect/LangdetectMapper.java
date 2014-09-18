@@ -1,7 +1,10 @@
 package org.xbib.elasticsearch.index.mapper.langdetect;
 
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.FieldType;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentParser;
+import org.elasticsearch.index.fielddata.FieldDataType;
 import org.elasticsearch.index.mapper.FieldMapperListener;
 import org.elasticsearch.index.mapper.Mapper;
 import org.elasticsearch.index.mapper.MapperParsingException;
@@ -14,25 +17,46 @@ import org.xbib.elasticsearch.common.langdetect.Detector;
 import org.xbib.elasticsearch.common.langdetect.Language;
 import org.xbib.elasticsearch.common.langdetect.LanguageDetectionException;
 
+import org.elasticsearch.index.mapper.core.AbstractFieldMapper;
+
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
+
 import static org.elasticsearch.index.mapper.MapperBuilders.stringField;
 
-public class LangdetectMapper implements Mapper {
+
+public class LangdetectMapper extends AbstractFieldMapper<Object>{ //#implements Mapper {
 
     public static final String CONTENT_TYPE = "langdetect";
 
-    public static class Builder extends Mapper.Builder<Builder, LangdetectMapper> {
+    protected LangdetectMapper(Names names,
+                               Detector detector,
+                               StringFieldMapper contentMapper,
+                               StringFieldMapper langMapper
+                               ){
+        super(names, 1.0f, Defaults.FIELD_TYPE, false, null, null, null, null, null, null, null, null, null, null);
+        this.contentMapper = contentMapper;
+        this.langMapper = langMapper;
+        this.detector = detector;
+    }
+
+
+    @Override
+    public Object value(Object value) {
+        return null;
+    }
+
+    public static class Builder extends AbstractFieldMapper.Builder<Builder, LangdetectMapper> {
 
         private StringFieldMapper.Builder contentBuilder;
         private StringFieldMapper.Builder langBuilder = stringField("lang");
         private Detector detector;
 
         public Builder(String name, Detector detector) {
-            super(name);
+            super(name, new FieldType(Defaults.FIELD_TYPE));
             this.detector = detector;
             this.contentBuilder = stringField(name);
             this.builder = this;
@@ -54,7 +78,7 @@ public class LangdetectMapper implements Mapper {
             StringFieldMapper contentMapper = contentBuilder.build(context);
             StringFieldMapper langMapper = langBuilder.build(context);
             context.path().remove();
-            return new LangdetectMapper(name, detector, contentMapper, langMapper);
+            return new LangdetectMapper(new Names(name), detector, contentMapper, langMapper);
         }
     }
 
@@ -96,21 +120,18 @@ public class LangdetectMapper implements Mapper {
         }
     }
 
-    private final String name;
-    private final Detector detector;
     private final StringFieldMapper contentMapper;
     private final StringFieldMapper langMapper;
+    private final Detector detector;
 
-    public LangdetectMapper(String name, Detector detector, StringFieldMapper contentMapper, StringFieldMapper langMapper) {
-        this.name = name;
-        this.detector = detector;
-        this.contentMapper = contentMapper;
-        this.langMapper = langMapper;
+    @Override
+    public FieldType defaultFieldType() {
+        return Defaults.FIELD_TYPE;
     }
 
     @Override
-    public String name() {
-        return name;
+    public FieldDataType defaultFieldDataType() {
+        return null;
     }
 
     @Override
@@ -153,6 +174,11 @@ public class LangdetectMapper implements Mapper {
     }
 
     @Override
+    protected void parseCreateField(ParseContext context, List<Field> fields) throws IOException {
+
+    }
+
+    @Override
     public void merge(Mapper mergeWith, MergeContext mergeContext) throws MergeMappingException {
     }
 
@@ -174,7 +200,7 @@ public class LangdetectMapper implements Mapper {
 
     @Override
     public XContentBuilder toXContent(XContentBuilder builder, Params params) throws IOException {
-        builder.startObject(name);
+        builder.startObject(name());
         builder.field("type", CONTENT_TYPE);
 
         builder.startObject("fields");
@@ -184,5 +210,10 @@ public class LangdetectMapper implements Mapper {
 
         builder.endObject();
         return builder;
+    }
+
+    @Override
+    protected String contentType() {
+        return CONTENT_TYPE;
     }
 }
