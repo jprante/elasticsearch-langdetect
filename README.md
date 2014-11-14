@@ -82,15 +82,16 @@ zh-tw
 
 ![Travis](https://travis-ci.org/jprante/elasticsearch-langdetect.png)
 
-| Elasticsearch  |   Plugin       | Release date |
+| Elasticsearch  | Plugin         | Release date |
 | -------------- | -------------- | ------------ |
+| 1.4.0          | 1.4.0.0        | Nov 14, 2014 |
 | 1.3.1          | 1.3.0.0        | Jul 30, 2014 |
 | 1.2.1          | 1.2.1.1        | Jun 18, 2014 |
 
 
 ## Installation
 
-    ./bin/plugin -install langdetect -url http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/1.3.0.0/elasticsearch-langdetect-1.3.0.0-plugin.zip
+    ./bin/plugin -install langdetect -url http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/1.4.0.0/elasticsearch-langdetect-1.4.0.0-plugin.zip
 
 Do not forget to restart the node after installing.
 
@@ -98,6 +99,7 @@ Do not forget to restart the node after installing.
 
 | File                                          | SHA1                                     |
 | --------------------------------------------- | -----------------------------------------|
+| elasticsearch-langdetect-1.4.0.0-plugin.zip   | f95361fa1a81b2681e2e9002b03ca6aad57f3012 |
 | elasticsearch-langdetect-1.3.0.0-plugin.zip   | e2dd56c72f19cec861141becd8beb18d7bb26ee6 |
 | elasticsearch-langdetect-1.2.1.1-plugin.zip   | cc3a0d5ccecf1210b96771dcb5c9935176e1cc35 |
 | elasticsearch-langdetect-1.2.1.0.zip          | c07b84e798e284ee238554c2b2bc065dfdb9114d |

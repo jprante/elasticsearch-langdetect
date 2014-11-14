@@ -10,6 +10,11 @@ public class LangdetectRequestBuilder extends SingleCustomOperationRequestBuilde
         super(client, new LangdetectRequest());
     }
 
+    public LangdetectRequestBuilder setText(String string) {
+        request.setText(string);
+        return this;
+    }
+
     @Override
     protected void doExecute(ActionListener<LangdetectResponse> listener) {
         client.execute(LangdetectAction.INSTANCE, request, listener);

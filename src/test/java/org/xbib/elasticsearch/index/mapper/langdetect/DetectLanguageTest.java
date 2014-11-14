@@ -1,8 +1,10 @@
-package org.xbib.elasticsearch.common.langdetect;
+package org.xbib.elasticsearch.index.mapper.langdetect;
 
 import org.elasticsearch.common.io.Streams;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.elasticsearch.common.settings.ImmutableSettings;
+import org.junit.Assert;
+import org.junit.Test;
+import org.xbib.elasticsearch.module.langdetect.LangdetectService;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,22 +16,22 @@ public class DetectLanguageTest extends Assert {
 
     @Test
     public void testEnglish() throws IOException {
-        testLanguage("/english.txt", "en");
+        testLanguage("english.txt", "en");
     }
 
     @Test
     public void testChinese() throws IOException {
-        testLanguage("/chinese.txt", "zh-cn");
+        testLanguage("chinese.txt", "zh-cn");
     }
 
     @Test
     public void testJapanese() throws IOException {
-        testLanguage("/japanese.txt", "ja");
+        testLanguage("japanese.txt", "ja");
     }
 
     @Test
     public void testKorean() throws IOException {
-        testLanguage("/korean.txt", "ko");
+        testLanguage("korean.txt", "ko");
     }
 
     private void testLanguage(String path, String lang) throws IOException {
@@ -38,9 +40,9 @@ public class DetectLanguageTest extends Assert {
         Streams.copy(reader, writer);
         reader.close();
         writer.close();
-        Detector detect = new Detector();
-        detect.loadDefaultProfiles();
-        assertEquals(detect.detect(writer.toString()), lang);
+        LangdetectService detect = new LangdetectService(ImmutableSettings.EMPTY);
+        detect.start();
+        assertEquals(detect.detectAll(writer.toString()).get(0).getLanguage(), lang);
     }
 
 }

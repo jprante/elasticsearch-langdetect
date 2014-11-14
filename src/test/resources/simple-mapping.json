@@ -1,7 +1,0 @@
-{
-    "someType" : {
-        "properties" : {
-            "someField":{ "type" : "langdetect" }
-        }
-    }
-}

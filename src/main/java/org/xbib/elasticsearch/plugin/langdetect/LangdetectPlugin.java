@@ -7,8 +7,8 @@ import org.elasticsearch.plugins.AbstractPlugin;
 import org.elasticsearch.rest.RestModule;
 import org.xbib.elasticsearch.action.langdetect.LangdetectAction;
 import org.xbib.elasticsearch.action.langdetect.TransportLangdetectAction;
-import org.xbib.elasticsearch.common.langdetect.Detector;
 import org.xbib.elasticsearch.module.langdetect.LangdetectModule;
+import org.xbib.elasticsearch.module.langdetect.LangdetectService;
 import org.xbib.elasticsearch.rest.action.langdetect.RestLangdetectAction;
 
 import java.util.Collection;
@@ -41,7 +41,7 @@ public class LangdetectPlugin extends AbstractPlugin {
     @Override
     public Collection<Class<? extends LifecycleComponent>> services() {
         Collection<Class<? extends LifecycleComponent>> services = newArrayList();
-        services.add(Detector.class);
+        services.add(LangdetectService.class);
         return services;
     }
 

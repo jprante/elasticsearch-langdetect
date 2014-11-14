@@ -1,7 +1,6 @@
 package org.xbib.elasticsearch.action.langdetect;
 
 import org.elasticsearch.action.support.single.custom.SingleCustomOperationRequest;
-import org.elasticsearch.common.bytes.BytesReference;
 import org.elasticsearch.common.io.stream.StreamInput;
 import org.elasticsearch.common.io.stream.StreamOutput;
 
@@ -9,29 +8,29 @@ import java.io.IOException;
 
 public class LangdetectRequest extends SingleCustomOperationRequest<LangdetectRequest> {
 
-    BytesReference text;
+    String text;
 
     public LangdetectRequest() {
     }
 
-    public LangdetectRequest setText(BytesReference text) {
+    public LangdetectRequest setText(String text) {
         this.text = text;
         return this;
     }
 
-    public BytesReference getText() {
+    public String getText() {
         return text;
     }
 
     @Override
     public void readFrom(StreamInput in) throws IOException {
         super.readFrom(in);
-        text = in.readBytesReference();
+        text = in.readString();
     }
 
     @Override
     public void writeTo(StreamOutput out) throws IOException {
         super.writeTo(out);
-        out.writeBytesReference(text);
+        out.writeString(text);
     }
 }

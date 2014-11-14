@@ -4,7 +4,7 @@ import org.elasticsearch.action.ActionResponse;
 import org.elasticsearch.common.xcontent.StatusToXContent;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.rest.RestStatus;
-import org.xbib.elasticsearch.common.langdetect.Language;
+import org.xbib.elasticsearch.index.analysis.langdetect.Language;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,8 +18,9 @@ public class LangdetectResponse extends ActionResponse implements StatusToXConte
     public LangdetectResponse() {
     }
 
-    public LangdetectResponse(List<Language> languages) {
+    public LangdetectResponse setLanguages(List<Language> languages) {
         this.languages = languages;
+        return this;
     }
 
     public List<Language> getLanguages() {

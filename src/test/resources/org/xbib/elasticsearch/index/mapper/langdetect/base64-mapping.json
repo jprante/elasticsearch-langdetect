@@ -1,0 +1,10 @@
+{
+    "someType" : {
+        "properties" : {
+            "someField": {
+                "type" : "langdetect",
+                 "binary" : true
+            }
+        }
+    }
+}

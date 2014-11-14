@@ -1,7 +1,9 @@
-package org.xbib.elasticsearch.common.langdetect;
+package org.xbib.elasticsearch.index.mapper.langdetect;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.Assert;
+import org.junit.Test;
+
+import org.xbib.elasticsearch.index.analysis.langdetect.NGram;
 
 public class NGramTest extends Assert {
 

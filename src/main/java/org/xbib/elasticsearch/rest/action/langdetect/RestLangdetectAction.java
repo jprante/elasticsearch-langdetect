@@ -18,14 +18,13 @@ public class RestLangdetectAction extends BaseRestHandler {
 
     @Inject
     public RestLangdetectAction(Settings settings, Client client, RestController controller) {
-        super(settings, client);
+        super(settings, controller, client);
         controller.registerHandler(POST, "/_langdetect", this);
     }
 
     @Override
     public void handleRequest(final RestRequest request, final RestChannel channel, final Client client) {
-        LangdetectRequest langdetectRequest = new LangdetectRequest().setText(request.content());
+        LangdetectRequest langdetectRequest = new LangdetectRequest().setText(request.content().toUtf8());
         client.admin().indices().execute(LangdetectAction.INSTANCE, langdetectRequest, new RestStatusToXContentListener<LangdetectResponse>(channel));
-
     }
 }
