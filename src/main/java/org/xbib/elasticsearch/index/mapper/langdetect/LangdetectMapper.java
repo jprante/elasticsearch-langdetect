@@ -13,11 +13,12 @@ import org.elasticsearch.index.mapper.MergeContext;
 import org.elasticsearch.index.mapper.MergeMappingException;
 import org.elasticsearch.index.mapper.ObjectMapperListener;
 import org.elasticsearch.index.mapper.ParseContext;
-import org.elasticsearch.index.mapper.core.AbstractFieldMapper;
 import org.elasticsearch.index.mapper.core.StringFieldMapper;
-import org.xbib.elasticsearch.module.langdetect.LangdetectService;
+
+import org.elasticsearch.index.mapper.core.AbstractFieldMapper;
 import org.xbib.elasticsearch.index.analysis.langdetect.Language;
 import org.xbib.elasticsearch.index.analysis.langdetect.LanguageDetectionException;
+import org.xbib.elasticsearch.module.langdetect.LangdetectService;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -26,14 +27,14 @@ import java.util.Map;
 
 import static org.elasticsearch.index.mapper.MapperBuilders.stringField;
 
-public class LangdetectMapper extends AbstractFieldMapper<Object> {
+public class LangdetectMapper extends AbstractFieldMapper<Object>{
 
     public static final String CONTENT_TYPE = "langdetect";
 
     public static class Builder extends AbstractFieldMapper.Builder<Builder, LangdetectMapper> {
 
         private StringFieldMapper.Builder contentBuilder;
-        private StringFieldMapper.Builder langBuilder;
+        private StringFieldMapper.Builder langBuilder = stringField("lang");
         private ImmutableSettings.Builder settingsBuilder;
 
         public Builder(String name) {
@@ -124,7 +125,7 @@ public class LangdetectMapper extends AbstractFieldMapper<Object> {
             context.path().remove();
             LangdetectService detector = new LangdetectService(settingsBuilder.build());
             detector.start();
-            return new LangdetectMapper(new Names(name), contentMapper, langMapper, detector);
+            return new LangdetectMapper(new Names(name), detector, contentMapper, langMapper);
         }
     }
 
@@ -155,51 +156,51 @@ public class LangdetectMapper extends AbstractFieldMapper<Object> {
                         break;
                     }
                     case "number_of_trials": {
-                        builder.ntrials((Integer)fieldNode);
+                        builder.ntrials((Integer) fieldNode);
                         break;
                     }
                     case "alpha": {
-                        builder.alpha((Double)fieldNode);
+                        builder.alpha((Double) fieldNode);
                         break;
                     }
                     case "alpha_width": {
-                        builder.alphaWidth((Double)fieldNode);
+                        builder.alphaWidth((Double) fieldNode);
                         break;
                     }
                     case "iteration_limit": {
-                        builder.iterationLimit((Integer)fieldNode);
+                        builder.iterationLimit((Integer) fieldNode);
                         break;
                     }
                     case "prob_threshold": {
-                        builder.probThreshold((Double)fieldNode);
+                        builder.probThreshold((Double) fieldNode);
                         break;
                     }
                     case "conv_threshold": {
-                        builder.convThreshold((Double)fieldNode);
+                        builder.convThreshold((Double) fieldNode);
                         break;
                     }
                     case "base_freq": {
-                        builder.baseFreq((Integer)fieldNode);
+                        builder.baseFreq((Integer) fieldNode);
                         break;
                     }
                     case "pattern": {
-                        builder.pattern((String)fieldNode);
+                        builder.pattern((String) fieldNode);
                         break;
                     }
                     case "max": {
-                        builder.max((Integer)fieldNode);
+                        builder.max((Integer) fieldNode);
                         break;
                     }
                     case "binary": {
-                        builder.binary((Boolean)fieldNode);
+                        builder.binary((Boolean) fieldNode);
                         break;
                     }
-                    case "map" : {
-                        builder.map((Map<String,String>)fieldNode);
+                    case "map": {
+                        builder.map((Map<String, String>) fieldNode);
                         break;
                     }
-                    case "languages" : {
-                        builder.languages((List<String>)fieldNode);
+                    case "languages": {
+                        builder.languages((List<String>) fieldNode);
                         break;
                     }
                 }
@@ -214,12 +215,16 @@ public class LangdetectMapper extends AbstractFieldMapper<Object> {
 
     private final LangdetectService detector;
 
-    public LangdetectMapper(Names names, StringFieldMapper contentMapper, StringFieldMapper langMapper,
-                            LangdetectService detector) {
+    protected LangdetectMapper(Names names, LangdetectService detector, StringFieldMapper contentMapper, StringFieldMapper langMapper){
         super(names, 1.0f, Defaults.FIELD_TYPE, false, null, null, null, null, null, null, null, null, null, null);
         this.contentMapper = contentMapper;
         this.langMapper = langMapper;
         this.detector = detector;
+    }
+
+    @Override
+    public Object value(Object value) {
+        return null;
     }
 
     @Override
@@ -233,8 +238,8 @@ public class LangdetectMapper extends AbstractFieldMapper<Object> {
     }
 
     @Override
-    public Object value(Object value) {
-        return null;
+    protected String contentType() {
+        return CONTENT_TYPE;
     }
 
     @Override
@@ -246,11 +251,13 @@ public class LangdetectMapper extends AbstractFieldMapper<Object> {
             content = parser.text();
             if (detector.getSettings().getAsBoolean("binary", false)) {
                 try {
+                    // try decode UTF-8 base64 (e.g. from attachment mapper plugin)
                     byte[] b = parser.binaryValue();
                     if (b != null && b.length > 0) {
                         content = new String(b, Charset.forName("UTF-8"));
                     }
                 } catch (Exception e) {
+                    // ignore
                 }
             }
         }
@@ -299,19 +306,11 @@ public class LangdetectMapper extends AbstractFieldMapper<Object> {
     public XContentBuilder toXContent(XContentBuilder builder, Params params) throws IOException {
         builder.startObject(name());
         builder.field("type", CONTENT_TYPE);
-
         builder.startObject("fields");
         contentMapper.toXContent(builder, params);
         langMapper.toXContent(builder, params);
         builder.endObject();
-
         builder.endObject();
         return builder;
     }
-
-    @Override
-    protected String contentType() {
-        return CONTENT_TYPE;
-    }
-
 }
