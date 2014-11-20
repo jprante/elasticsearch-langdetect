@@ -87,6 +87,8 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
 
     private Map<String,String> langmap = new HashMap<String,String>();
 
+    private String profile;
+
     private double alpha;
 
     private double alpha_width;
@@ -112,6 +114,7 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
 
     @Override
     protected void doStart() throws ElasticsearchException {
+        this.profile = settings.get("profile", "/langdetect/");
         load(settings);
         this.priorMap = null;
         this.n_trial = settings.getAsInt("number_of_trials", 7);
@@ -147,7 +150,7 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
             int size = keys.length;
             for (String key : keys) {
                 if (key != null && !key.isEmpty()) {
-                    loadProfileFromResource(key, index++, size);
+                    loadProfileFromResource(key, profile, index++, size);
                 }
             }
             logger.debug("language detection service installed for {}", langlist);
@@ -163,7 +166,7 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
             }
             if (map.getAsMap().isEmpty()) {
                 // is in "map" a resource name?
-                String s = settings.get("map") != null ? settings.get("map") : "/langdetect/language.json";
+                String s = settings.get("map") != null ? settings.get("map") : profile + "language.json";
                 InputStream in = getClass().getResourceAsStream(s);
                 if (in != null) {
                     map = ImmutableSettings.settingsBuilder().loadFromStream(s, in).build();
@@ -176,14 +179,14 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
         }
     }
 
-    public void loadProfileFromResource(String resource, int index, int langsize) throws IOException {
-        InputStream in = getClass().getResourceAsStream("/langdetect/" + resource);
+    public void loadProfileFromResource(String resource, String profile, int index, int langsize) throws IOException {
+        InputStream in = getClass().getResourceAsStream(profile + resource);
         if (in == null) {
             throw new IOException("profile '" + resource + "' not found");
         }
         ObjectMapper mapper = new ObjectMapper();
-        LangProfile profile = mapper.readValue(in, LangProfile.class);
-        addProfile(profile, index, langsize);
+        LangProfile langProfile = mapper.readValue(in, LangProfile.class);
+        addProfile(langProfile, index, langsize);
     }
 
     public void addProfile(LangProfile profile, int index, int langsize) throws IOException {
