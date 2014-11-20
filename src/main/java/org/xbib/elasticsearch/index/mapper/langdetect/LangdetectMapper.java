@@ -55,6 +55,11 @@ public class LangdetectMapper extends AbstractFieldMapper<Object>{
             return this;
         }
 
+        public Builder profile(String profile) {
+            settingsBuilder.put("profile", profile);
+            return this;
+        }
+
         public Builder ntrials(int trials) {
             settingsBuilder.put("number_of_trials", trials);
             return this;
@@ -201,6 +206,10 @@ public class LangdetectMapper extends AbstractFieldMapper<Object>{
                     }
                     case "languages": {
                         builder.languages((List<String>) fieldNode);
+                        break;
+                    }
+                    case "profile": {
+                        builder.profile((String) fieldNode);
                         break;
                     }
                 }

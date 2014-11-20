@@ -80,6 +80,27 @@ public class LangdetectMappingTest extends Assert {
         assertEquals(doc.getFields("someField.lang")[0].stringValue(), "en");
     }
 
+    @Test
+    public void testShortTextProfile() throws Exception {
+        String mapping = copyToStringFromClasspath("short-text-mapping.json");
+        DocumentMapper docMapper = createMapperParser().parse(mapping);
+        String sampleText = copyToStringFromClasspath("english.txt");
+        BytesReference json = jsonBuilder().startObject().field("_id", 1).field("someField", sampleText).endObject().bytes();
+        ParseContext.Document doc = docMapper.parse(json).rootDoc();
+        assertEquals(doc.get(docMapper.mappers().smartName("someField").mapper().names().indexName()), sampleText);
+        assertEquals(doc.getFields("someField.lang").length, 1);
+        assertEquals(doc.getFields("someField.lang")[0].stringValue(), "en");
+
+        // re-parse it
+        String builtMapping = docMapper.mappingSource().string();
+        docMapper = createMapperParser().parse(builtMapping);
+        json = jsonBuilder().startObject().field("_id", 1).field("someField", sampleText).endObject().bytes();
+        doc = docMapper.parse(json).rootDoc();
+        assertEquals(doc.get(docMapper.mappers().smartName("someField").mapper().names().indexName()), sampleText);
+        assertEquals(doc.getFields("someField.lang").length, 1);
+        assertEquals(doc.getFields("someField.lang")[0].stringValue(), "en");
+    }
+
     private DocumentMapperParser createMapperParser() throws IOException {
         return createMapperParser(ImmutableSettings.EMPTY);
     }
