@@ -279,7 +279,7 @@ All feedback is welcome! If you find issues, please post them at [Github](https:
       } ]
     }
 
-## Change profile of language detection to "shart text" profile
+## Change profile of language detection to "short text" profile
 
     curl -XPOST 'localhost:9200/_langdetect/profile?profile=/langdetect/short-text/'
 
