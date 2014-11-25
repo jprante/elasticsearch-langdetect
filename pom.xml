@@ -7,7 +7,7 @@
 
     <groupId>org.xbib.elasticsearch.plugin</groupId>
     <artifactId>elasticsearch-langdetect</artifactId>
-    <version>1.4.0.1</version>
+    <version>1.4.0.2</version>
 
     <packaging>jar</packaging>
 
@@ -96,6 +96,20 @@
             <artifactId>junit</artifactId>
             <version>4.11</version>
             <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>2.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.0</version>
             <scope>test</scope>
         </dependency>
 

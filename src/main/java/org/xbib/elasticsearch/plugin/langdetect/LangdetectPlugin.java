@@ -7,9 +7,13 @@ import org.elasticsearch.plugins.AbstractPlugin;
 import org.elasticsearch.rest.RestModule;
 import org.xbib.elasticsearch.action.langdetect.LangdetectAction;
 import org.xbib.elasticsearch.action.langdetect.TransportLangdetectAction;
+import org.xbib.elasticsearch.action.langdetect.profile.LangdetectProfileAction;
+import org.xbib.elasticsearch.action.langdetect.profile.TransportLangdetectProfileAction;
+import org.xbib.elasticsearch.module.langdetect.LangdetectIndexModule;
 import org.xbib.elasticsearch.module.langdetect.LangdetectModule;
 import org.xbib.elasticsearch.module.langdetect.LangdetectService;
 import org.xbib.elasticsearch.rest.action.langdetect.RestLangdetectAction;
+import org.xbib.elasticsearch.rest.action.langdetect.RestLangdetectProfileAction;
 
 import java.util.Collection;
 
@@ -31,10 +35,12 @@ public class LangdetectPlugin extends AbstractPlugin {
 
     public void onModule(RestModule module) {
         module.addRestAction(RestLangdetectAction.class);
+        module.addRestAction(RestLangdetectProfileAction.class);
     }
 
     public void onModule(ActionModule module) {
         module.registerAction(LangdetectAction.INSTANCE, TransportLangdetectAction.class);
+        module.registerAction(LangdetectProfileAction.INSTANCE, TransportLangdetectProfileAction.class);
     }
 
     @SuppressWarnings("rawtypes")
@@ -47,6 +53,13 @@ public class LangdetectPlugin extends AbstractPlugin {
 
     @Override
     public Collection<Class<? extends Module>> indexModules() {
+        Collection<Class<? extends Module>> modules = newArrayList();
+        modules.add(LangdetectIndexModule.class);
+        return modules;
+    }
+
+    @Override
+    public Collection<Class<? extends Module>> modules() {
         Collection<Class<? extends Module>> modules = newArrayList();
         modules.add(LangdetectModule.class);
         return modules;

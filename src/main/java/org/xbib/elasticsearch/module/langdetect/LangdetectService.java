@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.common.component.AbstractLifecycleComponent;
 import org.elasticsearch.common.inject.Inject;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.ESLoggerFactory;
 import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.xbib.elasticsearch.index.analysis.langdetect.LangProfile;
@@ -22,6 +24,8 @@ import java.util.Random;
 import java.util.regex.Pattern;
 
 public class LangdetectService extends AbstractLifecycleComponent<LangdetectService> {
+
+    private final static ESLogger logger = ESLoggerFactory.getLogger(LangdetectService.class.getName());
 
     private final static Pattern word = Pattern.compile("[\\P{IsWord}]", Pattern.UNICODE_CHARACTER_CLASS);
 
@@ -116,16 +120,7 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
     protected void doStart() throws ElasticsearchException {
         this.profile = settings.get("profile", "/langdetect/");
         load(settings);
-        this.priorMap = null;
-        this.n_trial = settings.getAsInt("number_of_trials", 7);
-        this.alpha = settings.getAsDouble("alpha", 0.5);
-        this.alpha_width = settings.getAsDouble("alpha_width", 0.05);
-        this.iteration_limit = settings.getAsInt("iteration_limit", 10000);
-        this.prob_threshold = settings.getAsDouble("prob_threshold", 0.1);
-        this.conv_threshold = settings.getAsDouble("conv_threshold",  0.99999);
-        this.base_freq = settings.getAsInt("base_freq", 10000);
-        this.filterPattern = settings.get("pattern") != null ?
-                Pattern.compile(settings.get("pattern"),Pattern.UNICODE_CHARACTER_CLASS) : null;
+        init();
     }
 
     @Override
@@ -179,6 +174,19 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
         }
     }
 
+    private void init() {
+        this.priorMap = null;
+        this.n_trial = settings.getAsInt("number_of_trials", 7);
+        this.alpha = settings.getAsDouble("alpha", 0.5);
+        this.alpha_width = settings.getAsDouble("alpha_width", 0.05);
+        this.iteration_limit = settings.getAsInt("iteration_limit", 10000);
+        this.prob_threshold = settings.getAsDouble("prob_threshold", 0.1);
+        this.conv_threshold = settings.getAsDouble("conv_threshold",  0.99999);
+        this.base_freq = settings.getAsInt("base_freq", 10000);
+        this.filterPattern = settings.get("pattern") != null ?
+                Pattern.compile(settings.get("pattern"),Pattern.UNICODE_CHARACTER_CLASS) : null;
+    }
+
     public void loadProfileFromResource(String resource, String profile, int index, int langsize) throws IOException {
         InputStream in = getClass().getResourceAsStream(profile + resource);
         if (in == null) {
@@ -207,32 +215,15 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
         }
     }
 
-    /**
-     * Set prior information about language probabilities.
-     *
-     * @param priorMap the priorMap to set
-     * @throws org.xbib.elasticsearch.index.analysis.langdetect.LanguageDetectionException
-     */
-    public void setPriorMap(HashMap<String, Double> priorMap) throws LanguageDetectionException {
-        this.priorMap = new double[langlist.size()];
-        double sump = 0;
-        for (int i = 0; i < this.priorMap.length; ++i) {
-            String lang = langlist.get(i);
-            if (priorMap.containsKey(lang)) {
-                double p = priorMap.get(lang);
-                if (p < 0) {
-                    throw new LanguageDetectionException("Prior probability must be non-negative");
-                }
-                this.priorMap[i] = p;
-                sump += p;
-            }
-        }
-        if (sump <= 0) {
-            throw new LanguageDetectionException("More one of prior probability must be non-zero");
-        }
-        for (int i = 0; i < this.priorMap.length; ++i) {
-            this.priorMap[i] /= sump;
-        }
+    public void setProfile(String profile) throws LanguageDetectionException {
+        this.profile = profile;
+        langlist.clear();
+        load(settings);
+        init();
+    }
+
+    public String getProfile() {
+        return profile;
     }
 
     public List<Language> detectAll(String text) throws LanguageDetectionException {

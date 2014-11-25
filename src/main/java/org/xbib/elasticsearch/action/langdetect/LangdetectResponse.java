@@ -13,9 +13,20 @@ import static org.elasticsearch.rest.RestStatus.OK;
 
 public class LangdetectResponse extends ActionResponse implements StatusToXContent {
 
+    private String profile;
+
     private List<Language> languages;
 
     public LangdetectResponse() {
+    }
+
+    public LangdetectResponse setProfile(String profile) {
+        this.profile = profile;
+        return this;
+    }
+
+    public String getProfile() {
+        return profile;
     }
 
     public LangdetectResponse setLanguages(List<Language> languages) {
@@ -29,6 +40,7 @@ public class LangdetectResponse extends ActionResponse implements StatusToXConte
 
     @Override
     public XContentBuilder toXContent(XContentBuilder builder, Params params) throws IOException {
+        builder.field("profile", profile);
         builder.startArray("languages");
         for (Language lang : languages) {
             builder.startObject().field("language", lang.getLanguage())

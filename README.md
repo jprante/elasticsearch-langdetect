@@ -83,6 +83,7 @@ zh-tw
 
 | Elasticsearch  | Plugin         | Release date |
 | -------------- | -------------- | ------------ |
+| 1.4.0          | 1.4.0.2        | Nov 26, 2014 |
 | 1.4.0          | 1.4.0.1        | Nov 20, 2014 |
 | 1.4.0          | 1.4.0.0        | Nov 14, 2014 |
 | 1.3.1          | 1.3.0.0        | Jul 30, 2014 |
@@ -91,7 +92,7 @@ zh-tw
 
 ## Installation
 
-    ./bin/plugin -install langdetect -url http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/1.4.0.1/elasticsearch-langdetect-1.4.0.1-plugin.zip
+    ./bin/plugin -install langdetect -url http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/1.4.0.2/elasticsearch-langdetect-1.4.0.2-plugin.zip
 
 Do not forget to restart the node after installing.
 
@@ -99,6 +100,7 @@ Do not forget to restart the node after installing.
 
 | File                                          | SHA1                                     |
 | --------------------------------------------- | -----------------------------------------|
+| elasticsearch-langdetect-1.4.0.2-plugin.zip   | 60919142f12d8b54e519f6cf97862e842c6b3bb8 |
 | elasticsearch-langdetect-1.4.0.1-plugin.zip   | a7ab2401ae68789bf1e5841427ce40440c903da4 |
 | elasticsearch-langdetect-1.4.0.0-plugin.zip   | f95361fa1a81b2681e2e9002b03ca6aad57f3012 |
 | elasticsearch-langdetect-1.3.0.0-plugin.zip   | e2dd56c72f19cec861141becd8beb18d7bb26ee6 |
@@ -246,7 +248,7 @@ All feedback is welcome! If you find issues, please post them at [Github](https:
 
     curl -XPOST 'localhost:9200/_langdetect?pretty' -d 'This is a test'
 	{
-	  "ok" : true,
+	  "profile" : "/langdetect/",
 	  "languages" : [ {
 	    "language" : "en",
 	    "probability" : 0.9999971603535163
@@ -255,7 +257,7 @@ All feedback is welcome! If you find issues, please post them at [Github](https:
 
     curl -XPOST 'localhost:9200/_langdetect?pretty' -d 'Das ist ein Test'
 	{
-      "ok" : true,
+	  "profile" : "/langdetect/",
       "languages" : [ {
         "language" : "de",
         "probability" : 0.9999993070517024
@@ -264,7 +266,7 @@ All feedback is welcome! If you find issues, please post them at [Github](https:
 
     curl -XPOST 'localhost:9200/_langdetect?pretty' -d 'Datt isse ne test'
 	{
-      "ok" : true,
+	  "profile" : "/langdetect/",
       "languages" : [ {
         "language" : "no",
         "probability" : 0.5714251911820175
@@ -277,6 +279,9 @@ All feedback is welcome! If you find issues, please post them at [Github](https:
       } ]
     }
 
+## Change profile of language detection to "shart text" profile
+
+    curl -XPOST 'localhost:9200/_langdetect/profile?profile=/langdetect/short-text/'
 
 # Credits
 

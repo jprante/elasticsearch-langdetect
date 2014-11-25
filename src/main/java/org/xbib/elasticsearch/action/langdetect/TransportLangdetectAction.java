@@ -21,15 +21,13 @@ public class TransportLangdetectAction extends TransportAction<LangdetectRequest
                                      ActionFilters actionFilters, LangdetectService service) {
         super(settings, LangdetectAction.NAME, threadPool, actionFilters);
         this.service = service;
-        // start the service here
-        this.service.start();
     }
 
     @Override
     protected void doExecute(LangdetectRequest request, ActionListener<LangdetectResponse> listener) {
         try {
             List<Language> langs = service.detectAll(request.getText());
-            listener.onResponse(new LangdetectResponse().setLanguages(langs));
+            listener.onResponse(new LangdetectResponse().setLanguages(langs).setProfile(service.getProfile()));
         } catch (LanguageDetectionException e) {
             listener.onFailure(e);
         }
