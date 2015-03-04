@@ -34,14 +34,14 @@ public class LangdetectMapper extends AbstractFieldMapper<Object>{
     public static class Builder extends AbstractFieldMapper.Builder<Builder, LangdetectMapper> {
 
         private StringFieldMapper.Builder contentBuilder;
-        private StringFieldMapper.Builder langBuilder = stringField("lang");
+        private StringFieldMapper.Builder langBuilder = stringField("lang").store(true);
         private ImmutableSettings.Builder settingsBuilder;
 
         public Builder(String name) {
             super(name, new FieldType(Defaults.FIELD_TYPE));
             this.builder = this;
             this.contentBuilder = stringField(name);
-            this.langBuilder =  stringField("lang");
+            this.langBuilder = stringField("lang").store(true);
             this.settingsBuilder = ImmutableSettings.settingsBuilder();
         }
 
