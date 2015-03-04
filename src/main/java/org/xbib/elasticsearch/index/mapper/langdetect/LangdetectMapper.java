@@ -258,7 +258,7 @@ public class LangdetectMapper extends AbstractFieldMapper<Object>{
         XContentParser.Token token = parser.currentToken();
         if (token == XContentParser.Token.VALUE_STRING) {
             content = parser.text();
-            if (detector.getSettings().getAsBoolean("binary", false)) {
+            if (detector.getSettings().getAsBoolean("binary", true)) {
                 try {
                     // try decode UTF-8 base64 (e.g. from attachment mapper plugin)
                     byte[] b = parser.binaryValue();

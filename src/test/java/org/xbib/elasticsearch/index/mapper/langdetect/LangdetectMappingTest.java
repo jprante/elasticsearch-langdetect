@@ -81,6 +81,28 @@ public class LangdetectMappingTest extends Assert {
     }
 
     @Test
+    public void testBinary2() throws Exception {
+        Settings settings = ImmutableSettings.EMPTY;
+        String mapping = copyToStringFromClasspath("base64-2-mapping.json");
+        DocumentMapper docMapper = createMapperParser(settings).parse(mapping);
+        String sampleBinary = copyToStringFromClasspath("base64-2.txt");
+        String sampleText = copyToStringFromClasspath("base64-2-decoded.txt");
+        BytesReference json = jsonBuilder().startObject().field("_id", 1).field("content", sampleBinary).endObject().bytes();
+        ParseContext.Document doc = docMapper.parse(json).rootDoc();
+        assertEquals(1, doc.getFields("content.language.lang").length);
+        assertEquals("en", doc.getFields("content.language.lang")[0].stringValue());
+
+        // re-parse it
+        String builtMapping = docMapper.mappingSource().string();
+        docMapper = createMapperParser(settings).parse(builtMapping);
+        json = jsonBuilder().startObject().field("_id", 1).field("content", sampleText).endObject().bytes();
+        doc = docMapper.parse(json).rootDoc();
+        assertEquals(doc.get(docMapper.mappers().smartName("content").mapper().names().indexName()), sampleText);
+        assertEquals(doc.getFields("content.language.lang").length, 1);
+        assertEquals(doc.getFields("content.language.lang")[0].stringValue(), "en");
+    }
+
+    @Test
     public void testShortTextProfile() throws Exception {
         String mapping = copyToStringFromClasspath("short-text-mapping.json");
         DocumentMapper docMapper = createMapperParser().parse(mapping);
