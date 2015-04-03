@@ -5,6 +5,7 @@ import org.apache.lucene.document.FieldType;
 import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentParser;
+import org.elasticsearch.index.analysis.NamedAnalyzer;
 import org.elasticsearch.index.fielddata.FieldDataType;
 import org.elasticsearch.index.mapper.FieldMapperListener;
 import org.elasticsearch.index.mapper.Mapper;
@@ -34,14 +35,17 @@ public class LangdetectMapper extends AbstractFieldMapper<Object>{
     public static class Builder extends AbstractFieldMapper.Builder<Builder, LangdetectMapper> {
 
         private StringFieldMapper.Builder contentBuilder;
-        private StringFieldMapper.Builder langBuilder = stringField("lang").store(true);
+        private StringFieldMapper.Builder langBuilder;
         private ImmutableSettings.Builder settingsBuilder;
 
-        public Builder(String name) {
+        public Builder(String name, NamedAnalyzer namedAnalyzer) {
             super(name, new FieldType(Defaults.FIELD_TYPE));
             this.builder = this;
             this.contentBuilder = stringField(name);
-            this.langBuilder = stringField("lang").store(true);
+            this.langBuilder = stringField("lang")
+                    .indexAnalyzer(namedAnalyzer)
+                    .searchAnalyzer(namedAnalyzer)
+                    .store(true);
             this.settingsBuilder = ImmutableSettings.settingsBuilder();
         }
 
@@ -140,7 +144,7 @@ public class LangdetectMapper extends AbstractFieldMapper<Object>{
         @Override
         public Mapper.Builder parse(String name, Map<String, Object> node, ParserContext parserContext)
                 throws MapperParsingException {
-            LangdetectMapper.Builder builder = new Builder(name);
+            LangdetectMapper.Builder builder = new Builder(name, parserContext.analysisService().analyzer("keyword"));
             for (Map.Entry<String, Object> entry : node.entrySet()) {
                 String fieldName = entry.getKey();
                 Object fieldNode = entry.getValue();

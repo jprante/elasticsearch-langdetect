@@ -10,10 +10,10 @@ import org.oxbib.elasticsearch.plugin.helper.AbstractNodeTestHelper;
 
 import static org.junit.Assert.assertEquals;
 
-public class LangDetectBinaryTest extends AbstractNodeTestHelper {
+public class LangDetectChineseTest extends AbstractNodeTestHelper {
 
     @Test
-    public void testLangDetectBinary() throws Exception {
+    public void testChineseLanguageCode() throws Exception {
         CreateIndexRequestBuilder createIndexRequestBuilder =
                 new CreateIndexRequestBuilder(client("1").admin().indices()).setIndex("test");
         createIndexRequestBuilder.addMapping("someType", "{\n" +
@@ -36,14 +36,15 @@ public class LangDetectBinaryTest extends AbstractNodeTestHelper {
         createIndexRequestBuilder.execute().actionGet();
         IndexRequestBuilder indexRequestBuilder =
                 new IndexRequestBuilder(client("1")).setIndex("test").setType("someType").setId("1")
-                .setSource("content", "IkdvZCBTYXZlIHRoZSBRdWVlbiIgKGFsdGVybmF0aXZlbHkgIkdvZCBTYXZlIHRoZSBLaW5nIg==");
+                .setSource("content", "位于美国首都华盛顿都会圈的希望中文学校５日晚举办活动庆祝建立２０周年。从中国大陆留学生为子女学中文而自发建立的学习班，到学生规模在全美名列前茅的中文学校，这个平台的发展也折射出美国的中文教育热度逐步提升。\n" +
+                        "希望中文学校是大华盛顿地区最大中文学校，现有７个校区逾４０００名学生，规模在美国东部数一数二。不过，见证了希望中文学校２０年发展的人们起初根本无法想象这个小小的中文教育平台能发展到今日之规模。");
         indexRequestBuilder.setRefresh(true).execute().actionGet();
         SearchRequestBuilder searchRequestBuilder =
                 new SearchRequestBuilder(client("1"))
                         .setIndices("test")
-                        .setQuery(QueryBuilders.matchAllQuery())
+                        .setQuery(QueryBuilders.termQuery("content.language.lang", "zh-cn"))
                         .addField("content.language.lang");
         SearchResponse searchResponse = searchRequestBuilder.execute().actionGet();
-        assertEquals("en", searchResponse.getHits().getAt(0).field("content.language.lang").getValue());
+        assertEquals(1L, searchResponse.getHits().getTotalHits());
     }
 }
