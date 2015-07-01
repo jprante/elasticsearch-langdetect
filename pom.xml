@@ -7,7 +7,7 @@
 
     <groupId>org.xbib.elasticsearch.plugin</groupId>
     <artifactId>elasticsearch-langdetect</artifactId>
-    <version>1.4.4.2</version>
+    <version>1.6.0.0</version>
 
     <packaging>jar</packaging>
 
@@ -69,8 +69,8 @@
         <github.global.server>github</github.global.server>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.compiler.version>1.7</java.compiler.version>
-        <elasticsearch.version>1.4.4</elasticsearch.version>
-        <jackson.version>2.4.2</jackson.version>
+        <elasticsearch.version>1.6.0</elasticsearch.version>
+        <jackson.version>2.5.2</jackson.version>
     </properties>
 
     <dependencies>
