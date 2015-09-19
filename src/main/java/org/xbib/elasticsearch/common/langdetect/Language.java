@@ -1,4 +1,4 @@
-package org.xbib.elasticsearch.index.analysis.langdetect;
+package org.xbib.elasticsearch.common.langdetect;
 
 import org.elasticsearch.common.io.stream.StreamInput;
 import org.elasticsearch.common.io.stream.StreamOutput;

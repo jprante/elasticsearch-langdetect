@@ -1,23 +1,22 @@
 package org.xbib.elasticsearch.action.langdetect;
 
-import org.elasticsearch.action.ActionListener;
-import org.elasticsearch.action.support.single.custom.SingleCustomOperationRequestBuilder;
-import org.elasticsearch.client.IndicesAdminClient;
+import org.elasticsearch.action.ActionRequestBuilder;
+import org.elasticsearch.client.ElasticsearchClient;
 
-public class LangdetectRequestBuilder extends SingleCustomOperationRequestBuilder<LangdetectRequest, LangdetectResponse, LangdetectRequestBuilder> {
+public class LangdetectRequestBuilder extends ActionRequestBuilder<LangdetectRequest, LangdetectResponse, LangdetectRequestBuilder> {
 
-    public LangdetectRequestBuilder(IndicesAdminClient client) {
-        super(client, new LangdetectRequest());
+    public LangdetectRequestBuilder(ElasticsearchClient client) {
+        super(client, LangdetectAction.INSTANCE, new LangdetectRequest());
+    }
+
+    public LangdetectRequestBuilder setProfile(String string) {
+        request.setProfile(string);
+        return this;
     }
 
     public LangdetectRequestBuilder setText(String string) {
         request.setText(string);
         return this;
-    }
-
-    @Override
-    protected void doExecute(ActionListener<LangdetectResponse> listener) {
-        client.execute(LangdetectAction.INSTANCE, request, listener);
     }
 
 }

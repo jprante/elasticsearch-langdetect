@@ -1,16 +1,15 @@
 package org.xbib.elasticsearch.index.mapper.langdetect;
 
-import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import org.xbib.elasticsearch.index.analysis.langdetect.LangProfile;
-import org.xbib.elasticsearch.index.analysis.langdetect.LanguageDetectionException;
+import org.xbib.elasticsearch.common.langdetect.LangProfile;
+import org.xbib.elasticsearch.common.langdetect.LanguageDetectionException;
 import org.xbib.elasticsearch.module.langdetect.LangdetectService;
 
-public class DetectorTest extends Assert {
+public class DetectorTests extends Assert {
 
     private static final String TRAINING_EN = "a a a b b c c d e";
 
@@ -23,7 +22,7 @@ public class DetectorTest extends Assert {
     @BeforeClass
     public static void setUp() throws Exception {
 
-        Settings settings = ImmutableSettings.settingsBuilder()
+        Settings settings = Settings.settingsBuilder()
                 .put("languages", "")
                 .build();
         detect = new LangdetectService(settings);

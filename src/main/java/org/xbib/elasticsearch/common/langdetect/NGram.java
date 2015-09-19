@@ -1,4 +1,4 @@
-package org.xbib.elasticsearch.index.analysis.langdetect;
+package org.xbib.elasticsearch.common.langdetect;
 
 import java.lang.Character.UnicodeBlock;
 import java.util.HashMap;

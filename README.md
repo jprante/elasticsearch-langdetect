@@ -1,6 +1,4 @@
-![Speechbubble](https://github.com/jprante/elasticsearch-langdetect/raw/master/src/site/resources/speechbubble_green.png)
-
-Image by [CurtiveArticide](http://www.softicons.com/free-icons/designers/curtivearticide>`_ `CC Attribution-NonCommercial 3.0 Unported <http://creativecommons.org/licenses/by-nc/3.0/)
+![Image 'Tower of Babel'](https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_%28Rotterdam%29_-_Google_Art_Project.jpg/299px-Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_%28Rotterdam%29_-_Google_Art_Project.jpg)
 
 # Elasticsearch Langdetect Plugin
 
@@ -83,6 +81,7 @@ zh-tw
 
 | Elasticsearch  | Plugin         | Release date |
 | -------------- | -------------- | ------------ |
+| 2.0.0-beta2    | 2.0.0-beta2.0  | Sep 19, 2015 |
 | 1.6.0          | 1.6.0.0        | Jul  1, 2015 |
 | 1.4.0          | 1.4.4.2        | Apr  3, 2015 |
 | 1.4.0          | 1.4.4.1        | Mar  4, 2015 |
@@ -93,12 +92,15 @@ zh-tw
 | 1.2.1          | 1.2.1.1        | Jun 18, 2014 |
 
 
-## Installation
+## Installation Elasticsearch 1.x
 
     ./bin/plugin -install langdetect -url http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/1.6.0.0/elasticsearch-langdetect-1.6.0.0-plugin.zip
 
-Do not forget to restart the node after installing.
+## Installation Elasticsearch 2.x
 
+    ./bin/plugin install http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/2.0.0-beta2.0/elasticsearch-langdetect-2.0.0-beta2.0-plugin.zip
+
+Do not forget to restart the node after installing.
 
 ## Project docs
 
@@ -153,7 +155,7 @@ All feedback is welcome! If you find issues, please post them at [Github](https:
         {
            "query" : {
                "term" : {
-                    "content.lang" : "en"
+                    "content" : "en"
                }
            }
         }
@@ -162,7 +164,7 @@ All feedback is welcome! If you find issues, please post them at [Github](https:
         {
            "query" : {
                "term" : {
-                    "content.lang" : "de"
+                    "content" : "de"
                }
            }
         }
@@ -172,7 +174,7 @@ All feedback is welcome! If you find issues, please post them at [Github](https:
         {
            "query" : {
                "term" : {
-                    "content.lang" : "fr"
+                    "content" : "fr"
                }
            }
         }
@@ -193,8 +195,13 @@ All feedback is welcome! If you find issues, please post them at [Github](https:
 				"content" : {
 				  "type" : "multi_field",
 				  "fields" : {
-					"content" : { "type" : "string" },
-					"language" : { "type" : "langdetect" }
+					"content" : { 
+					  "type" : "string" 
+					},
+					"language" : { 
+					  "type" : "langdetect",
+					  "binary" : true
+					}
 				  }
 				}
 			  }
@@ -230,7 +237,7 @@ All feedback is welcome! If you find issues, please post them at [Github](https:
 	{
 	 "query" : {
 		  "term" : {
-			 "content.language.lang" : "en"
+			 "content.language" : "en"
 		  }
 	   }
 	}
@@ -273,11 +280,19 @@ All feedback is welcome! If you find issues, please post them at [Github](https:
 
 ## Change profile of language detection to "short text" profile
 
-    curl -XPOST 'localhost:9200/_langdetect/profile?profile=/langdetect/short-text/'
+    curl -XPOST 'localhost:9200/_langdetect?pretty&profile=/langdetect/short-text/' -d 'Das ist ein Test'
+	{
+	  "profile" : "/langdetect/short-text/",
+      "languages" : [ {
+        "language" : "de",
+        "probability" : 0.9999993070517024
+      } ]
+    }
 
 # Credits
 
-Thanks to Alexander Reelsen for his OpenNLP plugin, from where I have copied and adapted the mapping type analysis code.
+Thanks to Alexander Reelsen for his OpenNLP plugin, from where I have copied and 
+adapted the mapping type analysis code.
 
 # License
 

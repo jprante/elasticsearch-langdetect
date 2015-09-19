@@ -1,7 +1,7 @@
 package org.xbib.elasticsearch.index.mapper.langdetect;
 
 import org.elasticsearch.common.io.Streams;
-import org.elasticsearch.common.settings.ImmutableSettings;
+import org.elasticsearch.common.settings.Settings;
 import org.junit.Assert;
 import org.junit.Test;
 import org.xbib.elasticsearch.module.langdetect.LangdetectService;
@@ -12,7 +12,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 
-public class DetectLanguageTest extends Assert {
+public class DetectLanguageTests extends Assert {
 
     @Test
     public void testEnglish() throws IOException {
@@ -40,8 +40,7 @@ public class DetectLanguageTest extends Assert {
         Streams.copy(reader, writer);
         reader.close();
         writer.close();
-        LangdetectService detect = new LangdetectService(ImmutableSettings.EMPTY);
-        detect.start();
+        LangdetectService detect = new LangdetectService(Settings.EMPTY);
         assertEquals(detect.detectAll(writer.toString()).get(0).getLanguage(), lang);
     }
 

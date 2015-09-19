@@ -1,23 +1,25 @@
-package org.oxbib.elasticsearch.plugin;
+package org.xbib.elasticsearch.plugin;
 
+import org.elasticsearch.action.admin.indices.create.CreateIndexAction;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
+import org.elasticsearch.action.index.IndexAction;
 import org.elasticsearch.action.index.IndexRequestBuilder;
+import org.elasticsearch.action.search.SearchAction;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.junit.Test;
-import org.oxbib.elasticsearch.plugin.helper.AbstractNodeTestHelper;
+import org.xbib.elasticsearch.plugin.helper.AbstractNodeTestHelper;
 
 import static org.junit.Assert.assertEquals;
 
-public class LangDetectChineseTest extends AbstractNodeTestHelper {
+public class LangDetectBinaryTests extends AbstractNodeTestHelper {
 
     @Test
-    public void testChineseLanguageCode() throws Exception {
+    public void testLangDetectBinary() throws Exception {
         CreateIndexRequestBuilder createIndexRequestBuilder =
-                new CreateIndexRequestBuilder(client("1").admin().indices()).setIndex("test");
+                new CreateIndexRequestBuilder(client("1"), CreateIndexAction.INSTANCE).setIndex("test");
         createIndexRequestBuilder.addMapping("someType", "{\n" +
-                "  \"someType\" : {\n" +
                 "    \"properties\": {\n" +
                 "      \"content\": {\n" +
                 "        \"type\": \"multi_field\",\n" +
@@ -26,25 +28,27 @@ public class LangDetectChineseTest extends AbstractNodeTestHelper {
                 "            \"type\": \"string\"\n" +
                 "          },\n" +
                 "          \"language\": {\n" +
-                "            \"type\": \"langdetect\"\n" +
+                "            \"type\": \"langdetect\",\n" +
+                "            \"binary\": true\n" +
                 "          }\n" +
                 "        }\n" +
                 "      }\n" +
                 "    }\n" +
-                "  }\n" +
                 "}");
         createIndexRequestBuilder.execute().actionGet();
         IndexRequestBuilder indexRequestBuilder =
-                new IndexRequestBuilder(client("1")).setIndex("test").setType("someType").setId("1")
-                .setSource("content", "位于美国首都华盛顿都会圈的希望中文学校５日晚举办活动庆祝建立２０周年。从中国大陆留学生为子女学中文而自发建立的学习班，到学生规模在全美名列前茅的中文学校，这个平台的发展也折射出美国的中文教育热度逐步提升。\n" +
-                        "希望中文学校是大华盛顿地区最大中文学校，现有７个校区逾４０００名学生，规模在美国东部数一数二。不过，见证了希望中文学校２０年发展的人们起初根本无法想象这个小小的中文教育平台能发展到今日之规模。");
+                new IndexRequestBuilder(client("1"), IndexAction.INSTANCE)
+                        .setIndex("test").setType("someType").setId("1")
+                        .setSource("content", "IkdvZCBTYXZlIHRoZSBRdWVlbiIgKGFsdGVybmF0aXZlbHkgIkdvZCBTYXZlIHRoZSBLaW5nIg==");
         indexRequestBuilder.setRefresh(true).execute().actionGet();
         SearchRequestBuilder searchRequestBuilder =
-                new SearchRequestBuilder(client("1"))
+                new SearchRequestBuilder(client("1"), SearchAction.INSTANCE)
                         .setIndices("test")
-                        .setQuery(QueryBuilders.termQuery("content.language.lang", "zh-cn"))
-                        .addField("content.language.lang");
+                        .setQuery(QueryBuilders.matchAllQuery())
+                        .addFields("content", "content.language");
         SearchResponse searchResponse = searchRequestBuilder.execute().actionGet();
         assertEquals(1L, searchResponse.getHits().getTotalHits());
+        //assertEquals("\"God Save the Queen\" (alternatively \"God Save the King\"", searchResponse.getHits().getAt(0).field("content").getValue());
+        assertEquals("en", searchResponse.getHits().getAt(0).field("content.language").getValue());
     }
 }

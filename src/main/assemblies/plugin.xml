@@ -1,20 +1,28 @@
 <?xml version="1.0"?>
 <assembly>
-<id>plugin</id>
-<formats>
-    <format>zip</format>
-</formats>
-<includeBaseDirectory>false</includeBaseDirectory>
-<dependencySets>
-    <dependencySet>
-        <outputDirectory>/</outputDirectory>
-        <useProjectArtifact>true</useProjectArtifact>
-        <unpack>false</unpack>
-        <scope>compile</scope>
-        <includes>
-            <include>org.xbib.elasticsearch.plugin</include>
-            <include>com.fasterxml.jackson.core</include>
-        </includes>
-    </dependencySet>
-</dependencySets>
+    <id>plugin</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>/</outputDirectory>
+            <useProjectArtifact>true</useProjectArtifact>
+            <unpack>false</unpack>
+            <scope>compile</scope>
+            <includes>
+                <include>org.xbib.elasticsearch.plugin</include>
+                <include>com.fasterxml.jackson.core:jackson-databind</include>
+                <include>com.fasterxml.jackson.core:jackson-annotations</include>
+            </includes>
+        </dependencySet>
+    </dependencySets>
+    <files>
+        <file>
+            <source>${basedir}/src/main/resources/plugin-descriptor.properties</source>
+            <outputDirectory>/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+    </files>
 </assembly>

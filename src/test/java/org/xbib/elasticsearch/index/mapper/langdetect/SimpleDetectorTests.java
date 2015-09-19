@@ -1,21 +1,18 @@
 package org.xbib.elasticsearch.index.mapper.langdetect;
 
-import org.elasticsearch.common.settings.ImmutableSettings;
+import org.elasticsearch.common.settings.Settings;
 import org.junit.Assert;
 import org.junit.Test;
 
 import org.xbib.elasticsearch.module.langdetect.LangdetectService;
 
-public class SimpleDetectorTest extends Assert {
+public class SimpleDetectorTests extends Assert {
 
     @Test
     public final void testDetector() throws Exception {
-
-        LangdetectService detect = new LangdetectService(ImmutableSettings.EMPTY);
+        LangdetectService detect = new LangdetectService(Settings.EMPTY);
         detect.start();
-        //detect.loadDefaultProfiles();
         assertEquals("de", detect.detectAll("Das kann deutsch sein").get(0).getLanguage());
-        //detect.reset();
         assertEquals("en", detect.detectAll("This is a very small test").get(0).getLanguage());
     }
 

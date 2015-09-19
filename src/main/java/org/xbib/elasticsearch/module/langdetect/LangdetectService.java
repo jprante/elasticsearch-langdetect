@@ -6,12 +6,11 @@ import org.elasticsearch.common.component.AbstractLifecycleComponent;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.logging.ESLogger;
 import org.elasticsearch.common.logging.ESLoggerFactory;
-import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
-import org.xbib.elasticsearch.index.analysis.langdetect.LangProfile;
-import org.xbib.elasticsearch.index.analysis.langdetect.Language;
-import org.xbib.elasticsearch.index.analysis.langdetect.LanguageDetectionException;
-import org.xbib.elasticsearch.index.analysis.langdetect.NGram;
+import org.xbib.elasticsearch.common.langdetect.LangProfile;
+import org.xbib.elasticsearch.common.langdetect.Language;
+import org.xbib.elasticsearch.common.langdetect.LanguageDetectionException;
+import org.xbib.elasticsearch.common.langdetect.NGram;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -85,11 +84,11 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
             "zh-tw"
     };
 
-    private Map<String, double[]> wordLangProbMap = new HashMap<String, double[]>();
+    private Map<String, double[]> wordLangProbMap = new HashMap<>();
 
-    private List<String> langlist = new LinkedList<String>();
+    private List<String> langlist = new LinkedList<>();
 
-    private Map<String,String> langmap = new HashMap<String,String>();
+    private Map<String,String> langmap = new HashMap<>();
 
     private String profile;
 
@@ -111,14 +110,16 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
 
     private Pattern filterPattern;
 
+    private boolean isStarted;
+
     @Inject
     public LangdetectService(Settings settings) {
         super(settings);
+        this.profile = settings.get("profile", "/langdetect/");
     }
 
     @Override
     protected void doStart() throws ElasticsearchException {
-        this.profile = settings.get("profile", "/langdetect/");
         load(settings);
         init();
     }
@@ -145,7 +146,7 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
             int size = keys.length;
             for (String key : keys) {
                 if (key != null && !key.isEmpty()) {
-                    loadProfileFromResource(key, profile, index++, size);
+                    loadProfileFromResource(key, this.profile, index++, size);
                 }
             }
             logger.debug("language detection service installed for {}", langlist);
@@ -155,16 +156,17 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
         }
         try {
             // map by settings
-            Settings map = ImmutableSettings.EMPTY;
+            Settings map = Settings.EMPTY;
             if (settings.getByPrefix("map.") != null) {
-                map = ImmutableSettings.settingsBuilder().put(settings.getByPrefix("map.")).build();
+                map = Settings.settingsBuilder().put(settings.getByPrefix("map.")).build();
             }
             if (map.getAsMap().isEmpty()) {
                 // is in "map" a resource name?
-                String s = settings.get("map") != null ? settings.get("map") : profile + "language.json";
+                String s = settings.get("map") != null ?
+                        settings.get("map") : this.profile + "language.json";
                 InputStream in = getClass().getResourceAsStream(s);
                 if (in != null) {
-                    map = ImmutableSettings.settingsBuilder().loadFromStream(s, in).build();
+                    map = Settings.settingsBuilder().loadFromStream(s, in).build();
                 }
             }
             this.langmap = map.getAsMap();
@@ -185,6 +187,7 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
         this.base_freq = settings.getAsInt("base_freq", 10000);
         this.filterPattern = settings.get("pattern") != null ?
                 Pattern.compile(settings.get("pattern"),Pattern.UNICODE_CHARACTER_CLASS) : null;
+        isStarted = true;
     }
 
     public void loadProfileFromResource(String resource, String profile, int index, int langsize) throws IOException {
@@ -227,11 +230,15 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
     }
 
     public List<Language> detectAll(String text) throws LanguageDetectionException {
-        List<Language> languages = new ArrayList<Language>();
+        if (!isStarted) {
+            load(settings);
+            init();
+        }
+        List<Language> languages = new ArrayList<>();
         if (filterPattern != null && !filterPattern.matcher(text).matches()) {
             return languages;
         }
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         languages = sortProbability(languages, detectBlock(list, text));
         return languages.subList(0, Math.min(languages.size(), settings.getAsInt("max", languages.size())));
     }

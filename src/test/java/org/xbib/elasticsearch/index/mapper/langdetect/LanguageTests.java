@@ -3,9 +3,9 @@ package org.xbib.elasticsearch.index.mapper.langdetect;
 import org.junit.Assert;
 import org.junit.Test;
 
-import org.xbib.elasticsearch.index.analysis.langdetect.Language;
+import org.xbib.elasticsearch.common.langdetect.Language;
 
-public class LanguageTest extends Assert {
+public class LanguageTests extends Assert {
 
     @Test
     public final void testLanguage() {

@@ -2,9 +2,9 @@ package org.xbib.elasticsearch.index.mapper.langdetect;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.xbib.elasticsearch.index.analysis.langdetect.LangProfile;
+import org.xbib.elasticsearch.common.langdetect.LangProfile;
 
-public class LangProfileTest extends Assert {
+public class LangProfileTests extends Assert {
 
     @Test
     public final void testLangProfile() {

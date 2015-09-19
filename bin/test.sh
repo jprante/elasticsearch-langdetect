@@ -41,7 +41,7 @@ curl -XPOST 'localhost:9200/test/_search' -d '
 {
    "query" : {
        "term" : {
-            "content.lang" : "en"
+            "content" : "en"
        }
    }
 }
@@ -50,7 +50,7 @@ curl -XPOST 'localhost:9200/test/_search' -d '
 {
    "query" : {
        "term" : {
-            "content.lang" : "de"
+            "content" : "de"
        }
    }
 }
@@ -60,7 +60,7 @@ curl -XPOST 'localhost:9200/test/_search' -d '
 {
    "query" : {
        "term" : {
-            "content.lang" : "fr"
+            "content" : "fr"
        }
    }
 }
