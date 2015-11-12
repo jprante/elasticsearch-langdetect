@@ -81,6 +81,7 @@ zh-tw
 
 | Elasticsearch  | Plugin         | Release date |
 | -------------- | -------------- | ------------ |
+| 2.0.0          | 2.0.0.0        | Nov 12, 2015 |
 | 2.0.0-beta2    | 2.0.0-beta2.0  | Sep 19, 2015 |
 | 1.6.0          | 1.6.0.0        | Jul  1, 2015 |
 | 1.4.0          | 1.4.4.2        | Apr  3, 2015 |
@@ -98,7 +99,7 @@ zh-tw
 
 ## Installation Elasticsearch 2.x
 
-    ./bin/plugin install http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/2.0.0-beta2.0/elasticsearch-langdetect-2.0.0-beta2.0-plugin.zip
+    ./bin/plugin install http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/2.0.0.0/elasticsearch-langdetect-2.0.0.0-plugin.zip
 
 Do not forget to restart the node after installing.
 
@@ -112,75 +113,155 @@ All feedback is welcome! If you find issues, please post them at [Github](https:
 
 # Examples
 
-## Language detection mapping example
+## A simple language detection example
 
-        curl -XDELETE 'localhost:9200/test'
+In this example, we create a simple detector field, and write text to it for detection.
 
-        curl -XPUT 'localhost:9200/test'
+    curl -XDELETE 'localhost:9200/test'
 
-        curl -XPOST 'localhost:9200/test/article/_mapping' -d '
-        {
-          "article" : {
-            "properties" : {
-               "content" : { "type" : "langdetect" }
-            }
-          }
+    curl -XPUT 'localhost:9200/test'
+
+    curl -XPOST 'localhost:9200/test/article/_mapping' -d '
+    {
+      "article" : {
+        "properties" : {
+           "content" : { "type" : "langdetect" }
         }
-        '
+      }
+    }
+    '
 
-        curl -XPUT 'localhost:9200/test/article/1' -d '
-        {
-          "title" : "Some title",
-          "content" : "Oh, say can you see by the dawn`s early light, What so proudly we hailed at the twilight`s last gleaming?"
-        }
-        '
+    curl -XPUT 'localhost:9200/test/article/1' -d '
+    {
+      "title" : "Some title",
+      "content" : "Oh, say can you see by the dawn`s early light, What so proudly we hailed at the twilight`s last gleaming?"
+    }
+    '
 
-        curl -XPUT 'localhost:9200/test/article/2' -d '
-        {
-          "title" : "Ein Titel",
-          "content" : "Einigkeit und Recht und Freiheit für das deutsche Vaterland!"
-        }
-        '
+    curl -XPUT 'localhost:9200/test/article/2' -d '
+    {
+      "title" : "Ein Titel",
+      "content" : "Einigkeit und Recht und Freiheit für das deutsche Vaterland!"
+    }
+    '
 
-        curl -XPUT 'localhost:9200/test/article/3' -d '
-        {
-          "title" : "Un titre",
-          "content" : "Allons enfants de la Patrie, Le jour de gloire est arrivé!"
-        }
-        '
+    curl -XPUT 'localhost:9200/test/article/3' -d '
+    {
+      "title" : "Un titre",
+      "content" : "Allons enfants de la Patrie, Le jour de gloire est arrivé!"
+    }
+    '
 
-        curl -XGET 'localhost:9200/test/_refresh'
+A search for the detected language codes is a simple term query, like this:
 
-        curl -XPOST 'localhost:9200/test/_search' -d '
-        {
-           "query" : {
-               "term" : {
-                    "content" : "en"
+    curl -XGET 'localhost:9200/test/_refresh'
+
+    curl -XPOST 'localhost:9200/test/_search' -d '
+    {
+       "query" : {
+           "term" : {
+                "content" : "en"
+           }
+       }
+    }
+    '
+    curl -XPOST 'localhost:9200/test/_search' -d '
+    {
+       "query" : {
+           "term" : {
+                "content" : "de"
+           }
+       }
+    }
+    '
+
+    curl -XPOST 'localhost:9200/test/_search' -d '
+    {
+       "query" : {
+           "term" : {
+                "content" : "fr"
+           }
+       }
+    }
+    '
+
+## Show stored language codes 
+ 
+Using multifields, it is possible to store the text alongside with the detected language(s).
+Here, we use another (short nonsense) example text for demonstration,
+which has more than one detected language code.
+
+    curl -XDELETE 'localhost:9200/test'
+
+    curl -XPUT 'localhost:9200/test'
+
+    curl -XPOST 'localhost:9200/test/article/_mapping' -d '
+    {
+      "article" : {
+        "properties" : {
+           "content" : { 
+             "type" : "multi_field",
+               "fields" : {
+                   "content" : {
+                       "type" : "string"
+                   },
+                   "language" : {
+                         "type": "langdetect",
+                         "store" : true
+                   }
                }
            }
         }
-        '
-        curl -XPOST 'localhost:9200/test/_search' -d '
-        {
-           "query" : {
-               "term" : {
-                    "content" : "de"
-               }
-           }
-        }
-        '
+      }
+    }
+    '
 
-        curl -XPOST 'localhost:9200/test/_search' -d '
-        {
-           "query" : {
-               "term" : {
-                    "content" : "fr"
-               }
-           }
-        }
-        '
+    curl -XPUT 'localhost:9200/test/article/1' -d '
+    {
+      "content" : "watt datt"
+    }
+    '
 
-## Language detection with attachment mapper plugin example
+    curl -XGET 'localhost:9200/test/_refresh'
+
+    curl -XPOST 'localhost:9200/test/_search?pretty' -d '
+    {
+       "fields" : "content.language",
+       "query" : {
+           "match" : {
+                "content" : "watt datt"
+           }
+       }
+    }
+    '
+
+The result is 
+
+    {
+     "took" : 2,
+     "timed_out" : false,
+     "_shards" : {
+       "total" : 5,
+       "successful" : 5,
+       "failed" : 0
+     },
+     "hits" : {
+       "total" : 1,
+       "max_score" : 0.51623213,
+       "hits" : [ {
+         "_index" : "test",
+         "_type" : "article",
+         "_id" : "1",
+         "_score" : 0.51623213,
+         "fields" : {
+           "content.language" : [ "sv", "it", "nl" ]
+         }
+       } ]
+     }
+    }
+
+
+## Language detection with attachment mapper plugin
 
 	curl -XDELETE 'localhost:9200/test'
 
@@ -288,6 +369,36 @@ All feedback is welcome! If you find issues, please post them at [Github](https:
         "probability" : 0.9999993070517024
       } ]
     }
+
+
+# Settings
+
+These settings can be used in `elasticsearch.yml` to modify language detection.
+
+Use with caution. You don't need to modify settings. This list is just for the sake of completeness.
+For successful modification of the model parameters, you should study the source code
+and be familiar with probabilistic matching using naive bayes with character n-gram. 
+See also Ted Dunning,
+[Statistical Identification of Language](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.48.1958), 1994.
+
+`langdetect.languages` - a comma-separated list of language codes used to restrict the detection
+
+`langdetect.map.<code>` - a substitution code for a language code
+
+`langdetect.number_of_trials` - number of trials, affects CPU usage (default: 7)
+
+`langdetect.alpha` - additional smoothing parameter, default: 0.5
+
+`langdetect.alpha_width` - the width of smoothing, default: 0.05
+
+`langdetect.iteration_limit` - safeguard to break loop, default: 10000
+
+`langdetect.prob_threshold` - default: 0.1
+
+`langdetect.conv_threshold` - detection is terminated when normalized probability exceeds 
+this threshold, default: 0.99999
+
+`langdetect.base_freq` - default 10000
 
 # Credits
 

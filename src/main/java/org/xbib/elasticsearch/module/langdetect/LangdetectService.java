@@ -139,8 +139,8 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
     private void load(Settings settings) {
         try {
             String[] keys = DEFAULT_LANGUAGES;
-            if (settings.get("languages") != null) {
-                keys = settings.get("languages").split(",");
+            if (settings.get("langdetect.languages") != null) {
+                keys = settings.get("langdetect.languages").split(",");
             }
             int index = 0;
             int size = keys.length;
@@ -157,13 +157,13 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
         try {
             // map by settings
             Settings map = Settings.EMPTY;
-            if (settings.getByPrefix("map.") != null) {
-                map = Settings.settingsBuilder().put(settings.getByPrefix("map.")).build();
+            if (settings.getByPrefix("langdetect.map.") != null) {
+                map = Settings.settingsBuilder().put(settings.getByPrefix("langdetect.map.")).build();
             }
             if (map.getAsMap().isEmpty()) {
                 // is in "map" a resource name?
-                String s = settings.get("map") != null ?
-                        settings.get("map") : this.profile + "language.json";
+                String s = settings.get("langdetect.map") != null ?
+                        settings.get("langdetect.map") : this.profile + "language.json";
                 InputStream in = getClass().getResourceAsStream(s);
                 if (in != null) {
                     map = Settings.settingsBuilder().loadFromStream(s, in).build();
@@ -178,15 +178,15 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
 
     private void init() {
         this.priorMap = null;
-        this.n_trial = settings.getAsInt("number_of_trials", 7);
-        this.alpha = settings.getAsDouble("alpha", 0.5);
-        this.alpha_width = settings.getAsDouble("alpha_width", 0.05);
-        this.iteration_limit = settings.getAsInt("iteration_limit", 10000);
-        this.prob_threshold = settings.getAsDouble("prob_threshold", 0.1);
-        this.conv_threshold = settings.getAsDouble("conv_threshold",  0.99999);
-        this.base_freq = settings.getAsInt("base_freq", 10000);
-        this.filterPattern = settings.get("pattern") != null ?
-                Pattern.compile(settings.get("pattern"),Pattern.UNICODE_CHARACTER_CLASS) : null;
+        this.n_trial = settings.getAsInt("langdetect.number_of_trials", 7);
+        this.alpha = settings.getAsDouble("langdetect.alpha", 0.5);
+        this.alpha_width = settings.getAsDouble("langdetect.alpha_width", 0.05);
+        this.iteration_limit = settings.getAsInt("langdetect.iteration_limit", 10000);
+        this.prob_threshold = settings.getAsDouble("langdetect.prob_threshold", 0.1);
+        this.conv_threshold = settings.getAsDouble("langdetect.conv_threshold",  0.99999);
+        this.base_freq = settings.getAsInt("langdetect.base_freq", 10000);
+        this.filterPattern = settings.get("langdetect.pattern") != null ?
+                Pattern.compile(settings.get("langdetect.pattern"),Pattern.UNICODE_CHARACTER_CLASS) : null;
         isStarted = true;
     }
 
@@ -240,7 +240,7 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
         }
         List<String> list = new ArrayList<>();
         languages = sortProbability(languages, detectBlock(list, text));
-        return languages.subList(0, Math.min(languages.size(), settings.getAsInt("max", languages.size())));
+        return languages.subList(0, Math.min(languages.size(), settings.getAsInt("langdetect.max", languages.size())));
     }
 
     private double[] detectBlock(List<String> list, String text) throws LanguageDetectionException {

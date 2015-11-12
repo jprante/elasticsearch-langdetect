@@ -23,7 +23,7 @@ public class DetectorTests extends Assert {
     public static void setUp() throws Exception {
 
         Settings settings = Settings.settingsBuilder()
-                .put("languages", "")
+                .put("langdetect.languages", "")
                 .build();
         detect = new LangdetectService(settings);
         detect.start();
