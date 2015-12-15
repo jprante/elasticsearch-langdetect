@@ -10,6 +10,7 @@ import org.elasticsearch.index.mapper.ParseContext;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.xbib.elasticsearch.index.MapperTestUtils;
 
 import java.io.IOException;
 import java.io.InputStreamReader;

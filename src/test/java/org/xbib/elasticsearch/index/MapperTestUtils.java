@@ -1,4 +1,4 @@
-package org.xbib.elasticsearch.index.mapper.langdetect;
+package org.xbib.elasticsearch.index;
 
 import org.elasticsearch.Version;
 import org.elasticsearch.cluster.metadata.IndexMetaData;

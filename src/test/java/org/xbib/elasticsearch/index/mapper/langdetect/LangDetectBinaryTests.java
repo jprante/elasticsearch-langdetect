@@ -1,4 +1,4 @@
-package org.xbib.elasticsearch.plugin;
+package org.xbib.elasticsearch.index.mapper.langdetect;
 
 import org.elasticsearch.action.admin.indices.create.CreateIndexAction;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
@@ -9,11 +9,11 @@ import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.junit.Test;
-import org.xbib.elasticsearch.plugin.helper.AbstractNodeTestHelper;
+import org.xbib.elasticsearch.index.NodeTestUtils;
 
 import static org.junit.Assert.assertEquals;
 
-public class LangDetectBinaryTests extends AbstractNodeTestHelper {
+public class LangDetectBinaryTests extends NodeTestUtils {
 
     @Test
     public void testLangDetectBinary() throws Exception {
