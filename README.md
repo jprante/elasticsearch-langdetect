@@ -81,6 +81,7 @@ zh-tw
 
 | Elasticsearch  | Plugin         | Release date |
 | -------------- | -------------- | ------------ |
+| 2.0.1          | 2.0.1.0        | Dec 15, 2015 |
 | 2.0.0          | 2.0.0.0        | Nov 12, 2015 |
 | 2.0.0-beta2    | 2.0.0-beta2.0  | Sep 19, 2015 |
 | 1.6.0          | 1.6.0.0        | Jul  1, 2015 |
@@ -99,7 +100,7 @@ zh-tw
 
 ## Installation Elasticsearch 2.x
 
-    ./bin/plugin install http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/2.0.0.0/elasticsearch-langdetect-2.0.0.0-plugin.zip
+    ./bin/plugin install http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/2.0.1.0/elasticsearch-langdetect-2.0.1.0-plugin.zip
 
 Do not forget to restart the node after installing.
 
