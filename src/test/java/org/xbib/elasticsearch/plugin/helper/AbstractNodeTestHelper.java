@@ -1,18 +1,23 @@
 package org.xbib.elasticsearch.plugin.helper;
 
+import org.elasticsearch.Version;
 import org.elasticsearch.action.admin.cluster.node.info.NodesInfoRequest;
 import org.elasticsearch.action.admin.cluster.node.info.NodesInfoResponse;
 import org.elasticsearch.client.support.AbstractClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.node.MyNodeBuilder;
 import org.elasticsearch.node.Node;
+import org.elasticsearch.plugins.Plugin;
 import org.junit.After;
 import org.junit.Before;
 import org.xbib.elasticsearch.plugin.langdetect.LangdetectPlugin;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -97,7 +102,9 @@ public abstract class AbstractNodeTestHelper {
                 .put(getNodeSettings())
                 .put("name", id)
                 .build();
-        Node node = nodeBuilder().settings(finalSettings).build();
+        List<Class<? extends Plugin>> classpathPlugins = new ArrayList<>();
+        classpathPlugins.add(LangdetectPlugin.class);
+        Node node = MyNodeBuilder.nodeBuilder(finalSettings, Version.CURRENT, classpathPlugins);
         AbstractClient client = (AbstractClient)node.client();
         nodes.put(id, node);
         clients.put(id, client);
