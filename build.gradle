@@ -1,0 +1,168 @@
+
+def xbibGroup = 'org.xbib.elasticsearch.plugin'
+def xbibVersion = '2.1.1.0'
+
+group = xbibGroup
+version = xbibVersion
+
+println "Current JVM: " + org.gradle.internal.jvm.Jvm.current()
+
+ext {
+    pluginName = 'langdetect'
+    pluginClassname  = 'org.xbib.elasticsearch.plugin.langdetect.LangdetectPlugin'
+    pluginDescription = 'Language detection for Elasticsearch'
+    versions = [
+        'log4j': '2.5',
+        'junit' : '4.12',
+        'elasticsearch' : '2.1.1',
+        'jackson': '2.6.2'
+    ]
+}
+
+apply plugin: 'java'
+apply plugin: 'maven'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    jcenter()
+    maven {
+        url "http://xbib.org/repository"
+    }
+}
+
+sourceSets {
+    integrationTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/integration-test/java')
+        }
+        resources.srcDir file('src/integration-test/resources')
+    }
+}
+configurations {
+    providedCompile
+    releaseJars
+    wagon
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
+}
+
+dependencies {
+    compile "org.elasticsearch:elasticsearch:${versions.elasticsearch}"
+    compile "com.fasterxml.jackson.core:jackson-databind:${versions.jackson}"
+    releaseJars("com.fasterxml.jackson.core:jackson-databind:${versions.jackson}") {
+        exclude module: "jackson-core"
+    }
+    testCompile "junit:junit:${versions.junit}"
+    testCompile "org.apache.logging.log4j:log4j-slf4j-impl:${versions.log4j}"
+    testCompile "org.apache.logging.log4j:log4j-core:${versions.log4j}"
+    integrationTestCompile "junit:junit:${versions.junit}"
+    integrationTestCompile "org.elasticsearch:elasticsearch:${versions.elasticsearch}"
+    wagon 'org.apache.maven.wagon:wagon-ssh-external:2.10'
+}
+
+compileJava {
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}
+
+test {
+    systemProperties['path.home'] = System.getProperty("user.dir")
+    testLogging {
+        showStandardStreams = false
+        exceptionFormat = 'full'
+    }
+}
+
+task makePluginDescriptor(type: Copy) {
+    from 'src/main/templates'
+    into 'build/tmp/plugin'
+    expand([
+            'descriptor': [
+                'name': pluginName,
+                'classname': pluginClassname,
+                'description': pluginDescription,
+                'jvm': true,
+                'site': false,
+                'isolated': true,
+                'version': project.property('version'),
+                'javaVersion': project.property('targetCompatibility'),
+                'elasticsearchVersion' : versions.elasticsearch
+            ]
+    ])
+}
+
+task buildPluginZip(type: Zip, dependsOn: [':jar', ':makePluginDescriptor']) {
+    from files(libsDir)
+    from configurations.releaseJars
+    from 'build/tmp/plugin'
+    classifier = 'plugin'
+}
+
+task unpackPlugin(type: Copy, dependsOn: [':buildPluginZip']) {
+    delete "plugins"
+    from files(libsDir)
+    from configurations.releaseJars
+    from 'build/tmp/plugin'
+    into "plugins/${pluginName}"
+}
+
+task integrationTest(type: Test, dependsOn: ['unpackPlugin']) {
+    testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = configurations.integrationTestCompile
+    classpath += fileTree("plugins/${pluginName}").include('*.jar')
+    classpath += sourceSets.integrationTest.output
+    // without this trick to remove identical jars from classpath, an Elasticsearch bug whines about a "jar hell"
+    classpath -= configurations.releaseJars
+    outputs.upToDateWhen { false }
+    systemProperty 'path.home', projectDir.absolutePath
+    testLogging.showStandardStreams = false
+}
+
+integrationTest.mustRunAfter test
+check.dependsOn integrationTest
+
+clean {
+    delete "plugins"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    from sourceSets.main.allSource
+    classifier 'sources'
+}
+
+artifacts {
+    archives sourcesJar
+    archives buildPluginZip
+}
+
+uploadArchives {
+    repositories {
+        if (project.hasProperty("xbibUsername")) {
+            mavenDeployer {
+                configuration = configurations.wagon
+                repository(
+                        id: 'xbib.org',
+                        url: uri('scpexe://xbib.org/repository'),
+                        authentication: [userName: xbibUsername, privateKey: xbibPrivateKey]
+                )
+                pom.project {
+                    inceptionYear '2012'
+                    licenses {
+                        license {
+                            name 'The Apache Software License, Version 2.0'
+                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                            distribution 'repo'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

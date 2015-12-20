@@ -10,7 +10,7 @@ import org.elasticsearch.index.mapper.ParseContext;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.xbib.elasticsearch.index.MapperTestUtils;
+import org.xbib.elasticsearch.MapperTestUtils;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,7 +18,7 @@ import java.io.InputStreamReader;
 import static org.elasticsearch.common.io.Streams.copyToString;
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
-public class LangdetectMappingTests extends Assert {
+public class LangdetectMappingTest extends Assert {
 
     private final static ESLogger logger = ESLoggerFactory.getLogger("test");
 
@@ -106,9 +106,7 @@ public class LangdetectMappingTests extends Assert {
     }
 
     private DocumentMapperParser newMapperParser() {
-        DocumentMapperParser mapperParser = MapperTestUtils.newMapperParser();
-        mapperParser.putTypeParser(LangdetectMapper.CONTENT_TYPE, new LangdetectMapper.TypeParser());
-        return mapperParser;
+        return MapperTestUtils.newMapperParser();
     }
 
     public String copyToStringFromClasspath(String path) throws IOException {

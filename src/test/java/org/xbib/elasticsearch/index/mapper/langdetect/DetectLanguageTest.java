@@ -12,7 +12,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 
-public class DetectLanguageTests extends Assert {
+public class DetectLanguageTest extends Assert {
 
     @Test
     public void testEnglish() throws IOException {

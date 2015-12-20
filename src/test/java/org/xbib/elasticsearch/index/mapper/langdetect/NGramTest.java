@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import org.xbib.elasticsearch.common.langdetect.NGram;
 
-public class NGramTests extends Assert {
+public class NGramTest extends Assert {
 
     @Test
     public final void testConstants() {

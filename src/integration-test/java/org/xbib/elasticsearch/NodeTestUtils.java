@@ -1,10 +1,9 @@
-package org.xbib.elasticsearch.index;
+package org.xbib.elasticsearch;
 
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.node.MockNode;
 import org.elasticsearch.node.Node;
-import org.elasticsearch.plugins.Plugin;
 import org.junit.After;
 import org.junit.Before;
 import org.xbib.elasticsearch.plugin.langdetect.LangdetectPlugin;
@@ -16,8 +15,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.HashSet;
-import java.util.Set;
 
 public class NodeTestUtils {
 
@@ -31,10 +28,7 @@ public class NodeTestUtils {
                 .put("index.number_of_replica", 0)
                 .build();
         // ES 2.1 renders NodeBuilder as useless
-        //Node node = NodeBuilder.nodeBuilder().settings(nodeSettings).local(true).build().start();
-        Set<Class<? extends Plugin>> plugins = new HashSet<>();
-        plugins.add(LangdetectPlugin.class);
-        Node node = new MockNode(nodeSettings, plugins);
+        Node node = new MockNode(nodeSettings, LangdetectPlugin.class);
         node.start();
         return node;
     }
@@ -47,8 +41,8 @@ public class NodeTestUtils {
     }
 
     @Before
-    public void setupMapperParser() throws IOException {
-        node = NodeTestUtils.createNode();
+    public void setupNode() throws IOException {
+        node = createNode();
         client = node.client();
     }
 
@@ -57,8 +51,8 @@ public class NodeTestUtils {
     }
 
     @After
-    public void cleanup() throws IOException {
-        NodeTestUtils.releaseNode(node);
+    public void cleanupNode() throws IOException {
+        releaseNode(node);
     }
 
     private static void deleteFiles() throws IOException {
@@ -75,8 +69,6 @@ public class NodeTestUtils {
                 Files.delete(dir);
                 return FileVisitResult.CONTINUE;
             }
-
         });
-
     }
 }

@@ -9,7 +9,7 @@ import org.xbib.elasticsearch.common.langdetect.LangProfile;
 import org.xbib.elasticsearch.common.langdetect.LanguageDetectionException;
 import org.xbib.elasticsearch.module.langdetect.LangdetectService;
 
-public class DetectorTests extends Assert {
+public class DetectorTest extends Assert {
 
     private static final String TRAINING_EN = "a a a b b c c d e";
 

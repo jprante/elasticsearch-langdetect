@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import org.xbib.elasticsearch.common.langdetect.Language;
 
-public class LanguageTests extends Assert {
+public class LanguageTest extends Assert {
 
     @Test
     public final void testLanguage() {

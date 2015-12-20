@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import org.xbib.elasticsearch.module.langdetect.LangdetectService;
 
-public class SimpleDetectorTests extends Assert {
+public class SimpleDetectorTest extends Assert {
 
     @Test
     public final void testDetector() throws Exception {

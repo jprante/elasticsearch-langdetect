@@ -1,7 +1,7 @@
-package org.xbib.elasticsearch.index.mapper.langdetect;
+package org.xbib.elasticsearch.plugin.langdetect;
 
 import org.junit.Test;
-import org.xbib.elasticsearch.index.NodeTestUtils;
+import org.xbib.elasticsearch.NodeTestUtils;
 import org.xbib.elasticsearch.action.langdetect.LangdetectRequestBuilder;
 import org.xbib.elasticsearch.action.langdetect.LangdetectResponse;
 
@@ -9,7 +9,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-public class LangDetectActionTests extends NodeTestUtils {
+public class LangDetectActionTest extends NodeTestUtils {
 
     @Test
     public void testLangDetectProfile() throws Exception {

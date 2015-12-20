@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.xbib.elasticsearch.common.langdetect.LangProfile;
 
-public class LangProfileTests extends Assert {
+public class LangProfileTest extends Assert {
 
     @Test
     public final void testLangProfile() {
