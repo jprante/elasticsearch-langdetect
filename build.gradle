@@ -153,11 +153,13 @@ clean {
 
 task javadocJar(type: Jar, dependsOn: classes) {
     from javadoc
+    into "build/tmp"
     classifier 'javadoc'
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
+    into "build/tmp"
     classifier 'sources'
 }
 
