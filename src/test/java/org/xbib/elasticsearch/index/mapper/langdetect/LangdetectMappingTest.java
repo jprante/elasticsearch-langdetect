@@ -2,6 +2,7 @@ package org.xbib.elasticsearch.index.mapper.langdetect;
 
 import org.apache.lucene.index.IndexableField;
 import org.elasticsearch.common.bytes.BytesReference;
+import org.elasticsearch.common.compress.CompressedXContent;
 import org.elasticsearch.common.logging.ESLogger;
 import org.elasticsearch.common.logging.ESLoggerFactory;
 import org.elasticsearch.index.mapper.DocumentMapper;
@@ -25,7 +26,7 @@ public class LangdetectMappingTest extends Assert {
     @Test
     public void testSimpleMappings() throws Exception {
         String mapping = copyToStringFromClasspath("simple-mapping.json");
-        DocumentMapper docMapper = newMapperParser().parse(mapping);
+        DocumentMapper docMapper = newMapperParser().parse("someType", new CompressedXContent(mapping));
         String sampleText = copyToStringFromClasspath("english.txt");
         BytesReference json = jsonBuilder().startObject().field("someField", sampleText).endObject().bytes();
         ParseContext.Document doc = docMapper.parse("someIndex", "someType", "1", json).rootDoc();
@@ -36,7 +37,7 @@ public class LangdetectMappingTest extends Assert {
         assertEquals("en", doc.getFields("someField")[0].stringValue());
         // re-parse it
         String builtMapping = docMapper.mappingSource().string();
-        docMapper = newMapperParser().parse(builtMapping);
+        docMapper = newMapperParser().parse("someType", new CompressedXContent(builtMapping));
         json = jsonBuilder().startObject().field("someField", sampleText).endObject().bytes();
         doc = docMapper.parse("someIndex", "someType", "1", json).rootDoc();
         assertEquals(1, doc.getFields("someField").length);
@@ -46,7 +47,7 @@ public class LangdetectMappingTest extends Assert {
     @Test
     public void testBinary() throws Exception {
         String mapping = copyToStringFromClasspath("base64-mapping.json");
-        DocumentMapper docMapper = newMapperParser().parse(mapping);
+        DocumentMapper docMapper = newMapperParser().parse("someType", new CompressedXContent(mapping));
         String sampleBinary = copyToStringFromClasspath("base64.txt");
         String sampleText = copyToStringFromClasspath("base64-decoded.txt");
         BytesReference json = jsonBuilder().startObject().field("someField", sampleBinary).endObject().bytes();
@@ -58,7 +59,7 @@ public class LangdetectMappingTest extends Assert {
         assertEquals("en", doc.getFields("someField")[0].stringValue());
         // re-parse it
         String builtMapping = docMapper.mappingSource().string();
-        docMapper = newMapperParser().parse(builtMapping);
+        docMapper = newMapperParser().parse("someType", new CompressedXContent(builtMapping));
         json = jsonBuilder().startObject().field("someField", sampleText).endObject().bytes();
         doc = docMapper.parse("someIndex", "someType", "1", json).rootDoc();
         assertEquals(1, doc.getFields("someField").length);
@@ -68,7 +69,7 @@ public class LangdetectMappingTest extends Assert {
     @Test
     public void testBinary2() throws Exception {
         String mapping = copyToStringFromClasspath("base64-2-mapping.json");
-        DocumentMapper docMapper = newMapperParser().parse(mapping);
+        DocumentMapper docMapper = newMapperParser().parse("someType", new CompressedXContent(mapping));
         //String sampleBinary = copyToStringFromClasspath("base64-2.txt");
         String sampleText = copyToStringFromClasspath("base64-2-decoded.txt");
         BytesReference json = jsonBuilder().startObject().field("content", sampleText).endObject().bytes();
@@ -80,7 +81,7 @@ public class LangdetectMappingTest extends Assert {
         assertEquals("en", doc.getFields("content.language")[0].stringValue());
         // re-parse it
         String builtMapping = docMapper.mappingSource().string();
-        docMapper = newMapperParser().parse(builtMapping);
+        docMapper = newMapperParser().parse("someType", new CompressedXContent(builtMapping));
         json = jsonBuilder().startObject().field("content", sampleText).endObject().bytes();
         doc = docMapper.parse("someIndex", "someType", "1", json).rootDoc();
         assertEquals(1, doc.getFields("content.language").length);
@@ -90,7 +91,7 @@ public class LangdetectMappingTest extends Assert {
     @Test
     public void testShortTextProfile() throws Exception {
         String mapping = copyToStringFromClasspath("short-text-mapping.json");
-        DocumentMapper docMapper = newMapperParser().parse(mapping);
+        DocumentMapper docMapper = newMapperParser().parse("someType", new CompressedXContent(mapping));
         String sampleText = copyToStringFromClasspath("english.txt");
         BytesReference json = jsonBuilder().startObject().field("someField", sampleText).endObject().bytes();
         ParseContext.Document doc = docMapper.parse("someIndex", "someType", "1", json).rootDoc();
@@ -98,7 +99,7 @@ public class LangdetectMappingTest extends Assert {
         assertEquals("en", doc.getFields("someField")[0].stringValue());
         // re-parse it
         String builtMapping = docMapper.mappingSource().string();
-        docMapper = newMapperParser().parse(builtMapping);
+        docMapper = newMapperParser().parse("someType", new CompressedXContent(builtMapping));
         json = jsonBuilder().startObject().field("someField", sampleText).endObject().bytes();
         doc = docMapper.parse("someIndex", "someType", "1", json).rootDoc();
         assertEquals(1, doc.getFields("someField").length);

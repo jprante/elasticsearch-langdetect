@@ -51,7 +51,7 @@ public class LangdetectMapper extends StringFieldMapper {
         protected Settings.Builder settingsBuilder = Settings.settingsBuilder();
 
         public Builder(String name) {
-            super(name, Defaults.LANG_FIELD_TYPE);
+            super(name, Defaults.LANG_FIELD_TYPE, Defaults.LANG_FIELD_TYPE);
             this.builder = this;
         }
 

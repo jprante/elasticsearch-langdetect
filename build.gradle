@@ -1,30 +1,47 @@
-
-def xbibGroup = 'org.xbib.elasticsearch.plugin'
-def xbibVersion = '2.1.1.0'
-
-group = xbibGroup
-version = xbibVersion
-
-println "Current JVM: " + org.gradle.internal.jvm.Jvm.current()
+group = 'org.xbib.elasticsearch.plugin'
+version = '2.2.0.1'
 
 ext {
     pluginName = 'langdetect'
     pluginClassname  = 'org.xbib.elasticsearch.plugin.langdetect.LangdetectPlugin'
     pluginDescription = 'Language detection for Elasticsearch'
+    user = 'jprante'
+    name = 'elasticsearch-langdetect'
+    scmUrl = 'https://github.com/' + user + '/' + name
+    scmConnection = 'scm:git:git://github.com/' + user + '/' + name + '.git'
+    scmDeveloperConnection = 'scm:git:git://github.com/' + user + '/' + name + '.git'
     versions = [
-        'log4j': '2.5',
-        'junit' : '4.12',
-        'elasticsearch' : '2.1.1',
-        'jackson': '2.6.2'
+            'elasticsearch' : '2.2.0',
+            'jackson': '2.6.2',
+            'log4j': '2.5',
+            'junit' : '4.12'
     ]
+}
+
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+        maven {
+            url "http://xbib.org/repository"
+        }
+    }
+    dependencies {
+        classpath 'org.ajoberstar:gradle-git:1.4.2'
+        classpath 'co.riiid:gradle-github-plugin:0.4.2'
+        classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3'
+    }
 }
 
 apply plugin: 'java'
 apply plugin: 'maven'
+apply plugin: 'signing'
+apply plugin: 'co.riiid.gradle'
 
 repositories {
-    mavenCentral()
     mavenLocal()
+    mavenCentral()
     jcenter()
     maven {
         url "http://xbib.org/repository"
@@ -42,19 +59,22 @@ sourceSets {
     }
 }
 configurations {
-    providedCompile
-    releaseJars
     wagon
     integrationTestCompile.extendsFrom testCompile
     integrationTestRuntime.extendsFrom testRuntime
+    releaseJars {
+        extendsFrom runtime
+        exclude group: 'org.elasticsearch'
+        exclude module: 'jna'
+        exclude module: 'jackson-core'
+        exclude module: 'jackson-dataformat-smile'
+        exclude module: 'jackson-dataformat-yaml'
+    }
 }
 
 dependencies {
     compile "org.elasticsearch:elasticsearch:${versions.elasticsearch}"
     compile "com.fasterxml.jackson.core:jackson-databind:${versions.jackson}"
-    releaseJars("com.fasterxml.jackson.core:jackson-databind:${versions.jackson}") {
-        exclude module: "jackson-core"
-    }
     testCompile "junit:junit:${versions.junit}"
     testCompile "org.apache.logging.log4j:log4j-slf4j-impl:${versions.log4j}"
     testCompile "org.apache.logging.log4j:log4j-core:${versions.log4j}"
@@ -63,13 +83,11 @@ dependencies {
     wagon 'org.apache.maven.wagon:wagon-ssh-external:2.10'
 }
 
-compileJava {
-    sourceCompatibility = 1.7
-    targetCompatibility = 1.7
-}
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
 
 tasks.withType(JavaCompile) {
-    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    options.compilerArgs << "-Xlint:unchecked,deprecation"
 }
 
 test {
@@ -102,7 +120,7 @@ task buildPluginZip(type: Zip, dependsOn: [':jar', ':makePluginDescriptor']) {
     from files(libsDir)
     from configurations.releaseJars
     from 'build/tmp/plugin'
-    classifier = 'plugin'
+    classifier 'plugin'
 }
 
 task unpackPlugin(type: Copy, dependsOn: [':buildPluginZip']) {
@@ -130,6 +148,12 @@ check.dependsOn integrationTest
 
 clean {
     delete "plugins"
+    delete "logs"
+}
+
+task javadocJar(type: Jar, dependsOn: classes) {
+    from javadoc
+    classifier 'javadoc'
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -138,31 +162,14 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 }
 
 artifacts {
-    archives sourcesJar
-    archives buildPluginZip
+    archives javadocJar, sourcesJar, buildPluginZip
 }
 
-uploadArchives {
-    repositories {
-        if (project.hasProperty("xbibUsername")) {
-            mavenDeployer {
-                configuration = configurations.wagon
-                repository(
-                        id: 'xbib.org',
-                        url: uri('scpexe://xbib.org/repository'),
-                        authentication: [userName: xbibUsername, privateKey: xbibPrivateKey]
-                )
-                pom.project {
-                    inceptionYear '2012'
-                    licenses {
-                        license {
-                            name 'The Apache Software License, Version 2.0'
-                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                            distribution 'repo'
-                        }
-                    }
-                }
-            }
-        }
-    }
+signing {
+    sign configurations.archives
 }
+
+ext.grgit = org.ajoberstar.grgit.Grgit.open()
+
+apply from: 'gradle/git.gradle'
+apply from: 'gradle/publish.gradle'

@@ -3,7 +3,6 @@ package org.xbib.elasticsearch.plugin.langdetect;
 import org.elasticsearch.action.ActionModule;
 import org.elasticsearch.common.component.LifecycleComponent;
 import org.elasticsearch.common.inject.Inject;
-import org.elasticsearch.common.inject.Module;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.indices.IndicesModule;
 import org.elasticsearch.plugins.Plugin;
@@ -11,7 +10,6 @@ import org.elasticsearch.rest.RestModule;
 import org.xbib.elasticsearch.action.langdetect.LangdetectAction;
 import org.xbib.elasticsearch.action.langdetect.TransportLangdetectAction;
 import org.xbib.elasticsearch.index.mapper.langdetect.LangdetectMapper;
-import org.xbib.elasticsearch.module.langdetect.LangdetectModule;
 import org.xbib.elasticsearch.module.langdetect.LangdetectService;
 import org.xbib.elasticsearch.rest.action.langdetect.RestLangdetectAction;
 
@@ -38,17 +36,19 @@ public class LangdetectPlugin extends Plugin {
     }
 
     public void onModule(ActionModule module) {
-        module.registerAction(LangdetectAction.INSTANCE, TransportLangdetectAction.class);
+        if (settings.getAsBoolean("plugins.langdetect.enabled", true)) {
+            module.registerAction(LangdetectAction.INSTANCE, TransportLangdetectAction.class);
+        }
     }
 
     public void onModule(RestModule module) {
-        if ("node".equals(settings.get("client.type")) && settings.getAsBoolean("plugins.langdetect.enabled", true)) {
+        if (settings.getAsBoolean("plugins.langdetect.enabled", true)) {
             module.addRestAction(RestLangdetectAction.class);
         }
     }
 
     public void onModule(IndicesModule indicesModule) {
-        if ("node".equals(settings.get("client.type")) && settings.getAsBoolean("plugins.langdetect.enabled", true)) {
+        if (settings.getAsBoolean("plugins.langdetect.enabled", true)) {
             indicesModule.registerMapper(LangdetectMapper.CONTENT_TYPE, new LangdetectMapper.TypeParser());
         }
     }
@@ -56,19 +56,21 @@ public class LangdetectPlugin extends Plugin {
     @Override
     public Collection<Class<? extends LifecycleComponent>> nodeServices() {
         Collection<Class<? extends LifecycleComponent>> services = new ArrayList<>();
-        if ("node".equals(settings.get("client.type")) && settings.getAsBoolean("plugins.langdetect.enabled", true)) {
+        if (settings.getAsBoolean("plugins.langdetect.enabled", true)) {
             services.add(LangdetectService.class);
         }
         return services;
     }
 
-    /*@Override
-    public Collection<Module> indexModules(Settings indexSettings) {
+    /*
+    @Override
+    public Collection<Module> nodeModules() {
         Collection<Module> modules = new ArrayList<>();
-        if ("node".equals(settings.get("client.type")) && settings.getAsBoolean("plugins.langdetect.enabled", true)) {
+        if (settings.getAsBoolean("plugins.langdetect.enabled", true)) {
             modules.add(new LangdetectModule());
         }
         return modules;
-    }*/
+    }
+    */
 
 }

@@ -27,7 +27,7 @@ public class RestLangdetectAction extends BaseRestHandler {
         LangdetectRequest langdetectRequest = new LangdetectRequest()
                 .setProfile(request.param("profile", "/langdetect/"))
                 .setText(request.content().toUtf8());
-        client.admin().indices().execute(LangdetectAction.INSTANCE, langdetectRequest,
+        client.execute(LangdetectAction.INSTANCE, langdetectRequest,
                 new RestStatusToXContentListener<LangdetectResponse>(channel));
     }
 }
