@@ -1,6 +1,5 @@
 package org.xbib.elasticsearch.module.langdetect;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.common.component.AbstractLifecycleComponent;
 import org.elasticsearch.common.inject.Inject;
@@ -14,12 +13,7 @@ import org.xbib.elasticsearch.common.langdetect.NGram;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class LangdetectService extends AbstractLifecycleComponent<LangdetectService> {
@@ -195,8 +189,8 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
         if (in == null) {
             throw new IOException("profile '" + resource + "' not found");
         }
-        ObjectMapper mapper = new ObjectMapper();
-        LangProfile langProfile = mapper.readValue(in, LangProfile.class);
+        LangProfile langProfile = new LangProfile();
+        langProfile.read(in);
         addProfile(langProfile, index, langsize);
     }
 
@@ -212,7 +206,7 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
             }
             int length = word.length();
             if (length >= 1 && length <= 3) {
-                double prob = profile.getFreq().get(word).doubleValue() / profile.getNWords()[length - 1];
+                double prob = profile.getFreq().get(word).doubleValue() / profile.getNWords().get(length - 1);
                 wordLangProbMap.get(word)[index] = prob;
             }
         }

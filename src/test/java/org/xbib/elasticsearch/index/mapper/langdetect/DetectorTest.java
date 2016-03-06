@@ -28,19 +28,22 @@ public class DetectorTest extends Assert {
         detect = new LangdetectService(settings);
         detect.start();
 
-        LangProfile profile_en = new LangProfile("en");
+        LangProfile profile_en = new LangProfile();
+        profile_en.setName("en");
         for (String w : TRAINING_EN.split(" ")) {
             profile_en.add(w);
         }
         detect.addProfile(profile_en, 0, 3);
 
-        LangProfile profile_fr = new LangProfile("fr");
+        LangProfile profile_fr = new LangProfile();
+        profile_fr.setName("fr");
         for (String w : TRAINING_FR.split(" ")) {
             profile_fr.add(w);
         }
         detect.addProfile(profile_fr, 1, 3);
 
-        LangProfile profile_ja = new LangProfile("ja");
+        LangProfile profile_ja = new LangProfile();
+        profile_ja.setName("ja");
         for (String w : TRAINING_JA.split(" ")) {
             profile_ja.add(w);
         }
