@@ -363,7 +363,7 @@ The result is
       } ]
     }
 
-## Use langdetect endpoint from Sense
+## Use _langdetect endpoint from Sense
 
     GET _langdetect
     {
