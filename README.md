@@ -363,6 +363,14 @@ The result is
       } ]
     }
 
+## Use langdetect endpoint from Sense
+
+    GET _langdetect
+    {
+       "text": "das ist ein test"
+    }
+	
+	
 ## Change profile of language detection to "short text" profile
 
     curl -XPOST 'localhost:9200/_langdetect?pretty&profile=/langdetect/short-text/' -d 'Das ist ein Test'
