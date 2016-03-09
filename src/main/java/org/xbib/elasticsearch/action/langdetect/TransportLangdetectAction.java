@@ -11,31 +11,32 @@ import org.xbib.elasticsearch.common.langdetect.Language;
 import org.xbib.elasticsearch.common.langdetect.LanguageDetectionException;
 import org.xbib.elasticsearch.common.langdetect.LangdetectService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TransportLangdetectAction extends TransportAction<LangdetectRequest, LangdetectResponse> {
 
-    private final LangdetectService service;
-
-    private final LangdetectService shortService;
+    private final static Map<String,LangdetectService> services = new HashMap<>();
 
     @Inject
     public TransportLangdetectAction(Settings settings, ThreadPool threadPool,
                                      ActionFilters actionFilters,  IndexNameExpressionResolver indexNameExpressionResolver) {
         super(settings, LangdetectAction.NAME, threadPool, actionFilters, indexNameExpressionResolver);
-        this.service = new LangdetectService(settings);
-        this.shortService = new LangdetectService(settings, "short-text");
+        services.put("", new LangdetectService(settings));
     }
 
     @Override
     protected void doExecute(LangdetectRequest request, ActionListener<LangdetectResponse> listener) {
         try {
-            List<Language> langs;
-            if ("short-text".equals(request.getProfile())) {
-                langs = shortService.detectAll(request.getText());
-            } else {
-                langs = service.detectAll(request.getText());
+            String profile = request.getProfile();
+            if (profile == null) {
+                profile = "";
             }
+            if (!services.containsKey(profile)) {
+                services.put(profile, new LangdetectService(settings, profile));
+            }
+            List<Language> langs = services.get(profile).detectAll(request.getText());
             listener.onResponse(new LangdetectResponse().setLanguages(langs).setProfile(request.getProfile()));
         } catch (LanguageDetectionException e) {
             listener.onFailure(e);
