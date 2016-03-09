@@ -1,7 +1,6 @@
 package org.xbib.elasticsearch.index.mapper.langdetect;
 
 import org.elasticsearch.common.io.Streams;
-import org.elasticsearch.common.settings.Settings;
 import org.junit.Assert;
 import org.junit.Test;
 import org.xbib.elasticsearch.common.langdetect.LangdetectService;
@@ -11,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 
 public class DetectLanguageTest extends Assert {
 
@@ -35,7 +35,7 @@ public class DetectLanguageTest extends Assert {
     }
 
     private void testLanguage(String path, String lang) throws IOException {
-        Reader reader = new InputStreamReader(getClass().getResourceAsStream(path), "UTF-8");
+        Reader reader = new InputStreamReader(getClass().getResourceAsStream(path), StandardCharsets.UTF_8);
         Writer writer = new StringWriter();
         Streams.copy(reader, writer);
         reader.close();
