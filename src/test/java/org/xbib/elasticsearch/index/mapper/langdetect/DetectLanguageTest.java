@@ -4,7 +4,7 @@ import org.elasticsearch.common.io.Streams;
 import org.elasticsearch.common.settings.Settings;
 import org.junit.Assert;
 import org.junit.Test;
-import org.xbib.elasticsearch.module.langdetect.LangdetectService;
+import org.xbib.elasticsearch.common.langdetect.LangdetectService;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -40,7 +40,7 @@ public class DetectLanguageTest extends Assert {
         Streams.copy(reader, writer);
         reader.close();
         writer.close();
-        LangdetectService detect = new LangdetectService(Settings.EMPTY);
+        LangdetectService detect = new LangdetectService();
         assertEquals(detect.detectAll(writer.toString()).get(0).getLanguage(), lang);
     }
 

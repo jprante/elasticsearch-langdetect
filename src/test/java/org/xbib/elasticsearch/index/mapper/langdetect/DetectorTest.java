@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import org.xbib.elasticsearch.common.langdetect.LangProfile;
 import org.xbib.elasticsearch.common.langdetect.LanguageDetectionException;
-import org.xbib.elasticsearch.module.langdetect.LangdetectService;
+import org.xbib.elasticsearch.common.langdetect.LangdetectService;
 
 public class DetectorTest extends Assert {
 
@@ -22,54 +22,48 @@ public class DetectorTest extends Assert {
     @BeforeClass
     public static void setUp() throws Exception {
 
-        Settings settings = Settings.settingsBuilder()
-                .put("langdetect.languages", "")
-                .build();
-        detect = new LangdetectService(settings);
-        detect.start();
+        detect = new LangdetectService(Settings.EMPTY);
 
         LangProfile profile_en = new LangProfile();
-        profile_en.setName("en");
+        profile_en.setName("en_test");
         for (String w : TRAINING_EN.split(" ")) {
             profile_en.add(w);
         }
         detect.addProfile(profile_en, 0, 3);
 
         LangProfile profile_fr = new LangProfile();
-        profile_fr.setName("fr");
+        profile_fr.setName("fr_test");
         for (String w : TRAINING_FR.split(" ")) {
             profile_fr.add(w);
         }
         detect.addProfile(profile_fr, 1, 3);
 
         LangProfile profile_ja = new LangProfile();
-        profile_ja.setName("ja");
+        profile_ja.setName("ja_test");
         for (String w : TRAINING_JA.split(" ")) {
             profile_ja.add(w);
         }
         detect.addProfile(profile_ja, 2, 3);
-
-        //detect.reset();
     }
 
     @Test
     public void testDetector1() throws LanguageDetectionException {
-        assertEquals(detect.detectAll("a").get(0).getLanguage(), "en");
+        assertEquals(detect.detectAll("a").get(0).getLanguage(), "en_test");
     }
 
     @Test
     public void testDetector2() throws LanguageDetectionException {
-        assertEquals(detect.detectAll("b d").get(0).getLanguage(), "fr");
+        assertEquals(detect.detectAll("b d").get(0).getLanguage(), "fr_test");
     }
 
     @Test
     public void testDetector3() throws LanguageDetectionException {
-        assertEquals(detect.detectAll("d e").get(0).getLanguage(), "en");
+        assertEquals(detect.detectAll("d e").get(0).getLanguage(), "en_test");
     }
 
     @Test
     public void testDetector4() throws LanguageDetectionException {
-        assertEquals(detect.detectAll("\u3042\u3042\u3042\u3042a").get(0).getLanguage(), "ja");
+        assertEquals(detect.detectAll("\u3042\u3042\u3042\u3042a").get(0).getLanguage(), "ja_test");
     }
 
     @Test

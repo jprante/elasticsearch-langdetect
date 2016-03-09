@@ -1,6 +1,7 @@
 package org.xbib.elasticsearch.action.langdetect;
 
 import org.elasticsearch.action.ActionResponse;
+import org.elasticsearch.common.Strings;
 import org.elasticsearch.common.xcontent.StatusToXContent;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.rest.RestStatus;
@@ -41,7 +42,9 @@ public class LangdetectResponse extends ActionResponse implements StatusToXConte
 
     @Override
     public XContentBuilder toXContent(XContentBuilder builder, Params params) throws IOException {
-        builder.field("profile", profile);
+        if (!Strings.isNullOrEmpty(profile)) {
+            builder.field("profile", profile);
+        }
         builder.startArray("languages");
         for (Language lang : languages) {
             builder.startObject().field("language", lang.getLanguage())

@@ -3,7 +3,7 @@
         "properties" : {
             "someField" : {
                  "type" : "langdetect",
-                 "profile" : "/langdetect/short-text/"
+                 "profile" : "short-text"
             }
         }
     }

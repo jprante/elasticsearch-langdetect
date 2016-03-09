@@ -47,6 +47,7 @@ import org.elasticsearch.index.settings.IndexSettingsModule;
 import org.elasticsearch.index.similarity.SimilarityLookupService;
 import org.elasticsearch.indices.analysis.IndicesAnalysisService;
 import org.elasticsearch.indices.mapper.MapperRegistry;
+import org.xbib.elasticsearch.common.langdetect.LangdetectService;
 import org.xbib.elasticsearch.index.mapper.langdetect.LangdetectMapper;
 
 import java.util.LinkedHashMap;
@@ -70,13 +71,13 @@ public class MapperTestUtils {
         return new SimilarityLookupService(new Index("test"), indexSettings);
     }
 
-    public static DocumentMapperParser newMapperParser() {
-        return newMapperParser(Settings.builder()
+    public static DocumentMapperParser newDocumentMapperParser() {
+        return newDocumentMapperParser(Settings.builder()
                 .put("path.home", System.getProperty("path.home"))
                 .build());
     }
 
-    public static DocumentMapperParser newMapperParser(Settings settings) {
+    public static DocumentMapperParser newDocumentMapperParser(Settings settings) {
         Settings forcedSettings = Settings.builder()
                 .put(IndexMetaData.SETTING_VERSION_CREATED, Version.CURRENT)
                 .put(settings)

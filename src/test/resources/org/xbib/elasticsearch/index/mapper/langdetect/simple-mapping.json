@@ -1,7 +1,10 @@
 {
     "someType" : {
         "properties" : {
-            "someField":{ "type" : "langdetect" }
+            "someField": {
+                "type" : "langdetect",
+                "languages" : [ "de", "en", "fr", "nl", "it" ]
+            }
         }
     }
 }

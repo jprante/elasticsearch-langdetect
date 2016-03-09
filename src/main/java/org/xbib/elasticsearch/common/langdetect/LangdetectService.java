@@ -1,28 +1,24 @@
-package org.xbib.elasticsearch.module.langdetect;
+package org.xbib.elasticsearch.common.langdetect;
 
 import org.elasticsearch.ElasticsearchException;
-import org.elasticsearch.common.component.AbstractLifecycleComponent;
-import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.logging.ESLogger;
 import org.elasticsearch.common.logging.ESLoggerFactory;
 import org.elasticsearch.common.settings.Settings;
-import org.xbib.elasticsearch.common.langdetect.LangProfile;
-import org.xbib.elasticsearch.common.langdetect.Language;
-import org.xbib.elasticsearch.common.langdetect.LanguageDetectionException;
-import org.xbib.elasticsearch.common.langdetect.NGram;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.regex.Pattern;
 
-public class LangdetectService extends AbstractLifecycleComponent<LangdetectService> {
+public class LangdetectService {
 
     private final static ESLogger logger = ESLoggerFactory.getLogger(LangdetectService.class.getName());
 
+    private final Settings settings;
+
     private final static Pattern word = Pattern.compile("[\\P{IsWord}]", Pattern.UNICODE_CHARACTER_CLASS);
 
-    private final static String[] DEFAULT_LANGUAGES = new String[] {
+    public final static String[] DEFAULT_LANGUAGES = new String[] {
            // "af",
             "ar",
             "bg",
@@ -78,6 +74,10 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
             "zh-tw"
     };
 
+    private final static Settings DEFAULT_SETTINGS = Settings.builder()
+            .putArray("languages", DEFAULT_LANGUAGES)
+            .build();
+
     private Map<String, double[]> wordLangProbMap = new HashMap<>();
 
     private List<String> langlist = new LinkedList<>();
@@ -106,24 +106,19 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
 
     private boolean isStarted;
 
-    @Inject
-    public LangdetectService(Settings settings) {
-        super(settings);
-        this.profile = settings.get("profile", "/langdetect/");
+    public LangdetectService() {
+        this(DEFAULT_SETTINGS);
     }
 
-    @Override
-    protected void doStart() throws ElasticsearchException {
+    public LangdetectService(Settings settings) {
+        this(settings, null);
+    }
+
+    public LangdetectService(Settings settings, String profile) {
+        this.settings = settings;
+        this.profile = settings.get("profile", profile) ;
         load(settings);
         init();
-    }
-
-    @Override
-    protected void doStop() throws ElasticsearchException {
-    }
-
-    @Override
-    protected void doClose() throws ElasticsearchException {
     }
 
     public Settings getSettings() {
@@ -131,33 +126,36 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
     }
 
     private void load(Settings settings) {
+        if (settings.equals(Settings.EMPTY)) {
+            return;
+        }
         try {
             String[] keys = DEFAULT_LANGUAGES;
-            if (settings.get("langdetect.languages") != null) {
-                keys = settings.get("langdetect.languages").split(",");
+            if (settings.get("languages") != null) {
+                keys = settings.get("languages").split(",");
             }
             int index = 0;
             int size = keys.length;
             for (String key : keys) {
                 if (key != null && !key.isEmpty()) {
-                    loadProfileFromResource(key, this.profile, index++, size);
+                    loadProfileFromResource(key, index++, size);
                 }
             }
             logger.debug("language detection service installed for {}", langlist);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            throw new ElasticsearchException(e.getMessage());
+            throw new ElasticsearchException(e.getMessage() + " profile=" + profile);
         }
         try {
             // map by settings
             Settings map = Settings.EMPTY;
-            if (settings.getByPrefix("langdetect.map.") != null) {
-                map = Settings.settingsBuilder().put(settings.getByPrefix("langdetect.map.")).build();
+            if (settings.getByPrefix("map.") != null) {
+                map = Settings.settingsBuilder().put(settings.getByPrefix("map.")).build();
             }
             if (map.getAsMap().isEmpty()) {
                 // is in "map" a resource name?
-                String s = settings.get("langdetect.map") != null ?
-                        settings.get("langdetect.map") : this.profile + "language.json";
+                String s = settings.get("map") != null ?
+                        settings.get("map") : this.profile + "language.json";
                 InputStream in = getClass().getResourceAsStream(s);
                 if (in != null) {
                     map = Settings.settingsBuilder().loadFromStream(s, in).build();
@@ -172,19 +170,20 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
 
     private void init() {
         this.priorMap = null;
-        this.n_trial = settings.getAsInt("langdetect.number_of_trials", 7);
-        this.alpha = settings.getAsDouble("langdetect.alpha", 0.5);
-        this.alpha_width = settings.getAsDouble("langdetect.alpha_width", 0.05);
-        this.iteration_limit = settings.getAsInt("langdetect.iteration_limit", 10000);
-        this.prob_threshold = settings.getAsDouble("langdetect.prob_threshold", 0.1);
-        this.conv_threshold = settings.getAsDouble("langdetect.conv_threshold",  0.99999);
-        this.base_freq = settings.getAsInt("langdetect.base_freq", 10000);
-        this.filterPattern = settings.get("langdetect.pattern") != null ?
-                Pattern.compile(settings.get("langdetect.pattern"),Pattern.UNICODE_CHARACTER_CLASS) : null;
+        this.n_trial = settings.getAsInt("number_of_trials", 7);
+        this.alpha = settings.getAsDouble("alpha", 0.5);
+        this.alpha_width = settings.getAsDouble("alpha_width", 0.05);
+        this.iteration_limit = settings.getAsInt("iteration_limit", 10000);
+        this.prob_threshold = settings.getAsDouble("prob_threshold", 0.1);
+        this.conv_threshold = settings.getAsDouble("conv_threshold",  0.99999);
+        this.base_freq = settings.getAsInt("base_freq", 10000);
+        this.filterPattern = settings.get("pattern") != null ?
+                Pattern.compile(settings.get("pattern"),Pattern.UNICODE_CHARACTER_CLASS) : null;
         isStarted = true;
     }
 
-    public void loadProfileFromResource(String resource, String profile, int index, int langsize) throws IOException {
+    public void loadProfileFromResource(String resource,  int index, int langsize) throws IOException {
+        String profile = "/langdetect/" + (this.profile != null ? this.profile + "/" : "");
         InputStream in = getClass().getResourceAsStream(profile + resource);
         if (in == null) {
             throw new IOException("profile '" + resource + "' not found");
@@ -212,13 +211,6 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
         }
     }
 
-    public void setProfile(String profile) throws LanguageDetectionException {
-        this.profile = profile;
-        langlist.clear();
-        load(settings);
-        init();
-    }
-
     public String getProfile() {
         return profile;
     }
@@ -234,7 +226,7 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
         }
         List<String> list = new ArrayList<>();
         languages = sortProbability(languages, detectBlock(list, text));
-        return languages.subList(0, Math.min(languages.size(), settings.getAsInt("langdetect.max", languages.size())));
+        return languages.subList(0, Math.min(languages.size(), settings.getAsInt("max", languages.size())));
     }
 
     private double[] detectBlock(List<String> list, String text) throws LanguageDetectionException {
@@ -338,5 +330,4 @@ public class LangdetectService extends AbstractLifecycleComponent<LangdetectServ
         }
         return list;
     }
-
 }

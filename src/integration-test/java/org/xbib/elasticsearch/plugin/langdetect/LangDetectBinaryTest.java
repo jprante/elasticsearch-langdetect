@@ -18,7 +18,7 @@ public class LangDetectBinaryTest extends NodeTestUtils {
     @Test
     public void testLangDetectBinary() throws Exception {
         CreateIndexRequestBuilder createIndexRequestBuilder =
-                new CreateIndexRequestBuilder(client("1"), CreateIndexAction.INSTANCE).setIndex("test");
+                new CreateIndexRequestBuilder(client(), CreateIndexAction.INSTANCE).setIndex("test");
         createIndexRequestBuilder.addMapping("someType", "{\n" +
                 "    \"properties\": {\n" +
                 "      \"content\": {\n" +
@@ -37,13 +37,13 @@ public class LangDetectBinaryTest extends NodeTestUtils {
                 "}");
         createIndexRequestBuilder.execute().actionGet();
         IndexRequestBuilder indexRequestBuilder =
-                new IndexRequestBuilder(client("1"), IndexAction.INSTANCE)
+                new IndexRequestBuilder(client(), IndexAction.INSTANCE)
                         .setIndex("test").setType("someType").setId("1")
                         //\"God Save the Queen\" (alternatively \"God Save the King\"
                         .setSource("content", "IkdvZCBTYXZlIHRoZSBRdWVlbiIgKGFsdGVybmF0aXZlbHkgIkdvZCBTYXZlIHRoZSBLaW5nIg==");
         indexRequestBuilder.setRefresh(true).execute().actionGet();
         SearchRequestBuilder searchRequestBuilder =
-                new SearchRequestBuilder(client("1"), SearchAction.INSTANCE)
+                new SearchRequestBuilder(client(), SearchAction.INSTANCE)
                         .setIndices("test")
                         .setQuery(QueryBuilders.matchAllQuery())
                         .addFields("content", "content.language");

@@ -1,5 +1,5 @@
 group = 'org.xbib.elasticsearch.plugin'
-version = '2.2.0.1'
+version = '2.2.0.2'
 
 ext {
     pluginName = 'langdetect'
@@ -167,8 +167,10 @@ artifacts {
     archives javadocJar, sourcesJar, buildPluginZip
 }
 
-signing {
-    sign configurations.archives
+if (project.hasProperty('signing.keyId')) {
+    signing {
+        sign configurations.archives
+    }
 }
 
 ext.grgit = org.ajoberstar.grgit.Grgit.open()

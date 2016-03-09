@@ -10,11 +10,7 @@ import org.elasticsearch.rest.RestModule;
 import org.xbib.elasticsearch.action.langdetect.LangdetectAction;
 import org.xbib.elasticsearch.action.langdetect.TransportLangdetectAction;
 import org.xbib.elasticsearch.index.mapper.langdetect.LangdetectMapper;
-import org.xbib.elasticsearch.module.langdetect.LangdetectService;
 import org.xbib.elasticsearch.rest.action.langdetect.RestLangdetectAction;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 public class LangdetectPlugin extends Plugin {
 
@@ -52,25 +48,4 @@ public class LangdetectPlugin extends Plugin {
             indicesModule.registerMapper(LangdetectMapper.CONTENT_TYPE, new LangdetectMapper.TypeParser());
         }
     }
-
-    @Override
-    public Collection<Class<? extends LifecycleComponent>> nodeServices() {
-        Collection<Class<? extends LifecycleComponent>> services = new ArrayList<>();
-        if (settings.getAsBoolean("plugins.langdetect.enabled", true)) {
-            services.add(LangdetectService.class);
-        }
-        return services;
-    }
-
-    /*
-    @Override
-    public Collection<Module> nodeModules() {
-        Collection<Module> modules = new ArrayList<>();
-        if (settings.getAsBoolean("plugins.langdetect.enabled", true)) {
-            modules.add(new LangdetectModule());
-        }
-        return modules;
-    }
-    */
-
 }

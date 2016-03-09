@@ -27,7 +27,6 @@ public class NodeTestUtils {
                 .put("index.number_of_shards", 1)
                 .put("index.number_of_replica", 0)
                 .build();
-        // ES 2.1 renders NodeBuilder as useless
         Node node = new MockNode(nodeSettings, LangdetectPlugin.class);
         node.start();
         return node;
@@ -46,7 +45,7 @@ public class NodeTestUtils {
         client = node.client();
     }
 
-    protected Client client(String id) {
+    protected Client client() {
         return client;
     }
 

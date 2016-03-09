@@ -14,7 +14,7 @@ import org.elasticsearch.index.mapper.Mapper;
 import org.elasticsearch.index.mapper.MapperParsingException;
 import org.elasticsearch.index.mapper.ParseContext;
 import org.elasticsearch.index.mapper.core.StringFieldMapper;
-import org.xbib.elasticsearch.module.langdetect.LangdetectService;
+import org.xbib.elasticsearch.common.langdetect.LangdetectService;
 import org.xbib.elasticsearch.common.langdetect.Language;
 import org.xbib.elasticsearch.common.langdetect.LanguageDetectionException;
 

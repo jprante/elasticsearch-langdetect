@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class NGram {
 
-    public final static Map<Character, Character> cjk_map = new HashMap<Character, Character>();
+    public final static Map<Character, Character> cjk_map = new HashMap<>();
 
     public final static int N_GRAM = 3;
 
