@@ -373,7 +373,7 @@ The result is
 	
 ## Change profile of language detection to "short text" profile
 
-    curl -XPOST 'localhost:9200/_langdetect?pretty&profile=/langdetect/short-text/' -d 'Das ist ein Test'
+    curl -XPOST 'localhost:9200/_langdetect?pretty&profile=short-text' -d 'Das ist ein Test'
 	{
 	  "profile" : "/langdetect/short-text/",
       "languages" : [ {
@@ -393,24 +393,24 @@ and be familiar with probabilistic matching using naive bayes with character n-g
 See also Ted Dunning,
 [Statistical Identification of Language](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.48.1958), 1994.
 
-`langdetect.languages` - a comma-separated list of language codes used to restrict the detection
+`languages` - a comma-separated list of language codes such as (de,en,fr...) used to restrict (and speed up) the detection process
 
-`langdetect.map.<code>` - a substitution code for a language code
+`map.<code>` - a substitution code for a language code
 
-`langdetect.number_of_trials` - number of trials, affects CPU usage (default: 7)
+`number_of_trials` - number of trials, affects CPU usage (default: 7)
 
-`langdetect.alpha` - additional smoothing parameter, default: 0.5
+`alpha` - additional smoothing parameter, default: 0.5
 
-`langdetect.alpha_width` - the width of smoothing, default: 0.05
+`alpha_width` - the width of smoothing, default: 0.05
 
-`langdetect.iteration_limit` - safeguard to break loop, default: 10000
+`iteration_limit` - safeguard to break loop, default: 10000
 
-`langdetect.prob_threshold` - default: 0.1
+`prob_threshold` - default: 0.1
 
-`langdetect.conv_threshold` - detection is terminated when normalized probability exceeds 
+`conv_threshold` - detection is terminated when normalized probability exceeds 
 this threshold, default: 0.99999
 
-`langdetect.base_freq` - default 10000
+`base_freq` - default 10000
 
 # Credits
 
