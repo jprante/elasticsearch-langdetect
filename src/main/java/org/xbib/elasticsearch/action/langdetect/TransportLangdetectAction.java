@@ -28,18 +28,20 @@ public class TransportLangdetectAction extends TransportAction<LangdetectRequest
 
     @Override
     protected void doExecute(LangdetectRequest request, ActionListener<LangdetectResponse> listener) {
-        try {
-            String profile = request.getProfile();
-            if (profile == null) {
-                profile = "";
+        String profile = request.getProfile();
+        if (profile == null) {
+            profile = "";
+        }
+        if (!services.containsKey(profile)) {
+            services.put(profile, new LangdetectService(settings, profile));
+        }
+        synchronized (services) {
+            try {
+                List<Language> langs = services.get(profile).detectAll(request.getText());
+                listener.onResponse(new LangdetectResponse().setLanguages(langs).setProfile(request.getProfile()));
+            } catch (LanguageDetectionException e) {
+                listener.onFailure(e);
             }
-            if (!services.containsKey(profile)) {
-                services.put(profile, new LangdetectService(settings, profile));
-            }
-            List<Language> langs = services.get(profile).detectAll(request.getText());
-            listener.onResponse(new LangdetectResponse().setLanguages(langs).setProfile(request.getProfile()));
-        } catch (LanguageDetectionException e) {
-            listener.onFailure(e);
         }
     }
 }
