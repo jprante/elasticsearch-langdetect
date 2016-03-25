@@ -100,7 +100,7 @@ zh-tw
 
 ## Installation Elasticsearch 2.x
 
-    ./bin/plugin install https://github.com/jprante/elasticsearch-langdetect/releases/download/2.2.0.1/elasticsearch-langdetect-2.2.0.1-plugin.zip
+    ./bin/plugin install https://github.com/jprante/elasticsearch-langdetect/releases/download/2.2.0.2/elasticsearch-langdetect-2.2.0.2-plugin.zip
 
 ## Installation Elasticsearch 1.x
 
