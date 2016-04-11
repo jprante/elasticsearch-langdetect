@@ -7,6 +7,7 @@ import org.elasticsearch.cluster.metadata.IndexNameExpressionResolver;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.threadpool.ThreadPool;
+import org.elasticsearch.transport.TransportService;
 import org.xbib.elasticsearch.common.langdetect.Language;
 import org.xbib.elasticsearch.common.langdetect.LanguageDetectionException;
 import org.xbib.elasticsearch.common.langdetect.LangdetectService;
@@ -21,8 +22,10 @@ public class TransportLangdetectAction extends TransportAction<LangdetectRequest
 
     @Inject
     public TransportLangdetectAction(Settings settings, ThreadPool threadPool,
-                                     ActionFilters actionFilters,  IndexNameExpressionResolver indexNameExpressionResolver) {
-        super(settings, LangdetectAction.NAME, threadPool, actionFilters, indexNameExpressionResolver);
+                                     ActionFilters actionFilters,
+                                     IndexNameExpressionResolver indexNameExpressionResolver,
+                                     TransportService transportService) {
+        super(settings, LangdetectAction.NAME, threadPool, actionFilters, indexNameExpressionResolver, transportService.getTaskManager());
         services.put("", new LangdetectService(settings));
     }
 
