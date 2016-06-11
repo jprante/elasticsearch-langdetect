@@ -53,6 +53,7 @@ public class LangdetectMapper extends StringFieldMapper {
         public Builder(String name) {
             super(name, Defaults.LANG_FIELD_TYPE, Defaults.LANG_FIELD_TYPE);
             this.builder = this;
+            settingsBuilder.putArray("languages", LangdetectService.DEFAULT_LANGUAGES);
         }
 
         @Override
