@@ -16,7 +16,9 @@ nexusStaging {
     packageGroup = "org.xbib"
 }
 
-uploadArchives {
+task xbibUpload(type: Upload) {
+    configuration = configurations.archives
+    uploadDescriptor = true
     repositories {
         if (project.hasProperty("xbibUsername")) {
             mavenDeployer {
@@ -26,6 +28,13 @@ uploadArchives {
                         authentication: [userName: xbibUsername, privateKey: xbibPrivateKey])
             }
         }
+    }
+}
+
+task mavenCentralUpload(type: Upload) {
+    configuration = configurations.archives
+    uploadDescriptor = true
+    repositories {
         if (project.hasProperty('ossrhUsername')) {
             mavenDeployer {
                 beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
@@ -38,7 +47,7 @@ uploadArchives {
                     description pluginDescription
                     packaging 'jar'
                     inceptionYear '2012'
-                    url url
+                    url scmUrl
                     organization {
                         name 'xbib'
                         url 'http://xbib.org'
