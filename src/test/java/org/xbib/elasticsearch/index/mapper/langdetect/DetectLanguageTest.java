@@ -54,33 +54,70 @@ public class DetectLanguageTest extends Assert {
      * The translations were obtained from http://unicode.org/udhr/. Some minimal processing was done to create the
      * udhr.tsv resource file: matched the dataset's language code with the one returned by the library, and removed
      * each file's English intro and redundant whitespace.
-     *
-     * For each translation and substring length, this test generates a sample of substrings (drawn uniformly with
-     * replacement from the set of possible substrings of the given length), runs the language identification code,
-     * measures the per-language accuracy (percentage of substrings classified correctly), and fails if the minimum or
-     * mean accuracy for the length is below a predetermined threshold. 
      */
     @Test
     public void testUdhrAccuracies() throws IOException {
+        testSubstringAccuracies(
+            "udhr.tsv",
+            new double[][] {
+                { 5,   100, 0.26, 0.65 },
+                { 10,  100, 0.46, 0.82 },
+                { 20,  100, 0.73, 0.94 },
+                { 50,  100, 0.85, 0.98 },
+                { 100, 100, 0.94, 0.99 },
+                { 300, 100, 1.00, 1.00 },
+                { 0,   1,   1.00, 1.00 }
+            }
+        );
+    }
+
+    /**
+     * Test classification accuracies on WordPress interface translations.
+     *
+     * The translations were obtained from https://translate.wordpress.org/projects/wp/4.6.x. Some minimal processing
+     * was done to create the wp-translations.tsv resource file: matched the dataset's language code with the one
+     * returned by the library, unescaped HTML entities, and dropped variable placeholders, HTML tags, and redundant
+     * whitespace. To speed up testing, the resource file contains only the 50 longest translated phrases for each
+     * language, excluding URL translations and word lists.
+     */
+    @Test
+    public void testWordPressTranslationsAccuracies() throws IOException {
+        testSubstringAccuracies(
+            "wp-translations.tsv",
+            new double[][] {
+                { 5,   10, 0.25, 0.60 },
+                { 10,  10, 0.44, 0.76 },
+                { 20,  10, 0.65, 0.88 },
+                { 0,   1,  0.80, 0.98 }
+            }
+        );
+    }
+
+    /**
+     * Test classification accuracies on substrings of texts from a single dataset.
+     *
+     * For each text and substring length, this test generates a sample of substrings (drawn uniformly with
+     * replacement from the set of possible substrings of the given length), runs the language identification code,
+     * measures the per-language accuracy (percentage of substrings classified correctly), and fails if the minimum or
+     * mean accuracy for the length is below a predetermined threshold.
+     *
+     * @param datasetPath dataset resource path (see {@link #readMultiLanguageDataset(String)})
+     * @param allTrialParams a matrix specifying each trial's parameters. Each row in the matrix must have four items:
+     *                       substring length and sample size, which are passed to
+     *                       {@link #generateSubstringSample(String, int, int)}, and a per-language accuracy threshold
+     *                       and mean accuracy threshold, which are used to determine whether the trial passes or fails
+     */
+    private void testSubstringAccuracies(String datasetPath, double[][] allTrialParams) throws IOException {
         LangdetectService service = new LangdetectService();
-        Map<String, List<String>> languageToFullTexts = readMultiLanguageDataset("udhr.tsv");
+        Map<String, List<String>> languageToFullTexts = readMultiLanguageDataset(datasetPath);
         // Sort the languages to make the log output prettier.
         List<String> languages = new ArrayList<>(languageToFullTexts.keySet());
         Collections.sort(languages);
-        // Group the test parameters: substring length, minimum per-language threshold, and minimum mean threshold. 
-        // TODO: Set language-specific thresholds?
-        double[][] testParams = { { 5,   0.26, 0.65 },
-                                  { 10,  0.46, 0.82 },
-                                  { 20,  0.73, 0.94 },
-                                  { 50,  0.85, 0.98 },
-                                  { 100, 0.94, 0.99 },
-                                  { 300, 1.00, 1.00 } };
-        // TODO: tune this?
-        int sampleSize = 100;
-        for (double[] trialParams : testParams) {
+        for (double[] trialParams : allTrialParams) {
             int substringLength = (int) trialParams[0];
-            double minAccuracyThreshold = trialParams[1];
-            double meanAccuracyThreshold = trialParams[2];
+            int sampleSize = (int) trialParams[1];
+            double minAccuracyThreshold = trialParams[2];
+            double meanAccuracyThreshold = trialParams[3];
             double sumAccuracies = 0;
             double minAccuracy = Double.POSITIVE_INFINITY;
             for (String language : languages) {
@@ -96,7 +133,7 @@ public class DetectLanguageTest extends Assert {
                 double accuracy = numCorrect / (fullTexts.size() * sampleSize);
                 sumAccuracies += accuracy;
                 minAccuracy = Math.min(minAccuracy, accuracy);
-                logger.info("Substring length: {} Language: {} Accuracy: {}", substringLength, language, accuracy);
+                logger.debug("Substring length: {} Language: {} Accuracy: {}", substringLength, language, accuracy);
             }
             double meanAccuracy = sumAccuracies / languages.size();
             logger.info("* Substring length: {} Accuracy: min={} mean={}", substringLength, minAccuracy, meanAccuracy);
@@ -117,7 +154,7 @@ public class DetectLanguageTest extends Assert {
     /**
      * Read and parse a multi-language dataset from the given path.
      *
-     * @param path location of a file in tab-separated format with two columns: language code and text
+     * @param path resource path, where the file is in tab-separated format with two columns: language code and text
      * @return a mapping from each language code found in the file to the texts of this language    
      */
     private Map<String, List<String>> readMultiLanguageDataset(String path) throws IOException {
@@ -158,11 +195,15 @@ public class DetectLanguageTest extends Assert {
      * repeated calls to this method with the same parameters will return the same sample.
      *
      * @param text the text from which the substring sample is drawn
-     * @param substringLength length of each generated substring
+     * @param substringLength length of each generated substring (set to zero to return a singleton list with the
+     *                        text -- sampleSize must be 1 in this case)
      * @param sampleSize number of substrings to include in the sample
      * @return the sample (a list of strings)
      */
     private List<String> generateSubstringSample(String text, int substringLength, int sampleSize) {
+        if (substringLength == 0 && sampleSize == 1) {
+            return Collections.singletonList(text);
+        }
         if (substringLength > text.trim().length()) {
             throw new IllegalArgumentException("Provided text is too short.");
         }
