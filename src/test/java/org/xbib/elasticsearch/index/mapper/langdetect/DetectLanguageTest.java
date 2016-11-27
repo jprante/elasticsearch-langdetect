@@ -74,7 +74,7 @@ public class DetectLanguageTest extends Assert {
                                   { 20,  0.73, 0.94 },
                                   { 50,  0.85, 0.98 },
                                   { 100, 0.94, 0.99 },
-                                  { 300, 1.00, 1.00 }};
+                                  { 300, 1.00, 1.00 } };
         // TODO: tune this?
         int sampleSize = 100;
         for (double[] trialParams : testParams) {
