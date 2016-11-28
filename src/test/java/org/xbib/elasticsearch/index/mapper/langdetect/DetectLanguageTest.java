@@ -3,6 +3,7 @@ package org.xbib.elasticsearch.index.mapper.langdetect;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.common.io.Streams;
+import org.elasticsearch.common.settings.Settings;
 import org.junit.Assert;
 import org.junit.Test;
 import org.xbib.elasticsearch.common.langdetect.LangdetectService;
@@ -51,9 +52,9 @@ public class DetectLanguageTest extends Assert {
     /**
      * Test classification accuracies on translations of the Universal Declaration of Human Rights (UDHR).
      *
-     * The translations were obtained from http://unicode.org/udhr/. Some minimal processing was done to create the
-     * udhr.tsv resource file: matched the dataset's language code with the one returned by the library, and removed
-     * each file's English intro and redundant whitespace.
+     * The translations were obtained from <a href="http://unicode.org/udhr/">the UDHR unicode dumps</a>. Some minimal
+     * processing was done to create the udhr.tsv resource file: matched the dataset's language code with the one
+     * returned by the library, and removed each file's English intro and redundant whitespace.
      */
     @Test
     public void testUdhrAccuracies() throws IOException {
@@ -67,29 +68,62 @@ public class DetectLanguageTest extends Assert {
                 { 100, 100, 0.94, 0.99 },
                 { 300, 100, 1.00, 1.00 },
                 { 0,   1,   1.00, 1.00 }
-            }
+            },
+            false
+        );
+    }
+
+    @Test
+    public void testUdhrAccuraciesShortProfile() throws IOException {
+        testSubstringAccuracies(
+            "udhr.tsv",
+            new double[][] {
+                { 5,   100, 0.16, 0.64 },
+                { 10,  100, 0.50, 0.82 },
+                { 20,  100, 0.68, 0.93 },
+                { 50,  100, 0.86, 0.98 },
+                { 100, 100, 0.94, 0.99 },
+                { 300, 100, 0.99, 0.99 },
+                { 0,   1,   1.00, 1.00 }
+            },
+            true
         );
     }
 
     /**
      * Test classification accuracies on WordPress interface translations.
      *
-     * The translations were obtained from https://translate.wordpress.org/projects/wp/4.6.x. Some minimal processing
-     * was done to create the wp-translations.tsv resource file: matched the dataset's language code with the one
-     * returned by the library, unescaped HTML entities, and dropped variable placeholders, HTML tags, and redundant
-     * whitespace. To speed up testing, the resource file contains only the 50 longest translated phrases for each
-     * language, excluding URL translations and word lists.
+     * The translations are for <a href="https://translate.wordpress.org/projects/wp/4.6.x">WordPress 4.6.x</a>. Some
+     * minimal processing was done to create the wp-translations.tsv resource file: matched the dataset's language code
+     * with the one returned by the library, unescaped HTML entities, and dropped variable placeholders, HTML tags, and
+     * redundant whitespace. To speed up testing, the resource file contains only the 50 longest translated phrases for
+     * each language, excluding URL translations and word lists.
      */
     @Test
     public void testWordPressTranslationsAccuracies() throws IOException {
         testSubstringAccuracies(
             "wp-translations.tsv",
             new double[][] {
-                { 5,   10, 0.25, 0.60 },
-                { 10,  10, 0.44, 0.76 },
-                { 20,  10, 0.65, 0.88 },
-                { 0,   1,  0.80, 0.98 }
-            }
+                { 5,  10, 0.25, 0.60 },
+                { 10, 10, 0.44, 0.76 },
+                { 20, 10, 0.65, 0.88 },
+                { 0,  1,  0.80, 0.98 }
+            },
+            false
+        );
+    }
+
+    @Test
+    public void testWordPressTranslationsAccuraciesShortProfile() throws IOException {
+        testSubstringAccuracies(
+            "wp-translations.tsv",
+            new double[][] {
+                { 5,  10, 0.23, 0.61 },
+                { 10, 10, 0.47, 0.77 },
+                { 20, 10, 0.69, 0.90 },
+                { 0,  1,  0.94, 0.99 }
+            },
+            true
         );
     }
 
@@ -106,9 +140,17 @@ public class DetectLanguageTest extends Assert {
      *                       substring length and sample size, which are passed to
      *                       {@link #generateSubstringSample(String, int, int)}, and a per-language accuracy threshold
      *                       and mean accuracy threshold, which are used to determine whether the trial passes or fails
+     * @param useShortProfile if true, the short text language profile will be used instead of the default profile
      */
-    private void testSubstringAccuracies(String datasetPath, double[][] allTrialParams) throws IOException {
-        LangdetectService service = new LangdetectService();
+    private void testSubstringAccuracies(String datasetPath,
+                                         double[][] allTrialParams,
+                                         boolean useShortProfile) throws IOException {
+        LangdetectService service = new LangdetectService(
+            Settings.builder()
+                    .putArray("languages", LangdetectService.DEFAULT_LANGUAGES)
+                    .put("profile", useShortProfile ? "short-text" : "")
+                    .build()
+        );
         Map<String, List<String>> languageToFullTexts = readMultiLanguageDataset(datasetPath);
         // Sort the languages to make the log output prettier.
         List<String> languages = new ArrayList<>(languageToFullTexts.keySet());
