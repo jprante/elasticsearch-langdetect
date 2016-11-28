@@ -49,13 +49,6 @@ public class DetectLanguageTest extends Assert {
         testLanguage("korean.txt", "ko");
     }
 
-    /**
-     * Test classification accuracies on translations of the Universal Declaration of Human Rights (UDHR).
-     *
-     * The translations were obtained from <a href="http://unicode.org/udhr/">the UDHR unicode dumps</a>. Some minimal
-     * processing was done to create the udhr.tsv resource file: matched the dataset's language code with the one
-     * returned by the library, and removed each file's English intro and redundant whitespace.
-     */
     @Test
     public void testUdhrAccuracies() throws IOException {
         testSubstringAccuracies(
