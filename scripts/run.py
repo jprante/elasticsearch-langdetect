@@ -1,10 +1,15 @@
 from io import BytesIO
+import os
 import re
 from zipfile import ZipFile
 
 import baker
+import ftfy
 import requests
 import xmltodict
+
+_TEST_RESOURCES_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                    '../src/test/resources/org/xbib/elasticsearch/index/mapper/langdetect/')
 
 # Supported languages according to https://github.com/shuyo/language-detection/blob/wiki/LanguageList.md
 _SUPPORTED_LANGUAGES = {
@@ -65,7 +70,7 @@ _SUPPORTED_LANGUAGES = {
 
 
 @baker.command
-def generate_udhr_dataset(out_path='../src/test/resources/org/xbib/elasticsearch/index/mapper/langdetect/udhr.tsv'):
+def generate_udhr_dataset(out_path=os.path.join(_TEST_RESOURCES_PATH, 'udhr.tsv')):
     """
     Download and generate the Universal Declaration of Human Rights (UDHR) dataset.
 
@@ -74,7 +79,7 @@ def generate_udhr_dataset(out_path='../src/test/resources/org/xbib/elasticsearch
     codes with those used by the plugin, removing each file's English intro, and dropping redundant whitespace.
 
     :param out_path: output path for the dataset file, which will be written in tab-separated format with two
-                     columns: language code and text
+                     columns: language code and text.
     """
     # Download and extract the translations
     input_zip = ZipFile(BytesIO(requests.get('http://unicode.org/udhr/assemblies/udhr_txt.zip').content))
@@ -87,13 +92,13 @@ def generate_udhr_dataset(out_path='../src/test/resources/org/xbib/elasticsearch
         'el-monoton': 'el',
         # German (the other option is de-1901, which seems too old)
         'de-1996': 'de',
-        # Norwegian, Bokmål (spoken by 85% of Norwegians -- the original Norwegian Wikipedia language)
+        # Bokmål Norwegian (spoken by 85% of Norwegians -- the original Norwegian Wikipedia language)
         # See https://en.wikipedia.org/wiki/Norwegian_Wikipedia
         'nb': 'no',
         # There's only one Portuguese Wikipedia, so go with Portugal's Portuguese translation
         # See https://en.wikipedia.org/wiki/Portuguese_Wikipedia
         'pt-PT': 'pt',
-        # Mandarin Chinese (Simplified) and Mandarin Chinese (Traditional)
+        # Simplified and Traditional Chinese
         # The supported codes are a relic from old Chinese Wikipedia. Nowadays localisation is done on the fly.
         # See https://en.wikipedia.org/wiki/Chinese_Wikipedia
         'zh-Hans': 'zh-cn',
@@ -108,15 +113,62 @@ def generate_udhr_dataset(out_path='../src/test/resources/org/xbib/elasticsearch
     assert len(_SUPPORTED_LANGUAGES) == len(supported_code_to_filename)
 
     # Write the selected translations to the output file
-    whitespace_pattern = re.compile(r'\s+', flags=re.UNICODE | re.MULTILINE)
+    whitespace_pattern = re.compile(r'\s+')
     with open(out_path, 'w', encoding='utf-8') as out_file:
-        for supported_code, filename in supported_code_to_filename.items():
-            out_file.write(supported_code)
-            out_file.write('\t')
+        for supported_code, filename in sorted(supported_code_to_filename.items()):
             # Remove the first 6 lines (English header) and clean up whitespace
-            out_file.write(whitespace_pattern.sub(' ', ' '.join(filename_to_content[filename].split('\n')[6:])).strip())
-            out_file.write('\n')
+            clean_text = whitespace_pattern.sub(' ', ' '.join(filename_to_content[filename].split('\n')[6:])).strip()
+            out_file.write('{}\t{}\n'.format(supported_code, clean_text))
 
+
+@baker.command
+def generate_wordpress_translations_dataset(out_path=os.path.join(_TEST_RESOURCES_PATH, 'wordpress-translations.tsv'),
+                                            texts_per_language=50):
+    """
+    Download and generate the WordPress interface translations dataset.
+
+    The generated dataset consists of translations for WordPress 4.6.x versions. This command applies minimal processing
+    to create the dataset, including: matching the dataset's language codes with those used by the plugin, unescaping
+    HTML entities, and stripping variable placeholders, HTML tags, and redundant whitespace.
+
+    :param out_path: output path for the dataset file, which will be written in tab-separated format with two
+                     columns: language code and text.
+    :param texts_per_language: number of texts to retain per langauge. The output file will contain up to this number of
+                               texts per language, excluding URL translations and word lists. The longest texts for
+                               each language are retained.
+    """
+    url_template = 'https://translate.wordpress.org/projects/wp/4.6.x/{}/default/export-translations?format=json'
+    requests_session = requests.Session()
+    wp_placeholder_pattern = re.compile(r'(%\d*\$?[sd])|(###[A-Z_]+###)')
+    html_tag_pattern = re.compile(r'<[^>]+>')
+    whitespace_pattern = re.compile(r'\s+')
+    with open(out_path, 'w', encoding='utf-8') as out_file:
+        for supported_code in sorted(_SUPPORTED_LANGUAGES):
+            # Use Australian and Bokmål Norwegian as the representative English and Norwegian variants, respectively
+            if supported_code == 'en':
+                wp_code = 'en-au'
+            elif supported_code == 'no':
+                wp_code = 'nb'
+            else:
+                wp_code = supported_code
+            # Clean and retain the longest texts
+            clean_texts_with_len = []
+            for original_text, translations in requests_session.get(url_template.format(wp_code)).json().items():
+                # Skip links and simple lists (e.g., stopwords aren't translated to Chinese)
+                if original_text.startswith('http') or original_text.startswith('Comma-separated'):
+                    continue
+                for translation in translations:
+                    # Skip texts that haven't been translated
+                    if supported_code != 'en' and original_text == translation:
+                        continue
+                    clean_text = wp_placeholder_pattern.sub('', translation)
+                    clean_text = ftfy.fixes.unescape_html(clean_text)
+                    clean_text = html_tag_pattern.sub('', clean_text)
+                    clean_text = whitespace_pattern.sub(' ', clean_text).strip()
+                    clean_texts_with_len.append((len(clean_text), clean_text))
+            clean_texts_with_len.sort(reverse=True)
+            for _, clean_text in clean_texts_with_len[:texts_per_language]:
+                out_file.write('{}\t{}\n'.format(supported_code, clean_text))
 
 if __name__ == '__main__':
     baker.run()

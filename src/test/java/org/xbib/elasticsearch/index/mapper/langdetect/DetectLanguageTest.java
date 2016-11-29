@@ -83,24 +83,15 @@ public class DetectLanguageTest extends Assert {
         );
     }
 
-    /**
-     * Test classification accuracies on WordPress interface translations.
-     *
-     * The translations are for <a href="https://translate.wordpress.org/projects/wp/4.6.x">WordPress 4.6.x</a>. Some
-     * minimal processing was done to create the wp-translations.tsv resource file: matched the dataset's language code
-     * with the one returned by the library, unescaped HTML entities, and dropped variable placeholders, HTML tags, and
-     * redundant whitespace. To speed up testing, the resource file contains only the 50 longest translated phrases for
-     * each language, excluding URL translations and word lists.
-     */
     @Test
     public void testWordPressTranslationsAccuracies() throws IOException {
         testSubstringAccuracies(
-            "wp-translations.tsv",
+            "wordpress-translations.tsv",
             new double[][] {
                 { 5,  10, 0.25, 0.60 },
                 { 10, 10, 0.44, 0.76 },
                 { 20, 10, 0.65, 0.88 },
-                { 0,  1,  0.80, 0.98 }
+                { 0,  1,  0.78, 0.98 }
             },
             false
         );
@@ -109,11 +100,11 @@ public class DetectLanguageTest extends Assert {
     @Test
     public void testWordPressTranslationsAccuraciesShortProfile() throws IOException {
         testSubstringAccuracies(
-            "wp-translations.tsv",
+            "wordpress-translations.tsv",
             new double[][] {
                 { 5,  10, 0.23, 0.61 },
                 { 10, 10, 0.47, 0.77 },
-                { 20, 10, 0.69, 0.90 },
+                { 20, 10, 0.68, 0.90 },
                 { 0,  1,  0.94, 0.99 }
             },
             true
