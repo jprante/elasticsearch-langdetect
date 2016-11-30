@@ -4,7 +4,7 @@ This directory contains the Python code that was used to generate the datasets f
 
 ## Setup
 
-* Create a [virtualenv](https://virtualenv.pypa.io/en/stable/) with Python 3.5 as the interpreter
+* Create a [virtualenv](https://virtualenv.pypa.io/en/stable/) with Python 3.5+ as the interpreter
 * Install Python requirements from `requirements.txt` (run `pip install -r requirements.txt`)
 
 ## Running the code

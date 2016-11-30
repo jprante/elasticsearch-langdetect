@@ -1,5 +1,6 @@
 package org.xbib.elasticsearch.index.mapper.langdetect;
 
+import com.google.common.base.Joiner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.common.io.Streams;
@@ -19,15 +20,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
-import java.util.Set;
 
 public class DetectLanguageTest extends Assert {
     private static final Logger logger = LogManager.getLogger();
+    private static final String DEFAULT_LANGUAGES = Joiner.on(",").join(LangdetectService.DEFAULT_LANGUAGES);
+    private static final String ALL_DEFAULT_PROFILE_LANGUAGES =
+        "af,ar,bg,bn,cs,da,de,el,en,es,et,fa,fi,fr,gu,he,hi,hr,hu,id,it,ja,kn,ko,lt,lv,mk,ml,mr,ne,nl,no,pa,pl,pt,ro," +
+        "ru,sk,sl,so,sq,sv,sw,ta,te,th,tl,tr,uk,ur,vi,zh-cn,zh-tw";
+    private static final String ALL_SHORT_PROFILE_LANGUAGES =
+        "ar,bg,bn,ca,cs,da,de,el,en,es,et,fa,fi,fr,gu,he,hi,hr,hu,id,it,ja,ko,lt,lv,mk,ml,nl,no,pa,pl,pt,ro,ru,si,sq," +
+        "sv,ta,te,th,tl,tr,uk,ur,vi,zh-cn,zh-tw";
 
     @Test
     public void testEnglish() throws IOException {
@@ -50,7 +56,7 @@ public class DetectLanguageTest extends Assert {
     }
 
     @Test
-    public void testUdhrAccuracies() throws IOException {
+    public void testUdhrAccuraciesDefaultProfileDefaultLanguages() throws IOException {
         testSubstringAccuracies(
             "udhr.tsv",
             new double[][] {
@@ -62,12 +68,31 @@ public class DetectLanguageTest extends Assert {
                 { 300, 100, 1.00, 1.00 },
                 { 0,   1,   1.00, 1.00 }
             },
+            false,
             false
         );
     }
 
     @Test
-    public void testUdhrAccuraciesShortProfile() throws IOException {
+    public void testUdhrAccuraciesDefaultProfileAllLanguages() throws IOException {
+        testSubstringAccuracies(
+            "udhr.tsv",
+            new double[][] {
+                { 5,   100, 0.25, 0.61 },
+                { 10,  100, 0.45, 0.79 },
+                { 20,  100, 0.72, 0.92 },
+                { 50,  100, 0.86, 0.98 },
+                { 100, 100, 0.94, 0.99 },
+                { 300, 100, 1.00, 1.00 },
+                { 0,   1,   1.00, 1.00 }
+            },
+            false,
+            true
+        );
+    }
+
+    @Test
+    public void testUdhrAccuraciesShortProfileDefaultLanguages() throws IOException {
         testSubstringAccuracies(
             "udhr.tsv",
             new double[][] {
@@ -79,12 +104,31 @@ public class DetectLanguageTest extends Assert {
                 { 300, 100, 0.99, 0.99 },
                 { 0,   1,   1.00, 1.00 }
             },
+            true,
+            false
+        );
+    }
+
+    @Test
+    public void testUdhrAccuraciesShortProfileAllLanguages() throws IOException {
+        testSubstringAccuracies(
+            "udhr.tsv",
+            new double[][] {
+                { 5,   100, 0.16, 0.64 },
+                { 10,  100, 0.49, 0.81 },
+                { 20,  100, 0.68, 0.93 },
+                { 50,  100, 0.85, 0.98 },
+                { 100, 100, 0.94, 0.99 },
+                { 300, 100, 0.99, 0.99 },
+                { 0,   1,   1.00, 1.00 }
+            },
+            true,
             true
         );
     }
 
     @Test
-    public void testWordPressTranslationsAccuracies() throws IOException {
+    public void testWordPressTranslationsAccuraciesDefaultProfileDefaultLanguages() throws IOException {
         testSubstringAccuracies(
             "wordpress-translations.tsv",
             new double[][] {
@@ -93,12 +137,28 @@ public class DetectLanguageTest extends Assert {
                 { 20, 10, 0.65, 0.88 },
                 { 0,  1,  0.78, 0.98 }
             },
+            false,
             false
         );
     }
 
     @Test
-    public void testWordPressTranslationsAccuraciesShortProfile() throws IOException {
+    public void testWordPressTranslationsAccuraciesDefaultProfileAllLanguages() throws IOException {
+        testSubstringAccuracies(
+            "wordpress-translations.tsv",
+            new double[][] {
+                { 5,  10, 0.17, 0.56 },
+                { 10, 10, 0.41, 0.73 },
+                { 20, 10, 0.59, 0.87 },
+                { 0,  1,  0.78, 0.99 }
+            },
+            false,
+            true
+        );
+    }
+
+    @Test
+    public void testWordPressTranslationsAccuraciesShortProfileDefaultLanguages() throws IOException {
         testSubstringAccuracies(
             "wordpress-translations.tsv",
             new double[][] {
@@ -107,9 +167,26 @@ public class DetectLanguageTest extends Assert {
                 { 20, 10, 0.68, 0.90 },
                 { 0,  1,  0.94, 0.99 }
             },
+            true,
+            false
+        );
+    }
+
+    @Test
+    public void testWordPressTranslationsAccuraciesShortProfileAllLanguages() throws IOException {
+        testSubstringAccuracies(
+            "wordpress-translations.tsv",
+            new double[][] {
+                { 5,  10, 0.23, 0.61 },
+                { 10, 10, 0.40, 0.77 },
+                { 20, 10, 0.68, 0.89 },
+                { 0,  1,  0.94, 0.99 }
+            },
+            true,
             true
         );
     }
+
 
     /**
      * Test classification accuracies on substrings of texts from a single dataset.
@@ -125,17 +202,23 @@ public class DetectLanguageTest extends Assert {
      *                       {@link #generateSubstringSample(String, int, int)}, and a per-language accuracy threshold
      *                       and mean accuracy threshold, which are used to determine whether the trial passes or fails
      * @param useShortProfile if true, the short text language profile will be used instead of the default profile
+     * @param useAllLanguages if true, all supported languages will be used instead of  just the default ones
      */
     private void testSubstringAccuracies(String datasetPath,
                                          double[][] allTrialParams,
-                                         boolean useShortProfile) throws IOException {
+                                         boolean useShortProfile,
+                                         boolean useAllLanguages) throws IOException {
         LangdetectService service = new LangdetectService(
             Settings.builder()
-                    .putArray("languages", LangdetectService.DEFAULT_LANGUAGES)
+                    .put("languages",
+                         useAllLanguages ?
+                             useShortProfile ? ALL_SHORT_PROFILE_LANGUAGES : ALL_DEFAULT_PROFILE_LANGUAGES :
+                             DEFAULT_LANGUAGES)
                     .put("profile", useShortProfile ? "short-text" : "")
                     .build()
         );
         Map<String, List<String>> languageToFullTexts = readMultiLanguageDataset(datasetPath);
+        languageToFullTexts.keySet().retainAll(Arrays.asList(service.getSettings().getAsArray("languages")));
         // Sort the languages to make the log output prettier.
         List<String> languages = new ArrayList<>(languageToFullTexts.keySet());
         Collections.sort(languages);
@@ -184,8 +267,6 @@ public class DetectLanguageTest extends Assert {
      * @return a mapping from each language code found in the file to the texts of this language    
      */
     private Map<String, List<String>> readMultiLanguageDataset(String path) throws IOException {
-        // TODO: investigate why some languages are commented out
-        Set<String> supportedLanguages = new HashSet<>(Arrays.asList(LangdetectService.DEFAULT_LANGUAGES));
         Map<String, List<String>> languageToFullTexts = new HashMap<>();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(path),
                                                                           StandardCharsets.UTF_8))) {
@@ -193,9 +274,6 @@ public class DetectLanguageTest extends Assert {
             while ((line = br.readLine()) != null) {
                 String[] splitLine = line.split("\t");
                 String language = splitLine[0];
-                if (!supportedLanguages.contains(language)) {
-                    continue;
-                }
                 if (!languageToFullTexts.containsKey(language)) {
                     languageToFullTexts.put(language, new ArrayList<String>());
                 }

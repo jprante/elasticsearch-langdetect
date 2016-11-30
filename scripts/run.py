@@ -17,6 +17,7 @@ _SUPPORTED_LANGUAGES = {
     'ar': 'Arabic',
     'bg': 'Bulgarian',
     'bn': 'Bengali',
+    'ca': 'Catalan',  # Short profile only
     'cs': 'Czech',
     'da': 'Danish',
     'de': 'German',
@@ -50,6 +51,7 @@ _SUPPORTED_LANGUAGES = {
     'pt': 'Portuguese',
     'ro': 'Romanian',
     'ru': 'Russian',
+    'si': 'Sinhalese',  # Short profile only
     'sk': 'Slovak',
     'sl': 'Slovene',
     'so': 'Somali',
