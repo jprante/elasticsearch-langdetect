@@ -203,14 +203,16 @@ def merge_language_profiles(output_profile_dir='merged-average'):
             if os.path.exists(profile_path):
                 profile_paths.append(profile_path)
         # Copy the original profile without any processing if only one exists
-        if len(profile_paths) == 1:
-            shutil.copy(profile_paths[0], os.path.join(merged_dir, lang))
-            continue
         for profile_path in profile_paths:
             with open(profile_path, encoding='utf-8') as profile_file:
                 profile = json.load(profile_file)
+            # The n_words sums of some profiles are wrong so we fix them here
+            profile['n_words'] = [0, 0, 0]
             for ngram, count in profile['freq'].items():
-                merged_profile['freq'][ngram] += Fraction(count, profile['n_words'][len(ngram) - 1] * 2)
+                profile['n_words'][len(ngram) - 1] += count
+            for ngram, count in profile['freq'].items():
+                merged_profile['freq'][ngram] += Fraction(count,
+                                                          profile['n_words'][len(ngram) - 1] * len(profile_paths))
         # The least common multiplier of the frequency denominators for each n-gram length is the new n_words
         merged_n_words = merged_profile['n_words']
         for ngram, freq in merged_profile['freq'].items():
@@ -220,8 +222,11 @@ def merge_language_profiles(output_profile_dir='merged-average'):
         # Ensure we don't exceed the maximum long value in Java
         for n_words in merged_n_words:
             assert n_words < 2 ** 63
+        n_words_check = list(merged_n_words)
         for ngram, freq in merged_profile['freq'].items():
             merged_profile['freq'][ngram] = int(merged_n_words[len(ngram) - 1] * freq)
+            n_words_check[len(ngram) - 1] -= merged_profile['freq'][ngram]
+        assert not sum(n_words_check)
         with open(os.path.join(merged_dir, lang), 'w', encoding='utf-8') as out_file:
             json.dump(merged_profile, out_file, ensure_ascii=False, separators=',:')
 
