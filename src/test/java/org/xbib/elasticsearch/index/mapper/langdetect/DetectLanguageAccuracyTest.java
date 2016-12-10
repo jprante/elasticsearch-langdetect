@@ -121,7 +121,15 @@ public class DetectLanguageAccuracyTest extends Assert {
         // Set up the detection service according to the test's parameters
         String languageSetting = DEFAULT_LANGUAGES;
         if (useAllLanguages) {
-            languageSetting = profileParam.isEmpty() ? ALL_DEFAULT_PROFILE_LANGUAGES : ALL_SHORT_PROFILE_LANGUAGES;
+            // TODO: This is a bit clunky. LangdetectService should support "all" as a language setting.
+            if (profileParam.isEmpty()) {
+                languageSetting = ALL_DEFAULT_PROFILE_LANGUAGES;
+            } else if (profileParam.equals("short-text")) {
+                languageSetting = ALL_SHORT_PROFILE_LANGUAGES;
+            } else {
+                assertEquals(profileParam, "merged-average");
+                languageSetting = ALL_LANGUAGES;
+            }
         }
         LangdetectService service = new LangdetectService(
             Settings.builder()
