@@ -214,6 +214,7 @@ public class LangdetectService {
     }
 
     public List<Language> detectAll(String text) throws LanguageDetectionException {
+        text = NGram.normalizeVietnamese(text);
         if (!isStarted) {
             load(settings);
             init();
