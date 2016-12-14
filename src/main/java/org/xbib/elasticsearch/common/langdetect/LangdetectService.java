@@ -188,9 +188,7 @@ public class LangdetectService {
         if (in == null) {
             throw new IOException("profile '" + resource + "' not found");
         }
-        LangProfile langProfile = new LangProfile();
-        langProfile.read(in);
-        addProfile(langProfile, index, langsize);
+        addProfile(new LangProfile(in), index, langsize);
     }
 
     public void addProfile(LangProfile profile, int index, int langsize) throws IOException {

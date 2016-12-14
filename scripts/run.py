@@ -1,6 +1,11 @@
+from collections import defaultdict
+from fractions import Fraction
 from io import BytesIO
+import json
+import math
 import os
 import re
+import shutil
 from zipfile import ZipFile
 
 import baker
@@ -8,8 +13,9 @@ import ftfy
 import requests
 import xmltodict
 
-_TEST_RESOURCES_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                    '../src/test/resources/org/xbib/elasticsearch/index/mapper/langdetect/')
+_THIS_PATH = os.path.dirname(os.path.abspath(__file__))
+_TEST_RESOURCES_PATH = os.path.join(_THIS_PATH, '../src/test/resources/org/xbib/elasticsearch/index/mapper/langdetect/')
+_MAIN_RESOURCES_PATH = os.path.join(_THIS_PATH, '../src/main/resources/langdetect/')
 
 # Supported languages according to https://github.com/shuyo/language-detection/blob/wiki/LanguageList.md
 _SUPPORTED_LANGUAGES = {
@@ -171,6 +177,58 @@ def generate_wordpress_translations_dataset(out_path=os.path.join(_TEST_RESOURCE
             clean_texts_with_len.sort(reverse=True)
             for _, clean_text in clean_texts_with_len[:texts_per_language]:
                 out_file.write('{}\t{}\n'.format(supported_code, clean_text))
+
+
+@baker.command
+def merge_language_profiles(output_profile_dir='merged-average'):
+    """
+    Preprocess the original default and short-text profile files, averaging the normalized n-gram frequencies from the
+    two profiles to create a merged profile.
+
+    For example, if the trigram "xyz" appears 1 time out of 1000 trigrams in a default profile file and 1 out of 100
+    in a short profile file, its merged-average frequency would be (0.001 + 0.01) / 2 = 0.0055. This frequency is then
+    converted back to an integer, as the plugin's Java code assumes the frequencies are integers.
+
+    :param output_profile_dir: directory name under the main resource path where the merged profile will be saved,
+                               overwriting any existing files in the directory
+    """
+    merged_dir = os.path.join(_MAIN_RESOURCES_PATH, output_profile_dir)
+    shutil.rmtree(merged_dir, ignore_errors=True)
+    os.mkdir(merged_dir)
+    for lang in _SUPPORTED_LANGUAGES:
+        merged_profile = dict(name=lang, freq=defaultdict(Fraction), n_words=[1, 1, 1])
+        profile_paths = []
+        for profile_name in ['default', 'short']:
+            profile_path = os.path.join(_MAIN_RESOURCES_PATH, '' if profile_name == 'default' else 'short-text', lang)
+            if os.path.exists(profile_path):
+                profile_paths.append(profile_path)
+        # Copy the original profile without any processing if only one exists
+        for profile_path in profile_paths:
+            with open(profile_path, encoding='utf-8') as profile_file:
+                profile = json.load(profile_file)
+            # The n_words sums of some profiles are wrong so we fix them here
+            profile['n_words'] = [0, 0, 0]
+            for ngram, count in profile['freq'].items():
+                profile['n_words'][len(ngram) - 1] += count
+            for ngram, count in profile['freq'].items():
+                merged_profile['freq'][ngram] += Fraction(count,
+                                                          profile['n_words'][len(ngram) - 1] * len(profile_paths))
+        # The least common multiplier of the frequency denominators for each n-gram length is the new n_words
+        merged_n_words = merged_profile['n_words']
+        for ngram, freq in merged_profile['freq'].items():
+            n_words_index = len(ngram) - 1
+            merged_n_words[n_words_index] = int(merged_n_words[n_words_index] * freq.denominator /
+                                                math.gcd(merged_n_words[n_words_index], freq.denominator))
+        # Ensure we don't exceed the maximum long value in Java
+        for n_words in merged_n_words:
+            assert n_words < 2 ** 63
+        n_words_check = list(merged_n_words)
+        for ngram, freq in merged_profile['freq'].items():
+            merged_profile['freq'][ngram] = int(merged_n_words[len(ngram) - 1] * freq)
+            n_words_check[len(ngram) - 1] -= merged_profile['freq'][ngram]
+        assert not sum(n_words_check)
+        with open(os.path.join(merged_dir, lang), 'w', encoding='utf-8') as out_file:
+            json.dump(merged_profile, out_file, ensure_ascii=False, separators=',:')
 
 if __name__ == '__main__':
     baker.run()

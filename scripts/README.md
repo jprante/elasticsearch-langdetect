@@ -1,6 +1,7 @@
-# Dataset generation scripts
+# Data processing scripts
 
-This directory contains the Python code that was used to generate the datasets for the language detection tests.
+This directory contains the Python code that was used to generate the datasets for the language detection tests, and to
+create the `merged-average` language profile.
 
 ## Setup
 
