@@ -1,5 +1,5 @@
 group = 'org.xbib.elasticsearch.plugin'
-version = '2.3.3.0'
+version = '2.4.3.0'
 
 ext {
     pluginName = 'langdetect'
@@ -11,41 +11,19 @@ ext {
     scmConnection = 'scm:git:git://github.com/' + user + '/' + name + '.git'
     scmDeveloperConnection = 'scm:git:git://github.com/' + user + '/' + name + '.git'
     versions = [
-            'elasticsearch' : '2.3.3',
-            'jackson': '2.6.2',
+            'elasticsearch' : '2.4.3',
+            'jackson': '2.8.1',
             'log4j': '2.5',
             'junit' : '4.12'
     ]
 }
 
-buildscript {
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        jcenter()
-        maven {
-            url "http://xbib.org/repository"
-        }
-    }
-    dependencies {
-        classpath 'org.ajoberstar:gradle-git:1.4.2'
-        classpath 'co.riiid:gradle-github-plugin:0.4.2'
-        classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3'
-    }
-}
-
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'signing'
-apply plugin: 'co.riiid.gradle'
 
 repositories {
-    mavenLocal()
     mavenCentral()
-    jcenter()
-    maven {
-        url "http://xbib.org/repository"
-    }
 }
 
 sourceSets {
@@ -172,7 +150,4 @@ if (project.hasProperty('signing.keyId')) {
     }
 }
 
-ext.grgit = org.ajoberstar.grgit.Grgit.open()
-
-apply from: 'gradle/git.gradle'
 apply from: 'gradle/publish.gradle'
