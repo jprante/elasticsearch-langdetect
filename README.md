@@ -81,6 +81,7 @@ zh-tw
 
 | Elasticsearch  | Plugin         | Release date |
 | -------------- | -------------- | ------------ |
+| 2.4.4          | 2.4.4.1        | Jan 25, 2017 |
 | 2.3.3          | 2.3.3.0        | Jun 11, 2016 |
 | 2.3.2          | 2.3.2.0        | Jun 11, 2016 |
 | 2.3.1          | 2.3.1.0        | Apr 11, 2016 |
@@ -104,7 +105,7 @@ zh-tw
 
 ## Installation Elasticsearch 2.x
 
-    ./bin/plugin install https://github.com/jprante/elasticsearch-langdetect/releases/download/2.3.3.0/elasticsearch-langdetect-2.3.3.0-plugin.zip
+    ./bin/plugin install https://github.com/jprante/elasticsearch-langdetect/releases/download/2.4.4.1/elasticsearch-langdetect-2.4.4.1-plugin.zip
 
 ## Installation Elasticsearch 1.x
 
@@ -134,7 +135,10 @@ In this example, we create a simple detector field, and write text to it for det
     {
       "article" : {
         "properties" : {
-           "content" : { "type" : "langdetect" }
+          "langcode" : { 
+            "type" : "langdetect",
+            "languages" : [ "de", "en", "fr", "nl", "it" ]
+          }
         }
       }
     }
@@ -143,21 +147,21 @@ In this example, we create a simple detector field, and write text to it for det
     curl -XPUT 'localhost:9200/test/article/1' -d '
     {
       "title" : "Some title",
-      "content" : "Oh, say can you see by the dawn`s early light, What so proudly we hailed at the twilight`s last gleaming?"
+      "langcode" : "Oh, say can you see by the dawn`s early light, What so proudly we hailed at the twilight`s last gleaming?"
     }
     '
 
     curl -XPUT 'localhost:9200/test/article/2' -d '
     {
       "title" : "Ein Titel",
-      "content" : "Einigkeit und Recht und Freiheit für das deutsche Vaterland!"
+      "langcode" : "Einigkeit und Recht und Freiheit für das deutsche Vaterland!"
     }
     '
 
     curl -XPUT 'localhost:9200/test/article/3' -d '
     {
       "title" : "Un titre",
-      "content" : "Allons enfants de la Patrie, Le jour de gloire est arrivé!"
+      "langcode" : "Allons enfants de la Patrie, Le jour de gloire est arrivé!"
     }
     '
 
@@ -169,7 +173,7 @@ A search for the detected language codes is a simple term query, like this:
     {
        "query" : {
            "term" : {
-                "content" : "en"
+                "langcode" : "en"
            }
        }
     }
@@ -178,7 +182,7 @@ A search for the detected language codes is a simple term query, like this:
     {
        "query" : {
            "term" : {
-                "content" : "de"
+                "langcode" : "de"
            }
        }
     }
@@ -188,13 +192,65 @@ A search for the detected language codes is a simple term query, like this:
     {
        "query" : {
            "term" : {
-                "content" : "fr"
+                "langcode" : "fr"
            }
        }
     }
     '
 
-## Show stored language codes 
+## Indexing language-detected text alongside with code
+
+Just indexing the language code is not eough in most cases. The language-detected text
+should be passed to a specific analyzer to papply language-specific analysis. This plugin
+allows that by the `language_to` parameter.
+
+    curl -XDELETE 'localhost:9200/test'
+
+    curl -XPUT 'localhost:9200/test'
+
+    curl -XPOST 'localhost:9200/test/article/_mapping' -d '
+    {
+      "article" : {
+        "properties" : {
+          "langcode":{
+            "type" : "langdetect",
+            "languages" : [ "de", "en", "fr", "nl", "it" ],
+            "language_to" : {
+              "de": "german_field",
+              "en": "english_field"
+            }
+          },
+          "german_field" : {
+            "analyzer" : "german",
+            "type": "string"
+          },
+          "english_field" : {
+            "analyzer" : "english",
+            "type" : "string"
+          }
+        }
+      }
+    }
+    '
+    
+    curl -XPUT 'localhost:9200/test/article/1' -d '
+    {
+      "langcode" : "This is a small example for english text"
+    }
+    '
+  
+    curl -XPOST 'localhost:9200/test/_search?pretty' -d '
+    {
+       "query" : {
+           "match" : {
+                "english_field" : "This is a small example for english text"
+           }
+       }
+    }
+    '
+
+
+## Language code and `multi_field`
  
 Using multifields, it is possible to store the text alongside with the detected language(s).
 Here, we use another (short nonsense) example text for demonstration,
