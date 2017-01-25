@@ -1,0 +1,22 @@
+{
+  "someType" : {
+    "properties" : {
+      "someField":{
+        "type" : "langdetect",
+        "languages" : [ "de", "en", "fr", "nl", "it" ],
+        "language_to" : {
+          "de": "german_field",
+          "en": "english_field"
+        }
+      },
+      "german_field" : {
+        "analyzer" : "german",
+        "type": "string"
+      },
+      "english_field" : {
+        "analyzer" : "english",
+        "type" : "string"
+      }
+    }
+  }
+}

@@ -19,8 +19,10 @@ import org.xbib.elasticsearch.common.langdetect.Language;
 import org.xbib.elasticsearch.common.langdetect.LanguageDetectionException;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +49,8 @@ public class LangdetectMapper extends StringFieldMapper {
     public static class Builder extends FieldMapper.Builder<Builder, StringFieldMapper> {
 
         protected int positionIncrementGap = -1;
+
+        protected LanguageTo languageTo = LanguageTo.builder().build();
 
         protected Settings.Builder settingsBuilder = Settings.settingsBuilder();
 
@@ -139,6 +143,11 @@ public class LangdetectMapper extends StringFieldMapper {
             return this;
         }
 
+        public Builder languageTo(LanguageTo languageTo) {
+            this.languageTo = languageTo;
+            return this;
+        }
+
         @Override
         public LangdetectMapper build(BuilderContext context) {
             if (positionIncrementGap != -1) {
@@ -159,7 +168,8 @@ public class LangdetectMapper extends StringFieldMapper {
             setupFieldType(context);
             LangdetectService service = new LangdetectService(settingsBuilder.build());
             return new LangdetectMapper(name, fieldType, defaultFieldType, 100, -1,
-                    context.indexSettings(), multiFieldsBuilder.build(this, context), copyTo, service);
+                    context.indexSettings(), multiFieldsBuilder.build(this, context), copyTo,
+                    languageTo, service);
         }
     }
 
@@ -175,12 +185,11 @@ public class LangdetectMapper extends StringFieldMapper {
                 String fieldName = entry.getKey();
                 Object fieldNode = entry.getValue();
                 switch (fieldName) {
-                    case "analyzer" : {
+                    case "analyzer" :
                         // "_keyword" - we do ignore this, it's our internal analyzer
                         iterator.remove();
                         break;
-                    }
-                    case "search_quote_analyzer": {
+                    case "search_quote_analyzer":
                         NamedAnalyzer analyzer = parserContext.analysisService().analyzer(fieldNode.toString());
                         if (analyzer == null) {
                             throw new MapperParsingException("Analyzer [" + fieldNode.toString() + "] not found for field [" + name + "]");
@@ -188,8 +197,7 @@ public class LangdetectMapper extends StringFieldMapper {
                         builder.searchQuotedAnalyzer(analyzer);
                         iterator.remove();
                         break;
-                    }
-                    case "position_increment_gap": {
+                    case "position_increment_gap":
                         int newPositionIncrementGap = XContentMapValues.nodeIntegerValue(fieldNode, -1);
                         if (newPositionIncrementGap < 0) {
                             throw new MapperParsingException("position_increment_gap less than 0 aren't allowed.");
@@ -206,78 +214,72 @@ public class LangdetectMapper extends StringFieldMapper {
                         }
                         iterator.remove();
                         break;
-                    }
-                    case "store" : {
+                    case "store" :
                         builder.store(parseStore(fieldName, fieldNode.toString()));
                         iterator.remove();
                         break;
-                    }
-                    case "number_of_trials": {
+                    case "number_of_trials":
                         builder.ntrials(XContentMapValues.nodeIntegerValue(fieldNode));
                         iterator.remove();
                         break;
-                    }
-                    case "alpha": {
+                    case "alpha":
                         builder.alpha(XContentMapValues.nodeDoubleValue(fieldNode));
                         iterator.remove();
                         break;
-                    }
-                    case "alpha_width": {
+                    case "alpha_width":
                         builder.alphaWidth(XContentMapValues.nodeDoubleValue(fieldNode));
                         iterator.remove();
                         break;
-                    }
-                    case "iteration_limit": {
+                    case "iteration_limit":
                         builder.iterationLimit(XContentMapValues.nodeIntegerValue(fieldNode));
                         iterator.remove();
                         break;
-                    }
-                    case "prob_threshold": {
+                    case "prob_threshold":
                         builder.probThreshold(XContentMapValues.nodeDoubleValue(fieldNode));
                         iterator.remove();
                         break;
-                    }
-                    case "conv_threshold": {
+                    case "conv_threshold":
                         builder.convThreshold(XContentMapValues.nodeDoubleValue(fieldNode));
                         iterator.remove();
                         break;
-                    }
-                    case "base_freq": {
+                    case "base_freq":
                         builder.baseFreq(XContentMapValues.nodeIntegerValue(fieldNode));
                         iterator.remove();
                         break;
-                    }
-                    case "pattern": {
+                    case "pattern":
                         builder.pattern(XContentMapValues.nodeStringValue(fieldNode, null));
                         iterator.remove();
                         break;
-                    }
-                    case "max": {
+                    case "max":
                         builder.max(XContentMapValues.nodeIntegerValue(fieldNode));
                         iterator.remove();
                         break;
-                    }
-                    case "binary": {
+                    case "binary":
                         boolean b = XContentMapValues.nodeBooleanValue(fieldNode);
                         builder.binary(b);
                         iterator.remove();
                         break;
-                    }
-                    case "map" : {
+                    case "map" :
                         builder.map(XContentMapValues.nodeMapValue(fieldNode, "map"));
                         iterator.remove();
                         break;
-                    }
-                    case "languages" : {
+                    case "languages" :
                         builder.languages(XContentMapValues.nodeStringArrayValue(fieldNode));
                         iterator.remove();
                         break;
-                    }
-                    case "profile" : {
+                    case "profile" :
                         builder.profile(XContentMapValues.nodeStringValue(fieldNode, null));
                         iterator.remove();
                         break;
-                    }
+                    case "language_to" :
+                        Map<String, Object> map = XContentMapValues.nodeMapValue(fieldNode, null);
+                        LanguageTo.Builder languageToBuilder = LanguageTo.builder();
+                        languageToBuilder.add(map);
+                        builder.languageTo(languageToBuilder.build());
+                        iterator.remove();
+                        break;
+                    default:
+                        break;
                 }
             }
             return builder;
@@ -288,17 +290,21 @@ public class LangdetectMapper extends StringFieldMapper {
 
     private final int positionIncrementGap;
 
+    private final LanguageTo languageTo;
+
     public LangdetectMapper(String simpleName,
-                             MappedFieldType fieldType,
-                             MappedFieldType defaultFieldType,
-                             int positionIncrementGap,
-                             int ignoreAbove,
-                             Settings indexSettings,
-                             MultiFields multiFields,
-                             CopyTo copyTo,
-                             LangdetectService langdetectService) {
+                            MappedFieldType fieldType,
+                            MappedFieldType defaultFieldType,
+                            int positionIncrementGap,
+                            int ignoreAbove,
+                            Settings indexSettings,
+                            MultiFields multiFields,
+                            CopyTo copyTo,
+                            LanguageTo languageTo,
+                            LangdetectService langdetectService) {
         super(simpleName, fieldType, defaultFieldType,
                 positionIncrementGap, ignoreAbove, indexSettings, multiFields, copyTo);
+        this.languageTo = languageTo;
         this.langdetectService = langdetectService;
         this.positionIncrementGap = positionIncrementGap;
     }
@@ -337,7 +343,7 @@ public class LangdetectMapper extends StringFieldMapper {
             try {
                 byte[] b = parser.binaryValue();
                 if (b != null && b.length > 0) {
-                    value = new String(b, Charset.forName("UTF-8"));
+                    value = new String(b, StandardCharsets.UTF_8);
                 }
             } catch (Exception e) {
                 // ignore
@@ -348,6 +354,9 @@ public class LangdetectMapper extends StringFieldMapper {
             for (Language lang : langs) {
                 Field field = new Field(fieldType().names().indexName(), lang.getLanguage(), fieldType());
                 fields.add(field);
+                if (languageTo.languageToFields().containsKey(lang.getLanguage())) {
+                    parseLanguageToFields(context, languageTo.languageToFields().get(lang.getLanguage()));
+                }
             }
         } catch (LanguageDetectionException e) {
             context.createExternalValueContext("unknown");
@@ -377,5 +386,84 @@ public class LangdetectMapper extends StringFieldMapper {
         for (String key : map.keySet()) {
             builder.field(key, map.get(key));
         }
+        languageTo.toXContent(builder, params);
     }
+
+    @SuppressWarnings("unchecked")
+    private static void parseLanguageToFields(ParseContext originalContext, Object languageToFields) throws IOException {
+        List<Object> fieldList = languageToFields instanceof List ?
+                (List<Object>)languageToFields : Collections.singletonList(languageToFields);
+        ParseContext context = originalContext.createCopyToContext();
+        for (Object field : fieldList) {
+            ParseContext.Document targetDoc = null;
+            for (ParseContext.Document doc = context.doc(); doc != null; doc = doc.getParent()) {
+                if (field.toString().startsWith(doc.getPrefix())) {
+                    targetDoc = doc;
+                    break;
+                }
+            }
+            if (targetDoc == null) {
+                throw new IllegalArgumentException("target doc is null");
+            }
+            final ParseContext copyToContext;
+            if (targetDoc == context.doc()) {
+                copyToContext = context;
+            } else {
+                copyToContext = context.switchDoc(targetDoc);
+            }
+            FieldMapper fieldMapper = copyToContext.docMapper().mappers().getMapper(field.toString());
+            if (fieldMapper != null) {
+                fieldMapper.parse(copyToContext);
+            } else {
+                throw new MapperParsingException("attempt to copy value to non-existing field [" + field + "]");
+            }
+        }
+    }
+
+    public static class LanguageTo {
+
+        private final Map<String, Object> languageToFields;
+
+        private LanguageTo(Map<String, Object> languageToFields) {
+            this.languageToFields = languageToFields;
+        }
+
+        public XContentBuilder toXContent(XContentBuilder builder, Params params) throws IOException {
+            if (!languageToFields.isEmpty()) {
+                builder.startObject("language_to");
+                for (Map.Entry<String, Object> field : languageToFields.entrySet()) {
+                    builder.field(field.getKey(), field.getValue());
+                }
+                builder.endObject();
+            }
+            return builder;
+        }
+
+        public static Builder builder() {
+            return new Builder();
+        }
+
+        public static class Builder {
+            private final Map<String, Object> languageToBuilders = new LinkedHashMap<>();
+
+            public LanguageTo.Builder add(String language, String field) {
+                languageToBuilders.put(language, field);
+                return this;
+            }
+
+            public LanguageTo.Builder add(Map<String, Object> map) {
+                languageToBuilders.putAll(map);
+                return this;
+            }
+
+            public LanguageTo build() {
+                return new LanguageTo(Collections.unmodifiableMap(languageToBuilders));
+            }
+        }
+
+        public Map<String, Object> languageToFields() {
+            return languageToFields;
+        }
+    }
+
 }
