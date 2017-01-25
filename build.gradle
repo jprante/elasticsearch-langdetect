@@ -1,14 +1,28 @@
+
 plugins {
     id "org.sonarqube" version "2.2"
     id "org.xbib.gradle.plugin.asciidoctor" version "1.5.4.1.0"
 }
+
+printf "Host: %s\nOS: %s %s %s\nJVM: %s %s %s %s\nGroovy: %s\nGradle: %s\n" +
+        "Build: group: ${project.group} name: ${project.name} version: ${project.version}\n",
+        InetAddress.getLocalHost(),
+        System.getProperty("os.name"),
+        System.getProperty("os.arch"),
+        System.getProperty("os.version"),
+        System.getProperty("java.version"),
+        System.getProperty("java.vm.version"),
+        System.getProperty("java.vm.vendor"),
+        System.getProperty("java.vm.name"),
+        GroovySystem.getVersion(),
+        gradle.gradleVersion
 
 ext {
     pluginName = 'langdetect'
     pluginClassname  = 'org.xbib.elasticsearch.plugin.langdetect.LangdetectPlugin'
     pluginDescription = 'Language detection for Elasticsearch'
     user = 'jprante'
-    name = 'elasticsearch-mapper-langdetect'
+    name = 'elasticsearch-langdetect'
     scmUrl = 'https://github.com/' + user + '/' + name
     scmConnection = 'scm:git:git://github.com/' + user + '/' + name + '.git'
     scmDeveloperConnection = 'scm:git:git://github.com/' + user + '/' + name + '.git'
@@ -70,12 +84,14 @@ dependencies {
     wagon 'org.apache.maven.wagon:wagon-ssh-external:2.10'
 }
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7
 
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 tasks.withType(JavaCompile) {
-    options.compilerArgs << "-Xlint:unchecked,deprecation"
+    options.compilerArgs << "-Xlint:all"
 }
+
 
 test {
     systemProperties['path.home'] = System.getProperty("user.dir")
