@@ -1,51 +1,37 @@
-group = 'org.xbib.elasticsearch.plugin'
-version = '2.3.3.0'
+plugins {
+    id "org.sonarqube" version "2.2"
+    id "org.xbib.gradle.plugin.asciidoctor" version "1.5.4.1.0"
+}
 
 ext {
     pluginName = 'langdetect'
     pluginClassname  = 'org.xbib.elasticsearch.plugin.langdetect.LangdetectPlugin'
     pluginDescription = 'Language detection for Elasticsearch'
     user = 'jprante'
-    name = 'elasticsearch-langdetect'
+    name = 'elasticsearch-mapper-langdetect'
     scmUrl = 'https://github.com/' + user + '/' + name
     scmConnection = 'scm:git:git://github.com/' + user + '/' + name + '.git'
     scmDeveloperConnection = 'scm:git:git://github.com/' + user + '/' + name + '.git'
     versions = [
-            'elasticsearch' : '2.3.3',
+            'elasticsearch' : '2.4.4',
             'jackson': '2.6.2',
             'log4j': '2.5',
             'junit' : '4.12'
     ]
 }
 
-buildscript {
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        jcenter()
-        maven {
-            url "http://xbib.org/repository"
-        }
-    }
-    dependencies {
-        classpath 'org.ajoberstar:gradle-git:1.4.2'
-        classpath 'co.riiid:gradle-github-plugin:0.4.2'
-        classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3'
-    }
-}
-
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'signing'
-apply plugin: 'co.riiid.gradle'
+apply plugin: 'findbugs'
+apply plugin: 'pmd'
+apply plugin: 'checkstyle'
+apply plugin: "jacoco"
+apply plugin: 'org.xbib.gradle.plugin.asciidoctor'
 
 repositories {
     mavenLocal()
     mavenCentral()
-    jcenter()
-    maven {
-        url "http://xbib.org/repository"
-    }
 }
 
 sourceSets {
@@ -172,7 +158,5 @@ if (project.hasProperty('signing.keyId')) {
     }
 }
 
-ext.grgit = org.ajoberstar.grgit.Grgit.open()
-
-apply from: 'gradle/git.gradle'
+apply from: 'gradle/sonarqube.gradle'
 apply from: 'gradle/publish.gradle'
