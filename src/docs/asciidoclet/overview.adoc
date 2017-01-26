@@ -1,0 +1,4 @@
+= Bibliographic entity processing for Java
+Jörg Prante
+Version 1.0
+

@@ -41,7 +41,7 @@ public class DetectLanguageTest extends Assert {
         reader.close();
         writer.close();
         LangdetectService detect = new LangdetectService();
-        assertEquals(detect.detectAll(writer.toString()).get(0).getLanguage(), lang);
+        assertEquals(lang, detect.detectAll(writer.toString()).get(0).getLanguage());
     }
 
 }

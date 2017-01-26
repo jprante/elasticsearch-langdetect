@@ -1,0 +1,516 @@
+# A langdetect plugin for Elasticsearch
+
+image:https://api.travis-ci.org/jprante/elasticsearch-langdetect.svg[title="Build status", link="https://travis-ci.org/jprante/elasticsearch-langdetect/"]
+image:https://img.shields.io/sonar/http/nemo.sonarqube.com/org.xbib.elasticsearch.plugin%3Aelasticsearch-langdetect/coverage.svg?style=flat-square[title="Coverage", link="https://sonarqube.com/dashboard/index?id=org.xbib.elasticsearch.plugin%3Aelasticsearch-langdetect"]
+image:https://maven-badges.herokuapp.com/maven-central/org.xbib.elasticsearch.plugin/elasticsearch-langdetect/badge.svg[title="Maven Central", link="http://search.maven.org/#search%7Cga%7C1%7Cxbib%20elasticsearch-langdetect"]
+image:https://img.shields.io/badge/License-Apache%202.0-blue.svg[title="Apache License 2.0", link="https://opensource.org/licenses/Apache-2.0"]
+image:https://img.shields.io/twitter/url/https/twitter.com/xbib.svg?style=social&label=Follow%20%40xbib[title="Twitter", link="https://twitter.com/xbib"]
+
+image:https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_%28Rotterdam%29_-_Google_Art_Project.jpg/299px-Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_%28Rotterdam%29_-_Google_Art_Project.jpg["Tower of Babel"]
+
+This is an implementation of a plugin for [Elasticsearch](http://github.com/elasticsearch/elasticsearch) using the 
+implementation of Nakatani Shuyo's [language detector](http://code.google.com/p/language-detection/).
+
+It uses 3-gram character and a Bayesian filter with various normalizations and feature sampling.
+The precision is over 99% for 53 languages.
+
+The plugin offers a mapping type to specify fields where you want to enable language detection.
+Detected languages are indexed into a subfield of the field named 'lang', as you can see in the example.
+The field can be queried for language codes.
+
+You can use the multi_field mapping type to combine this plugin with the attachment mapper plugin, to
+enable language detection in base64-encoded binary data. Currently, UTF-8 texts are supported only.
+
+The plugin offers also a REST endpoint, where a short text can be posted to in UTF-8, and the plugin responds
+with a list of recognized languages.
+
+Here is a list of languages code recognized:
+
+.Langauges
+[frame="all"]
+|===
+| Code | Description
+| af | Afrikaans
+| ar | Arabic
+| bg | Bulgarian
+| bn | Bengali
+| cs | Czech
+| da | Danish
+| de | German
+| el | Greek
+| en | English
+| es | Spanish
+| et | Estonian
+| fa | Farsi
+| fi | Finnish
+| fr | French
+| gu | Gujarati
+| he | Hebrew
+| hi | Hindi
+| hr | Croatian
+| hu | Hungarian
+| id | Indonesian
+| it | Italian
+| ja | Japanese
+| kn | Kannada
+| ko | Korean
+| lt | Lithuanian
+| lv | Latvian
+| mk | Macedonian
+| ml | Malayalam
+| mr | Marathi
+| ne | Nepali
+| nl | Dutch
+| no | Norwegian
+| pa | Eastern Punjabi
+| pl | Polish
+| pt | Portuguese
+| ro | Romanian
+| ru | Russian
+| sk | Slovak
+| sl | Slovene
+| so | Somali
+| sq | Albanian
+| sv | Swedish
+| sw | Swahili
+| ta | Tamil
+| te | Telugu
+| th | Thai
+| tl | Tagalog
+| tr | Turkish
+| uk | Ukrainian
+| ur | Urdu
+| vi | Vietnamese
+| zh-cn | Chinese
+| zh-tw | Traditional Chinese characters (Taiwan, Hongkong, Macau)
+|===
+
+.Compatibility matrix
+[frame="all"]
+|===
+| Plugin version | Elasticsearch version | Release date
+| 5.1.2.0        | 5.1.2 | Jan 26, 2017
+| 2.4.4.1        | 2.4.4        | Jan 25, 2017
+| 2.3.3.0        | 2.3.3        | Jun 11, 2016
+| 2.3.2.0        | 2.3.2        | Jun 11, 2016
+| 2.3.1.0        | 2.3.1        | Apr 11, 2016
+| 2.2.1.0        | 2.2.1        | Apr 11, 2016
+| 2.2.0.2        | 2.2.0        | Mar 25, 2016
+| 2.2.0.1        | 2.2.0        | Mar  6, 2016
+| 2.1.1.0        | 2.1.1        | Dec 20, 2015
+| 2.1.0.0        | 2.1.0        | Dec 15, 2015
+| 2.0.1.0        | 2.0.1        | Dec 15, 2015
+| 2.0.0.0        | 2.0.0        | Nov 12, 2015
+| 1.6.0.0        | 1.6.0        | Jul  1, 2015
+| 1.4.4.1        | 1.4.4        | Apr  3, 2015
+| 1.4.4.1        | 1.4.4        | Mar  4, 2015
+| 1.4.0.2        | 1.4.0        | Nov 26, 2014
+| 1.4.0.1        | 1.4.0        | Nov 20, 2014
+| 1.4.0.0        | 1.4.0        | Nov 14, 2014
+| 1.3.1.0        | 1.3.0        | Jul 30, 2014
+| 1.2.1.1        | 1.2.1        | Jun 18, 2014
+|===
+
+## Installation
+
+### Elasticsearch 5.x
+
+[source]
+----
+./bin/elasticsearch-plugin install http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/5.1.2.0/elasticsearch-langdetect-5.1.2.0-plugin.zip
+----
+
+### Elasticsearch 2.x
+
+[source]
+----
+./bin/plugin install http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/2.4.4.1/elasticsearch-langdetect-2.4.4.1-plugin.zip
+----
+
+### Elasticsearch 1.x
+
+[source]
+----
+./bin/plugin -install langdetect -url http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/1.6.0.0/elasticsearch-langdetect-1.6.0.0-plugin.zip
+----
+
+Do not forget to restart the node after installing.
+
+# Examples
+
+NOTE: The examples are written for Elasticsearch 5.x and need to be adapted to earlier versions of Elastiscearch.
+
+## A simple language detection example
+
+In this example, we create a simple detector field, and write text to it for detection.
+
+[source]
+----
+DELETE /test
+PUT /test
+{
+   "mappings": {
+      "docs": {
+         "properties": {
+            "text": {
+               "type": "langdetect",
+               "languages" : [ "en", "de", "fr" ]
+            }
+         }
+      }
+   }
+}
+
+PUT /test/docs/1
+{
+      "text" : "Oh, say can you see by the dawn`s early light, What so proudly we hailed at the twilight`s last gleaming?"
+}
+
+PUT /test/docs/2
+{
+      "text" : "Einigkeit und Recht und Freiheit für das deutsche Vaterland!"
+}
+
+PUT /test/docs/3
+{
+      "text" : "Allons enfants de la Patrie, Le jour de gloire est arrivé!"
+}
+
+POST /test/_search
+{
+       "query" : {
+           "term" : {
+                "text" : "en"
+           }
+       }
+}
+
+POST /test/_search
+{
+       "query" : {
+           "term" : {
+                "text" : "de"
+           }
+       }
+}
+
+POST /test/_search
+{
+       "query" : {
+           "term" : {
+                "text" : "fr"
+           }
+       }
+}
+----
+
+## Indexing language-detected text alongside with code
+
+Just indexing the language code is not enough in most cases. The language-detected text
+should be passed to a specific analyzer to apply language-specific analysis. This plugin
+allows that by the `language_to` parameter.
+
+[source]
+----
+DELETE /test
+PUT /test
+{
+   "mappings": {
+      "docs": {
+         "properties": {
+            "text": {
+               "type": "langdetect",
+               "languages": [
+                  "de",
+                  "en",
+                  "fr",
+                  "nl",
+                  "it"
+               ],
+               "language_to": {
+                  "de": "german_field",
+                  "en": "english_field"
+               }
+            },
+            "german_field": {
+               "analyzer": "german",
+               "type": "string"
+            },
+            "english_field": {
+               "analyzer": "english",
+               "type": "string"
+            }
+         }
+      }
+   }
+}
+
+PUT /test/docs/1
+{
+  "text" : "Oh, say can you see by the dawn`s early light, What so proudly we hailed at the twilight`s last gleaming?"
+}
+
+POST /test/_search
+{
+   "query" : {
+       "match" : {
+            "english_field" : "light"
+       }
+   }
+}
+----
+
+## Language code and `multi_field`
+ 
+Using multifields, it is possible to store the text alongside with the detected language(s).
+Here, we use another (short nonsense) example text for demonstration,
+which has more than one detected language code.
+
+[source]
+----
+DELETE /test
+PUT /test
+{
+   "mappings": {
+      "docs": {
+         "properties": {
+            "text": {
+               "type": "text",
+               "fields": {
+                  "language": {
+                     "type": "langdetect",
+                     "languages": [
+                        "de",
+                        "en",
+                        "fr",
+                        "nl",
+                        "it"
+                     ],
+                     "store": true
+                  }
+               }
+            }
+         }
+      }
+   }
+}
+
+PUT /test/docs/1
+{
+    "text" : "Oh, say can you see by the dawn`s early light, What so proudly we hailed at the twilight`s last gleaming?"
+}
+
+POST /test/_search
+{
+   "query" : {
+       "match" : {
+            "text" : "light"
+       }
+   }
+}
+
+POST /test/_search
+{
+   "query" : {
+       "match" : {
+            "text.language" : "en"
+       }
+   }
+}
+----
+
+## Language detection ina binary field with `attachment` mapper plugin
+
+[source]
+----
+DELETE /test
+PUT /test
+{
+   "mappings": {
+      "docs": {
+         "properties": {
+            "text": {
+    		  "type" : "attachment",
+			  "fields" : {
+				"content" : {
+				  "type" : "text",
+				  "fields" : {
+					"language" : {
+					  "type" : "langdetect",
+					  "binary" : true
+					}
+				  }
+				}
+			  }
+            }
+         }
+      }
+   }
+}
+----
+
+On a shell, enter commands
+
+[source,bash]
+----
+rm index.tmp
+echo -n '{"content":"' >> index.tmp
+echo "This is a very simple text in plain english" | base64  >> index.tmp
+echo -n '"}' >> index.tmp
+curl -XPOST --data-binary "@index.tmp" 'localhost:9200/test/docs/1'
+rm index.tmp
+----
+
+[source]
+----
+POST /test/_refresh
+
+POST /test/_search
+{
+   "query" : {
+       "match" : {
+            "content" : "very simple"
+       }
+   }
+}
+
+POST /test/_search
+{
+   "query" : {
+       "match" : {
+            "content.language" : "en"
+       }
+   }
+}
+----
+
+## Language detection REST API Example
+
+
+[source]
+----
+curl -XPOST 'localhost:9200/_langdetect?pretty' -d 'This is a test'
+{
+  "languages" : [
+    {
+      "language" : "en",
+      "probability" : 0.9999972283490304
+    }
+  ]
+}
+----
+
+[source]
+----
+curl -XPOST 'localhost:9200/_langdetect?pretty' -d 'Das ist ein Test'
+{
+  "languages" : [
+    {
+      "language" : "de",
+      "probability" : 0.9999985460514316
+    }
+  ]
+}
+----
+
+[source]
+----
+curl -XPOST 'localhost:9200/_langdetect?pretty' -d 'Datt isse ne test'
+{
+  "languages" : [
+    {
+      "language" : "no",
+      "probability" : 0.5714275763833249
+    },
+    {
+      "language" : "nl",
+      "probability" : 0.28571402563882925
+    },
+    {
+      "language" : "de",
+      "probability" : 0.14285660343967294
+    }
+  ]
+}
+----
+
+## Use _langdetect endpoint from Sense
+
+[source]
+----
+GET _langdetect
+{
+   "text": "das ist ein test"
+}
+----
+	
+## Change profile of language detection
+
+There is a "short text" profile which is better to detect languages in a few words.
+
+[source]
+----
+curl -XPOST 'localhost:9200/_langdetect?pretty&profile=short-text' -d 'Das ist ein Test'
+{
+  "profile" : "/langdetect/short-text/",
+  "languages" : [ {
+    "language" : "de",
+    "probability" : 0.9999993070517024
+  } ]
+}
+----
+
+# Settings
+
+These settings can be used in `elasticsearch.yml` to modify language detection.
+
+Use with caution. You don't need to modify settings. This list is just for the sake of completeness.
+For successful modification of the model parameters, you should study the source code
+and be familiar with probabilistic matching using naive bayes with character n-gram. 
+See also Ted Dunning,
+link:http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.48.1958[Statistical Identification of Language], 1994.
+
+|===
+|Name |Description
+|`languages` | a comma-separated list of language codes such as (de,en,fr...) used to restrict (and speed up) the detection process
+|`map.<code>` | a substitution code for a language code
+|`number_of_trials` | number of trials, affects CPU usage (default: 7)
+|`alpha` | additional smoothing parameter, default: 0.5
+|`alpha_width` | the width of smoothing, default: 0.05
+|`iteration_limit` | safeguard to break loop, default: 10000
+|`prob_threshold` | default: 0.1
+|`conv_threshold` | detection is terminated when normalized probability exceeds
+this threshold, default: 0.99999
+|`base_freq` | default 10000
+|===
+
+## Issues
+
+All feedback is welcome! If you find issues, please post them at
+link:https://github.com/jprante/elasticsearch-langdetect/issues[Github]
+
+# Credits
+
+Thanks to Alexander Reelsen for his OpenNLP plugin, from where I have copied and adapted the mapping type code.
+
+# License
+
+elasticsearch-langdetect - a language detection plugin for Elasticsearch
+
+Derived work of language-detection by Nakatani Shuyo http://code.google.com/p/language-detection/
+
+Copyright (C) 2012 Jörg Prante
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+you may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+image:https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif[title="PayPal", link="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=GVHFQYZ9WZ8HG"]

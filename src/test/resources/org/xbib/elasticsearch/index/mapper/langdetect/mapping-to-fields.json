@@ -11,11 +11,11 @@
       },
       "german_field" : {
         "analyzer" : "german",
-        "type": "string"
+        "type": "text"
       },
       "english_field" : {
         "analyzer" : "english",
-        "type" : "string"
+        "type" : "text"
       }
     }
   }

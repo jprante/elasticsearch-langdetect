@@ -4,10 +4,9 @@ import org.elasticsearch.common.settings.Settings;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
 import org.xbib.elasticsearch.common.langdetect.LangProfile;
-import org.xbib.elasticsearch.common.langdetect.LanguageDetectionException;
 import org.xbib.elasticsearch.common.langdetect.LangdetectService;
+import org.xbib.elasticsearch.common.langdetect.LanguageDetectionException;
 
 public class DetectorTest extends Assert {
 

@@ -4,101 +4,16 @@ import java.lang.Character.UnicodeBlock;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ *
+ */
 public class NGram {
 
-    public final static Map<Character, Character> cjk_map = new HashMap<>();
+    private static final Map<Character, Character> cjk_map = new HashMap<>();
 
-    public final static int N_GRAM = 3;
+    public static final  int N_GRAM = 3;
 
-    private final static String LATIN1_EXCLUDED = "\u00A0\u00AB\u00B0\u00BB";
-
-    private StringBuilder grams;
-
-    private boolean capitalword;
-
-    public NGram() {
-        grams = new StringBuilder(" ");
-        capitalword = false;
-    }
-
-    public void addChar(char ch) {
-        ch = normalize(ch);
-        char lastchar = grams.charAt(grams.length() - 1);
-        if (lastchar == ' ') {
-            grams = new StringBuilder(" ");
-            capitalword = false;
-            if (ch == ' ') {
-                return;
-            }
-        } else if (grams.length() >= N_GRAM) {
-            grams.deleteCharAt(0);
-        }
-        grams.append(ch);
-        if (Character.isUpperCase(ch)) {
-            if (Character.isUpperCase(lastchar)) {
-                capitalword = true;
-            }
-        } else {
-            capitalword = false;
-        }
-    }
-
-    public String get(int n) {
-        if (capitalword) {
-            return null;
-        }
-        int len = grams.length();
-        if (n < 1 || n > 3 || len < n) {
-            return null;
-        }
-        if (n == 1) {
-            char ch = grams.charAt(len - 1);
-            if (ch == ' ') {
-                return null;
-            }
-            return Character.toString(ch);
-        } else {
-            return grams.substring(len - n, len);
-        }
-    }
-
-    public static char normalize(char ch) {
-        Character.UnicodeBlock block = Character.UnicodeBlock.of(ch);
-        if (block == UnicodeBlock.BASIC_LATIN) {
-            if (ch < 'A' || (ch < 'a' && ch > 'Z') || ch > 'z') {
-                ch = ' ';
-            }
-        } else if (block == UnicodeBlock.LATIN_1_SUPPLEMENT) {
-            if (LATIN1_EXCLUDED.indexOf(ch) >= 0) {
-                ch = ' ';
-            }
-        } else if (block == UnicodeBlock.GENERAL_PUNCTUATION) {
-            ch = ' ';
-        } else if (block == UnicodeBlock.ARABIC) {
-            if (ch == '\u06cc') {
-                ch = '\u064a';
-            }
-        } else if (block == UnicodeBlock.LATIN_EXTENDED_ADDITIONAL) {
-            if (ch >= '\u1ea0') {
-                ch = '\u1ec3';
-            }
-        } else if (block == UnicodeBlock.HIRAGANA) {
-            ch = '\u3042';
-        } else if (block == UnicodeBlock.KATAKANA) {
-            ch = '\u30a2';
-        } else if (block == UnicodeBlock.BOPOMOFO || block == UnicodeBlock.BOPOMOFO_EXTENDED) {
-            ch = '\u3105';
-        } else if (block == UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS) {
-            if (cjk_map.containsKey(ch)) {
-                ch = cjk_map.get(ch);
-            }
-        } else if (block == UnicodeBlock.HANGUL_SYLLABLES) {
-            ch = '\uac00';
-        }
-        return ch;
-    }
-
-    static final String[] CJK_CLASS = {
+    private static final String[] CJK_CLASS = {
             "\u4F7C\u6934",
             "\u88CF\u95B2",
             "\u7027\u7DCB",
@@ -226,7 +141,7 @@ public class NGram {
             "\u55C5\u57A2\u58D5\u59E5\u637A\u74E2\u7CE0\u895F",
             "\u4E19\u4E32\u4E4F\u4E91\u4EC7\u4ED4\u4F0D\u5141\u51E1\u51F6\u51F8\u52AB\u535C\u53C9\u53DB\u540A\u5410\u54C0\u559D\u5750\u5751\u576A\u57E0\u5824\u582A\u5830\u5835\u5851\u5858\u586B\u5954\u59FB\u5A46\u5B5F\u5BB4\u5BD3\u5C16\u5C60\u5CFB\u5D16\u5E16\u5E3D\u5E7D\u5E87\u5ECA\u5FD9\u60DC\u60F9\u6155\u6167\u6234\u626E\u6276\u6284\u633A\u6377\u6492\u649E\u64B0\u6562\u6591\u65A5\u65E6\u65FA\u6602\u670B\u676D\u68AF\u695A\u6B23\u6BC5\u6C70\u6C83\u6CE1\u6D8C\u6DD8\u6E20\u71D5\u72D0\u72D7\u73B2\u73CA\u7433\u7483\u74DC\u74F6\u7554\u764C\u7761\u77DB\u78A7\u7A46\u7A7F\u7A84\u7C97\u7D2F\u7FC1\u7FE0\u8000\u8017\u808C\u80AF\u8404\u8461\u8463\u8475\u8513\u85AA\u8679\u86CB\u871C\u87BA\u88F8\u8C8C\u8DF3\u8FC4\u901D\u9022\u906E\u9075\u9192\u91C7\u966A\u971E\u9910\u9B41\u9F0E\u9F20"
     };
-
+    private static final String LATIN1_EXCLUDED = "\u00A0\u00AB\u00B0\u00BB";
 
     static {
         for (String cjk_list : CJK_CLASS) {
@@ -234,6 +149,92 @@ public class NGram {
             for (int i = 0; i < cjk_list.length(); ++i) {
                 cjk_map.put(cjk_list.charAt(i), representative);
             }
+        }
+    }
+
+    private StringBuilder grams;
+    private boolean capitalword;
+
+    public NGram() {
+        grams = new StringBuilder(" ");
+        capitalword = false;
+    }
+
+    public static char normalize(char c) {
+        char ch = c;
+        UnicodeBlock block = UnicodeBlock.of(ch);
+        if (block == UnicodeBlock.BASIC_LATIN) {
+            if (ch < 'A' || (ch < 'a' && ch > 'Z') || ch > 'z') {
+                ch = ' ';
+            }
+        } else if (block == UnicodeBlock.LATIN_1_SUPPLEMENT) {
+            if (LATIN1_EXCLUDED.indexOf(ch) >= 0) {
+                ch = ' ';
+            }
+        } else if (block == UnicodeBlock.GENERAL_PUNCTUATION) {
+            ch = ' ';
+        } else if (block == UnicodeBlock.ARABIC) {
+            if (ch == '\u06cc') {
+                ch = '\u064a';
+            }
+        } else if (block == UnicodeBlock.LATIN_EXTENDED_ADDITIONAL) {
+            if (ch >= '\u1ea0') {
+                ch = '\u1ec3';
+            }
+        } else if (block == UnicodeBlock.HIRAGANA) {
+            ch = '\u3042';
+        } else if (block == UnicodeBlock.KATAKANA) {
+            ch = '\u30a2';
+        } else if (block == UnicodeBlock.BOPOMOFO || block == UnicodeBlock.BOPOMOFO_EXTENDED) {
+            ch = '\u3105';
+        } else if (block == UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS) {
+            if (cjk_map.containsKey(ch)) {
+                ch = cjk_map.get(ch);
+            }
+        } else if (block == UnicodeBlock.HANGUL_SYLLABLES) {
+            ch = '\uac00';
+        }
+        return ch;
+    }
+
+    public void addChar(char c) {
+        char ch = normalize(c);
+        char lastchar = grams.charAt(grams.length() - 1);
+        if (lastchar == ' ') {
+            grams = new StringBuilder(" ");
+            capitalword = false;
+            if (ch == ' ') {
+                return;
+            }
+        } else if (grams.length() >= N_GRAM) {
+            grams.deleteCharAt(0);
+        }
+        grams.append(ch);
+        if (Character.isUpperCase(ch)) {
+            if (Character.isUpperCase(lastchar)) {
+                capitalword = true;
+            }
+        } else {
+            capitalword = false;
+        }
+    }
+
+    public String get(int n) {
+        if (capitalword) {
+            return null;
+        }
+        int len = grams.length();
+        if (n < 1 || n > 3 || len < n) {
+            return null;
+        }
+        if (n == 1) {
+            char ch = grams.charAt(len - 1);
+            if (ch == ' ') {
+                return null;
+            }
+            return Character.toString(ch);
+        } else {
+            return grams.substring(len - n, len);
         }
     }
 }

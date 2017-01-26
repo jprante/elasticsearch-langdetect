@@ -1,0 +1,5 @@
+org.xbib.elasticsearch.action.langdetect
+org.xbib.elasticsearch.common.langdetect
+org.xbib.elasticsearch.index.mapper.langdetect
+org.xbib.elasticsearch.plugin.langdetect
+org.xbib.elasticsearch.rest.action.langdetect

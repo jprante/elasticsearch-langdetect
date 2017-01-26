@@ -4,10 +4,19 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="[%d{ABSOLUTE}][%-5p][%-25c][%t] %m%n"/>
         </Console>
+        <RollingFile name="RollingFile" fileName="logs/test.log"
+                     filePattern="logs/test-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="[%d{ABSOLUTE}][%-5p][%-25c][%t] %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+        </RollingFile>
     </appenders>
     <Loggers>
-        <Root level="info">
+        <Root level="debug">
             <AppenderRef ref="Console" />
+            <AppenderRef ref="RollingFile" />
         </Root>
     </Loggers>
 </configuration>

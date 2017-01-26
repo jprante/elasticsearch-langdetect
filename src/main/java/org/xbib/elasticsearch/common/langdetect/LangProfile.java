@@ -11,19 +11,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ *
+ */
 public class LangProfile {
 
     private String name;
 
     private Map<String, Integer> freq;
 
-    private List<Integer> n_words;
+    private List<Integer> nWords;
 
     public LangProfile() {
         this.freq = new HashMap<>();
-        this.n_words = new ArrayList<>(NGram.N_GRAM);
+        this.nWords = new ArrayList<>(NGram.N_GRAM);
         for (int i = 0; i < NGram.N_GRAM; i++) {
-            n_words.add(0);
+            nWords.add(0);
         }
     }
 
@@ -35,7 +38,7 @@ public class LangProfile {
         if (len < 1 || len > NGram.N_GRAM) {
             return;
         }
-        n_words.set(len - 1, n_words.get(len -1) + 1);
+        nWords.set(len - 1, nWords.get(len - 1) + 1);
         if (freq.containsKey(gram)) {
             freq.put(gram, freq.get(gram) + 1);
         } else {
@@ -43,33 +46,33 @@ public class LangProfile {
         }
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getName() {
         return name;
     }
 
-    public List<Integer> getNWords() {
-        return n_words;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setFreq(Map<String, Integer> freq) {
-        this.freq = freq;
+    public List<Integer> getNWords() {
+        return nWords;
     }
 
     public Map<String, Integer> getFreq() {
         return freq;
     }
 
+    public void setFreq(Map<String, Integer> freq) {
+        this.freq = freq;
+    }
+
     @SuppressWarnings("unchecked")
     public void read(InputStream input) throws IOException {
         XContentParser parser = XContentFactory.xContent(XContentType.JSON).createParser(input);
-        Map<String,Object> map = parser.map();
+        Map<String, Object> map = parser.map();
         freq = (Map<String, Integer>) map.get("freq");
-        name = (String)map.get("name");
-        n_words = (List<Integer>)map.get("n_words");
+        name = (String) map.get("name");
+        nWords = (List<Integer>) map.get("n_words");
     }
 
 }

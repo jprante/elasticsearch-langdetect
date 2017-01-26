@@ -13,13 +13,17 @@ import java.util.List;
 
 import static org.elasticsearch.rest.RestStatus.OK;
 
+/**
+ *
+ */
 public class LangdetectResponse extends ActionResponse implements StatusToXContent {
 
     private String profile;
 
     private List<Language> languages = new ArrayList<>();
 
-    public LangdetectResponse() {
+    public String getProfile() {
+        return profile;
     }
 
     public LangdetectResponse setProfile(String profile) {
@@ -27,17 +31,13 @@ public class LangdetectResponse extends ActionResponse implements StatusToXConte
         return this;
     }
 
-    public String getProfile() {
-        return profile;
+    public List<Language> getLanguages() {
+        return languages;
     }
 
     public LangdetectResponse setLanguages(List<Language> languages) {
         this.languages = languages;
         return this;
-    }
-
-    public List<Language> getLanguages() {
-        return languages;
     }
 
     @Override

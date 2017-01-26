@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - Class org.xbib.elasticsearch.index.mapper.langdetect.LangDetectActionTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>Class org.xbib.elasticsearch.index.mapper.langdetect.LangDetectActionTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/org.xbib.elasticsearch.index.mapper.langdetect.html">org.xbib.elasticsearch.index.mapper.langdetect</a> &gt; LangDetectActionTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">2</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">47.717s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">testLangDetectProfile</td>
+<td>5.799s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testSort</td>
+<td>41.918s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>[11:30:09,478][INFO ][test                     ][Test worker] settings cluster name
+[11:30:09,478][INFO ][test                     ][Test worker] starting nodes
+[11:30:09,513][INFO ][test                     ][Test worker] settings={cluster.name=test-helper-cluster--joerg-1, http.enabled=false, path.home=/Users/joerg/Projects/github/jprante/elasticsearch-analysis-langdetect, transport.type=local}
+[11:30:09,680][INFO ][org.elasticsearch.node.Node][Test worker] initializing ...
+[11:30:09,785][DEBUG][org.elasticsearch.env.NodeEnvironment][Test worker] using node location [[NodePath{path=/Users/joerg/Projects/github/jprante/elasticsearch-analysis-langdetect/data/nodes/0, spins=null}]], local_lock_id [0]
+[11:30:09,794][DEBUG][org.elasticsearch.env.NodeEnvironment][Test worker] node data locations details:
+ -&gt; /Users/joerg/Projects/github/jprante/elasticsearch-analysis-langdetect/data/nodes/0, free_space [138.5gb], usable_space [138.3gb], total_space [931gb], spins? [unknown], mount [/ (/dev/disk0s2)], type [hfs]
+[11:30:09,801][INFO ][org.elasticsearch.env.NodeEnvironment][Test worker] heap size [3.5gb], compressed ordinary object pointers [true]
+[11:30:09,804][INFO ][org.elasticsearch.node.Node][Test worker] node name [xjGsg-9] derived from node ID [xjGsg-9xSHuExRZsmYSNxw]; set [node.name] to override
+[11:30:09,808][INFO ][org.elasticsearch.node.Node][Test worker] version[5.1.2], pid[7248], build[c8c4c16/2017-01-11T20:18:39.146Z], OS[Mac OS X/10.9.5/x86_64], JVM[Azul Systems, Inc./OpenJDK 64-Bit Server VM/1.8.0_112/25.112-b16]
+[11:30:09,809][DEBUG][org.elasticsearch.node.Node][Test worker] using config [/Users/joerg/Projects/github/jprante/elasticsearch-analysis-langdetect/config], data [[/Users/joerg/Projects/github/jprante/elasticsearch-analysis-langdetect/data]], logs [/Users/joerg/Projects/github/jprante/elasticsearch-analysis-langdetect/logs], plugins [/Users/joerg/Projects/github/jprante/elasticsearch-analysis-langdetect/plugins]
+[11:30:09,819][DEBUG][org.elasticsearch.plugins.PluginsService][Test worker] [/Users/joerg/Projects/github/jprante/elasticsearch-analysis-langdetect/plugins] directory does not exist.
+[11:30:09,821][INFO ][org.elasticsearch.plugins.PluginsService][Test worker] no modules loaded
+[11:30:09,823][INFO ][org.elasticsearch.plugins.PluginsService][Test worker] loaded plugin [org.xbib.elasticsearch.plugin.langdetect.LangdetectPlugin]
+[11:30:09,876][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [force_merge], size [1], queue size [unbounded]
+[11:30:09,878][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [fetch_shard_started], core [1], max [16], keep alive [5m]
+[11:30:09,879][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [listener], size [4], queue size [unbounded]
+[11:30:09,885][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [index], size [8], queue size [200]
+[11:30:09,886][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [refresh], core [1], max [4], keep alive [5m]
+[11:30:09,887][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [generic], core [4], max [128], keep alive [30s]
+[11:30:09,887][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [warmer], core [1], max [4], keep alive [5m]
+[11:30:09,888][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [search], size [13], queue size [1k]
+[11:30:09,889][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [flush], core [1], max [4], keep alive [5m]
+[11:30:09,889][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [fetch_shard_store], core [1], max [16], keep alive [5m]
+[11:30:09,890][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [management], core [1], max [5], keep alive [5m]
+[11:30:09,890][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [get], size [8], queue size [1k]
+[11:30:09,891][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [bulk], size [8], queue size [50]
+[11:30:09,891][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [snapshot], core [1], max [4], keep alive [5m]
+[11:30:10,056][DEBUG][org.elasticsearch.script.ScriptService][Test worker] using script cache with max_size [100], expire [0s]
+[11:30:10,788][DEBUG][org.elasticsearch.common.network.IfConfig][Test worker] configuration:
+
+lo0
+        inet 127.0.0.1 netmask:255.0.0.0 scope:host
+        inet6 fe80::1 prefixlen:64 scope:link
+        inet6 ::1 prefixlen:128 scope:host
+        UP MULTICAST LOOPBACK mtu:16384 index:1
+
+en4
+        inet 10.1.1.42 netmask:255.255.0.0 broadcast:10.1.255.255 scope:site
+        inet6 fe80::6a5b:35ff:febc:4672 prefixlen:64 scope:link
+        hardware 68:5B:35:BC:46:72
+        UP MULTICAST mtu:1500 index:9
+
+[11:30:10,834][DEBUG][org.elasticsearch.monitor.jvm.JvmGcMonitorService][Test worker] enabled [true], interval [1s], gc_threshold [{default=GcThreshold{name='default', warnThreshold=10000, infoThreshold=5000, debugThreshold=2000}, young=GcThreshold{name='young', warnThreshold=1000, infoThreshold=700, debugThreshold=400}, old=GcThreshold{name='old', warnThreshold=10000, infoThreshold=5000, debugThreshold=2000}}], overhead [50, 25, 10]
+[11:30:10,843][DEBUG][org.elasticsearch.monitor.os.OsService][Test worker] using refresh_interval [1s]
+[11:30:10,891][DEBUG][org.elasticsearch.monitor.process.ProcessService][Test worker] using refresh_interval [1s]
+[11:30:10,901][DEBUG][org.elasticsearch.monitor.jvm.JvmService][Test worker] using refresh_interval [1s]
+[11:30:10,901][DEBUG][org.elasticsearch.monitor.fs.FsService][Test worker] using refresh_interval [1s]
+[11:30:10,904][DEBUG][org.elasticsearch.cluster.routing.allocation.decider.ClusterRebalanceAllocationDecider][Test worker] using [cluster.routing.allocation.allow_rebalance] with [indices_all_active]
+[11:30:10,905][DEBUG][org.elasticsearch.cluster.routing.allocation.decider.ConcurrentRebalanceAllocationDecider][Test worker] using [cluster_concurrent_rebalance] with [2]
+[11:30:11,021][DEBUG][org.elasticsearch.cluster.routing.allocation.decider.ThrottlingAllocationDecider][Test worker] using node_concurrent_outgoing_recoveries [2], node_concurrent_incoming_recoveries [2], node_initial_primaries_recoveries [4]
+[11:30:11,778][DEBUG][org.elasticsearch.index.store.IndexStoreConfig][Test worker] using indices.store.throttle.type [NONE], with index.store.throttle.max_bytes_per_sec [0b]
+[11:30:11,782][DEBUG][org.elasticsearch.indices.IndicesQueryCache][Test worker] using [node] query cache with size [364mb] max filter count [10000]
+[11:30:11,789][DEBUG][org.elasticsearch.indices.IndexingMemoryController][Test worker] using indexing buffer size [364mb] with indices.memory.shard_inactive_time [5m], indices.memory.interval [5s]
+[11:30:11,798][DEBUG][org.elasticsearch.transport.local.LocalTransport][Test worker] creating [8] workers, queue_size [-1]
+[11:30:11,811][DEBUG][org.elasticsearch.discovery.zen.UnicastZenPing][Test worker] using initial hosts [0.0.0.0], with concurrent_connects [10], resolve_timeout [5s]
+[11:30:11,814][DEBUG][org.elasticsearch.discovery.zen.ElectMasterService][Test worker] using minimum_master_nodes [-1]
+[11:30:11,815][DEBUG][org.elasticsearch.discovery.zen.ZenDiscovery][Test worker] using ping_timeout [3s], join.timeout [1m], master_election.ignore_non_master [false]
+[11:30:11,820][DEBUG][org.elasticsearch.discovery.zen.MasterFaultDetection][Test worker] [master] uses ping_interval [1s], ping_timeout [30s], ping_retries [3]
+[11:30:11,824][DEBUG][org.elasticsearch.discovery.zen.NodesFaultDetection][Test worker] [node  ] uses ping_interval [1s], ping_timeout [30s], ping_retries [3]
+[11:30:12,092][DEBUG][org.elasticsearch.indices.recovery.RecoverySettings][Test worker] using max_bytes_per_sec[40mb]
+[11:30:12,275][DEBUG][org.elasticsearch.gateway.GatewayAllocator$InternalPrimaryShardAllocator][Test worker] using initial_shards [quorum]
+[11:30:12,492][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][Test worker] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
+[11:30:12,545][DEBUG][org.elasticsearch.gateway.GatewayMetaState][Test worker] took 0s to load state
+[11:30:12,551][INFO ][org.elasticsearch.node.Node][Test worker] initialized
+[11:30:12,551][INFO ][org.elasticsearch.node.Node][Test worker] starting ...
+[11:30:12,556][INFO ][org.elasticsearch.transport.TransportService][Test worker] publish_address {local[1]}, bound_addresses {local[1]}
+[11:30:12,576][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] processing [initial_join]: execute
+[11:30:12,577][DEBUG][org.elasticsearch.node.Node][Test worker] waiting to join the cluster. timeout [30s]
+[11:30:12,579][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] processing [initial_join]: took [2ms] no change in cluster_state
+[11:30:15,599][DEBUG][org.elasticsearch.discovery.zen.ZenDiscovery][elasticsearch[xjGsg-9][generic][T#1]] filtered ping responses: (ignore_non_masters [false])
+	--&gt; ping_response{node [{xjGsg-9}{xjGsg-9xSHuExRZsmYSNxw}{nFs4lD9rTWaCFS4k7yjX5A}{local}{local[1]}], id[7], master [null],cluster_state_version [-1], cluster_name[test-helper-cluster--joerg-1]}
+[11:30:15,602][DEBUG][org.elasticsearch.discovery.zen.ZenDiscovery][elasticsearch[xjGsg-9][generic][T#1]] elected as master, waiting for incoming joins ([0] needed)
+[11:30:15,605][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] processing [zen-disco-elected-as-master ([0] nodes joined)]: execute
+[11:30:15,619][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] cluster state updated, version [1], source [zen-disco-elected-as-master ([0] nodes joined)]
+[11:30:15,620][INFO ][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] new_master {xjGsg-9}{xjGsg-9xSHuExRZsmYSNxw}{nFs4lD9rTWaCFS4k7yjX5A}{local}{local[1]}, reason: zen-disco-elected-as-master ([0] nodes joined)
+[11:30:15,620][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] publishing cluster state version [1]
+[11:30:15,623][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] set local cluster state to version 1
+[11:30:15,627][INFO ][org.elasticsearch.node.Node][Test worker] started
+[11:30:15,627][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] processing [zen-disco-elected-as-master ([0] nodes joined)]: took [22ms] done applying updated cluster_state (version: 1, uuid: vPR-e6RiRzeKRhFhtworoQ)
+[11:30:15,642][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] processing [local-gateway-elected-state]: execute
+[11:30:15,644][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] cluster state updated, version [2], source [local-gateway-elected-state]
+[11:30:15,644][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] publishing cluster state version [2]
+[11:30:15,645][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] set local cluster state to version 2
+[11:30:15,650][INFO ][org.elasticsearch.gateway.GatewayService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] recovered [0] indices into cluster_state
+[11:30:15,650][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] processing [local-gateway-elected-state]: took [7ms] done applying updated cluster_state (version: 2, uuid: tABH6uFAQli18Ckpg_Gdog)
+[11:30:15,651][INFO ][test                     ][Test worker] nodes are started
+[11:30:15,656][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] processing [create-index [test], cause [api]]: execute
+[11:30:15,684][DEBUG][org.elasticsearch.indices.IndicesService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] creating Index [[test/Xm20JUvBQCGan_kpOOa9Dw]], shards [5]/[1] - reason [create index]
+[11:30:15,694][DEBUG][org.elasticsearch.index.store.IndexStore][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] using index.store.throttle.type [NONE], with index.store.throttle.max_bytes_per_sec [null]
+[11:30:15,755][DEBUG][org.elasticsearch.index.mapper.MapperService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] using dynamic[true]
+[11:30:16,080][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
+[11:30:16,372][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
+[11:30:16,399][INFO ][org.elasticsearch.cluster.metadata.MetaDataCreateIndexService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [test] creating index, cause [api], templates [], shards [5]/[1], mappings [article]
+[11:30:16,427][DEBUG][org.elasticsearch.indices.IndicesService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [test] closing ... (reason [cleaning up after validating index on master])
+[11:30:16,427][DEBUG][org.elasticsearch.indices.IndicesService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [test/Xm20JUvBQCGan_kpOOa9Dw] closing index service (reason [cleaning up after validating index on master])
+[11:30:16,427][DEBUG][org.elasticsearch.index.cache.bitset.BitsetFilterCache][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] clearing all bitsets because [close]
+[11:30:16,428][DEBUG][org.elasticsearch.index.cache.query.IndexQueryCache][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] full cache clear, reason [close]
+[11:30:16,428][DEBUG][org.elasticsearch.index.cache.bitset.BitsetFilterCache][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] clearing all bitsets because [close]
+[11:30:16,430][DEBUG][org.elasticsearch.indices.IndicesService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [test/Xm20JUvBQCGan_kpOOa9Dw] closed... (reason [cleaning up after validating index on master])
+[11:30:16,433][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] cluster state updated, version [3], source [create-index [test], cause [api]]
+[11:30:16,433][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] publishing cluster state version [3]
+[11:30:16,433][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] set local cluster state to version 3
+[11:30:16,435][DEBUG][org.elasticsearch.indices.cluster.IndicesClusterStateService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [[test/Xm20JUvBQCGan_kpOOa9Dw]] creating index
+[11:30:16,436][DEBUG][org.elasticsearch.indices.IndicesService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] creating Index [[test/Xm20JUvBQCGan_kpOOa9Dw]], shards [5]/[1] - reason [create index]
+[11:30:16,437][DEBUG][org.elasticsearch.index.store.IndexStore][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] using index.store.throttle.type [NONE], with index.store.throttle.max_bytes_per_sec [null]
+[11:30:16,438][DEBUG][org.elasticsearch.index.mapper.MapperService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] using dynamic[true]
+[11:30:16,439][DEBUG][org.elasticsearch.index.mapper.MapperService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [[test/Xm20JUvBQCGan_kpOOa9Dw]] adding mapping [article], source [{&quot;article&quot;:{&quot;properties&quot;:{&quot;content&quot;:{&quot;type&quot;:&quot;langdetect&quot;,&quot;analyzer&quot;:&quot;_keyword&quot;,&quot;include_in_all&quot;:false,&quot;languages&quot;:[&quot;de&quot;,&quot;en&quot;,&quot;fr&quot;]}}}}]
+[11:30:16,606][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
+[11:30:16,785][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
+[11:30:16,787][DEBUG][org.elasticsearch.indices.cluster.IndicesClusterStateService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [test][1] creating shard
+[11:30:16,794][DEBUG][org.elasticsearch.index.IndexService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [test][1] creating using a new path [ShardPath{path=/Users/joerg/Projects/github/jprante/elasticsearch-analysis-langdetect/data/nodes/0/indices/Xm20JUvBQCGan_kpOOa9Dw/1, shard=[test][1]}]
+[11:30:16,794][DEBUG][org.elasticsearch.index.IndexService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] creating shard_id [test][1]
+[11:30:16,809][DEBUG][org.elasticsearch.index.store.Store][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] store stats are refreshed with refresh_interval [10s]
+[11:30:16,872][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] state: [CREATED]
+[11:30:16,880][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] state: [CREATED]-&gt;[RECOVERING], reason [from store]
+[11:30:16,881][DEBUG][org.elasticsearch.indices.cluster.IndicesClusterStateService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [test][3] creating shard
+[11:30:16,882][DEBUG][org.elasticsearch.index.IndexService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [test][3] creating using a new path [ShardPath{path=/Users/joerg/Projects/github/jprante/elasticsearch-analysis-langdetect/data/nodes/0/indices/Xm20JUvBQCGan_kpOOa9Dw/3, shard=[test][3]}]
+[11:30:16,882][DEBUG][org.elasticsearch.index.IndexService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] creating shard_id [test][3]
+[11:30:16,885][DEBUG][org.elasticsearch.index.store.Store][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] store stats are refreshed with refresh_interval [10s]
+[11:30:16,886][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] state: [CREATED]
+[11:30:16,888][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] state: [CREATED]-&gt;[RECOVERING], reason [from store]
+[11:30:16,889][DEBUG][org.elasticsearch.indices.cluster.IndicesClusterStateService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [test][2] creating shard
+[11:30:16,890][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][generic][T#1]] starting recovery from store ...
+[11:30:16,890][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][generic][T#3]] starting recovery from store ...
+[11:30:16,890][DEBUG][org.elasticsearch.index.IndexService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [test][2] creating using a new path [ShardPath{path=/Users/joerg/Projects/github/jprante/elasticsearch-analysis-langdetect/data/nodes/0/indices/Xm20JUvBQCGan_kpOOa9Dw/2, shard=[test][2]}]
+[11:30:16,890][DEBUG][org.elasticsearch.index.IndexService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] creating shard_id [test][2]
+[11:30:16,891][DEBUG][org.elasticsearch.index.store.Store][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] store stats are refreshed with refresh_interval [10s]
+[11:30:16,892][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] state: [CREATED]
+[11:30:16,894][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] state: [CREATED]-&gt;[RECOVERING], reason [from store]
+[11:30:16,894][DEBUG][org.elasticsearch.indices.cluster.IndicesClusterStateService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [test][0] creating shard
+[11:30:16,894][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][generic][T#2]] starting recovery from store ...
+[11:30:16,895][DEBUG][org.elasticsearch.index.IndexService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [test][0] creating using a new path [ShardPath{path=/Users/joerg/Projects/github/jprante/elasticsearch-analysis-langdetect/data/nodes/0/indices/Xm20JUvBQCGan_kpOOa9Dw/0, shard=[test][0]}]
+[11:30:16,895][DEBUG][org.elasticsearch.index.IndexService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] creating shard_id [test][0]
+[11:30:16,897][DEBUG][org.elasticsearch.index.store.Store][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] store stats are refreshed with refresh_interval [10s]
+[11:30:16,899][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] state: [CREATED]
+[11:30:16,904][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] state: [CREATED]-&gt;[RECOVERING], reason [from store]
+[11:30:16,906][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][generic][T#4]] starting recovery from store ...
+[11:30:16,914][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] processing [create-index [test], cause [api]]: took [1.2s] done applying updated cluster_state (version: 3, uuid: 8FEr5_B6TAGyOsOUZNFWRg)
+[11:30:16,988][DEBUG][org.elasticsearch.index.translog.Translog][elasticsearch[xjGsg-9][generic][T#4]] wipe translog location - creating new translog
+[11:30:16,988][DEBUG][org.elasticsearch.index.translog.Translog][elasticsearch[xjGsg-9][generic][T#3]] wipe translog location - creating new translog
+[11:30:16,988][DEBUG][org.elasticsearch.index.translog.Translog][elasticsearch[xjGsg-9][generic][T#2]] wipe translog location - creating new translog
+[11:30:16,988][DEBUG][org.elasticsearch.index.translog.Translog][elasticsearch[xjGsg-9][generic][T#1]] wipe translog location - creating new translog
+[11:30:17,000][DEBUG][org.elasticsearch.index.engine.Engine][elasticsearch[xjGsg-9][generic][T#4]] no translog ID present in the current generation - creating one
+[11:30:17,000][DEBUG][org.elasticsearch.index.engine.Engine][elasticsearch[xjGsg-9][generic][T#1]] no translog ID present in the current generation - creating one
+[11:30:17,001][DEBUG][org.elasticsearch.index.engine.Engine][elasticsearch[xjGsg-9][generic][T#2]] no translog ID present in the current generation - creating one
+[11:30:17,002][DEBUG][org.elasticsearch.index.engine.Engine][elasticsearch[xjGsg-9][generic][T#3]] no translog ID present in the current generation - creating one
+[11:30:17,040][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][generic][T#3]] state: [RECOVERING]-&gt;[POST_RECOVERY], reason [post recovery from shard_store]
+[11:30:17,040][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][generic][T#4]] state: [RECOVERING]-&gt;[POST_RECOVERY], reason [post recovery from shard_store]
+[11:30:17,040][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][generic][T#1]] state: [RECOVERING]-&gt;[POST_RECOVERY], reason [post recovery from shard_store]
+[11:30:17,040][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][generic][T#2]] state: [RECOVERING]-&gt;[POST_RECOVERY], reason [post recovery from shard_store]
+[11:30:17,041][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][generic][T#4]] recovery completed from [shard_store], took [145ms]
+[11:30:17,041][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][generic][T#1]] recovery completed from [shard_store], took [158ms]
+[11:30:17,041][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][generic][T#3]] recovery completed from [shard_store], took [249ms]
+[11:30:17,042][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][generic][T#2]] recovery completed from [shard_store], took [150ms]
+[11:30:17,042][DEBUG][org.elasticsearch.cluster.action.shard.ShardStateAction][elasticsearch[xjGsg-9][generic][T#3]] [test][1] sending [internal:cluster/shard/started] to [xjGsg-9xSHuExRZsmYSNxw] for shard entry [shard id [[test][1]], allocation id [r31ohnA5TS-24_8ha4AXyQ], primary term [0], message [after new shard recovery]]
+[11:30:17,042][DEBUG][org.elasticsearch.cluster.action.shard.ShardStateAction][elasticsearch[xjGsg-9][generic][T#4]] [test][0] sending [internal:cluster/shard/started] to [xjGsg-9xSHuExRZsmYSNxw] for shard entry [shard id [[test][0]], allocation id [z78LVcKSTOWuUYQNekMARw], primary term [0], message [after new shard recovery]]
+[11:30:17,042][DEBUG][org.elasticsearch.cluster.action.shard.ShardStateAction][elasticsearch[xjGsg-9][generic][T#2]] [test][2] sending [internal:cluster/shard/started] to [xjGsg-9xSHuExRZsmYSNxw] for shard entry [shard id [[test][2]], allocation id [N9wqcAeVRUuHyf-U33djlA], primary term [0], message [after new shard recovery]]
+[11:30:17,042][DEBUG][org.elasticsearch.cluster.action.shard.ShardStateAction][elasticsearch[xjGsg-9][generic][T#1]] [test][3] sending [internal:cluster/shard/started] to [xjGsg-9xSHuExRZsmYSNxw] for shard entry [shard id [[test][3]], allocation id [b2Rs7kcaTROKAERrSklvZw], primary term [0], message [after new shard recovery]]
+[11:30:17,044][DEBUG][org.elasticsearch.cluster.action.shard.ShardStateAction][elasticsearch[xjGsg-9][generic][T#3]] [test][1] received shard started for [shard id [[test][1]], allocation id [r31ohnA5TS-24_8ha4AXyQ], primary term [0], message [after new shard recovery]]
+[11:30:17,044][DEBUG][org.elasticsearch.cluster.action.shard.ShardStateAction][elasticsearch[xjGsg-9][generic][T#1]] [test][3] received shard started for [shard id [[test][3]], allocation id [b2Rs7kcaTROKAERrSklvZw], primary term [0], message [after new shard recovery]]
+[11:30:17,044][DEBUG][org.elasticsearch.cluster.action.shard.ShardStateAction][elasticsearch[xjGsg-9][generic][T#2]] [test][2] received shard started for [shard id [[test][2]], allocation id [N9wqcAeVRUuHyf-U33djlA], primary term [0], message [after new shard recovery]]
+[11:30:17,044][DEBUG][org.elasticsearch.cluster.action.shard.ShardStateAction][elasticsearch[xjGsg-9][generic][T#4]] [test][0] received shard started for [shard id [[test][0]], allocation id [z78LVcKSTOWuUYQNekMARw], primary term [0], message [after new shard recovery]]
+[11:30:17,046][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] processing [shard-started[shard id [[test][1]], allocation id [r31ohnA5TS-24_8ha4AXyQ], primary term [0], message [after new shard recovery], shard id [[test][3]], allocation id [b2Rs7kcaTROKAERrSklvZw], primary term [0], message [after new shard recovery], shard id [[test][2]], allocation id [N9wqcAeVRUuHyf-U33djlA], primary term [0], message [after new shard recovery]]]: execute
+[11:30:17,070][DEBUG][org.elasticsearch.cluster.action.shard.ShardStateAction][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [test][1] starting shard [test][1], node[xjGsg-9xSHuExRZsmYSNxw], [P], recovery_source[new shard recovery], s[INITIALIZING], a[id=r31ohnA5TS-24_8ha4AXyQ], unassigned_info[[reason=INDEX_CREATED], at[2017-01-26T10:30:16.404Z], delayed=false, allocation_status[no_attempt]] (shard started task: [shard id [[test][1]], allocation id [r31ohnA5TS-24_8ha4AXyQ], primary term [0], message [after new shard recovery]])
+[11:30:17,070][DEBUG][org.elasticsearch.cluster.action.shard.ShardStateAction][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [test][3] starting shard [test][3], node[xjGsg-9xSHuExRZsmYSNxw], [P], recovery_source[new shard recovery], s[INITIALIZING], a[id=b2Rs7kcaTROKAERrSklvZw], unassigned_info[[reason=INDEX_CREATED], at[2017-01-26T10:30:16.404Z], delayed=false, allocation_status[no_attempt]] (shard started task: [shard id [[test][3]], allocation id [b2Rs7kcaTROKAERrSklvZw], primary term [0], message [after new shard recovery]])
+[11:30:17,070][DEBUG][org.elasticsearch.cluster.action.shard.ShardStateAction][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [test][2] starting shard [test][2], node[xjGsg-9xSHuExRZsmYSNxw], [P], recovery_source[new shard recovery], s[INITIALIZING], a[id=N9wqcAeVRUuHyf-U33djlA], unassigned_info[[reason=INDEX_CREATED], at[2017-01-26T10:30:16.404Z], delayed=false, allocation_status[no_attempt]] (shard started task: [shard id [[test][2]], allocation id [N9wqcAeVRUuHyf-U33djlA], primary term [0], message [after new shard recovery]])
+[11:30:17,076][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] cluster state updated, version [4], source [shard-started[shard id [[test][1]], allocation id [r31ohnA5TS-24_8ha4AXyQ], primary term [0], message [after new shard recovery], shard id [[test][3]], allocation id [b2Rs7kcaTROKAERrSklvZw], primary term [0], message [after new shard recovery], shard id [[test][2]], allocation id [N9wqcAeVRUuHyf-U33djlA], primary term [0], message [after new shard recovery]]]
+[11:30:17,076][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] publishing cluster state version [4]
+[11:30:17,076][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] set local cluster state to version 4
+[11:30:17,077][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] state: [POST_RECOVERY]-&gt;[STARTED], reason [global state is [STARTED]]
+[11:30:17,078][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] state: [POST_RECOVERY]-&gt;[STARTED], reason [global state is [STARTED]]
+[11:30:17,078][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] state: [POST_RECOVERY]-&gt;[STARTED], reason [global state is [STARTED]]
+[11:30:17,079][DEBUG][org.elasticsearch.indices.cluster.IndicesClusterStateService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [test][4] creating shard
+[11:30:17,080][DEBUG][org.elasticsearch.index.IndexService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [test][4] creating using a new path [ShardPath{path=/Users/joerg/Projects/github/jprante/elasticsearch-analysis-langdetect/data/nodes/0/indices/Xm20JUvBQCGan_kpOOa9Dw/4, shard=[test][4]}]
+[11:30:17,080][DEBUG][org.elasticsearch.index.IndexService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] creating shard_id [test][4]
+[11:30:17,081][DEBUG][org.elasticsearch.index.store.Store][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] store stats are refreshed with refresh_interval [10s]
+[11:30:17,082][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] state: [CREATED]
+[11:30:17,083][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] state: [CREATED]-&gt;[RECOVERING], reason [from store]
+[11:30:17,083][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][generic][T#3]] starting recovery from store ...
+[11:30:17,083][DEBUG][org.elasticsearch.cluster.action.shard.ShardStateAction][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [test][0] sending [internal:cluster/shard/started] to [xjGsg-9xSHuExRZsmYSNxw] for shard entry [shard id [[test][0]], allocation id [z78LVcKSTOWuUYQNekMARw], primary term [0], message [master {xjGsg-9}{xjGsg-9xSHuExRZsmYSNxw}{nFs4lD9rTWaCFS4k7yjX5A}{local}{local[1]} marked shard as initializing, but shard state is [POST_RECOVERY], mark shard as started]]
+[11:30:17,084][DEBUG][org.elasticsearch.cluster.action.shard.ShardStateAction][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [test][0] received shard started for [shard id [[test][0]], allocation id [z78LVcKSTOWuUYQNekMARw], primary term [0], message [master {xjGsg-9}{xjGsg-9xSHuExRZsmYSNxw}{nFs4lD9rTWaCFS4k7yjX5A}{local}{local[1]} marked shard as initializing, but shard state is [POST_RECOVERY], mark shard as started]]
+[11:30:17,086][DEBUG][org.elasticsearch.index.translog.Translog][elasticsearch[xjGsg-9][generic][T#3]] wipe translog location - creating new translog
+[11:30:17,088][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] processing [shard-started[shard id [[test][1]], allocation id [r31ohnA5TS-24_8ha4AXyQ], primary term [0], message [after new shard recovery], shard id [[test][3]], allocation id [b2Rs7kcaTROKAERrSklvZw], primary term [0], message [after new shard recovery], shard id [[test][2]], allocation id [N9wqcAeVRUuHyf-U33djlA], primary term [0], message [after new shard recovery]]]: took [42ms] done applying updated cluster_state (version: 4, uuid: 9m6tB2ahT8CkbXeYtl-KkQ)
+[11:30:17,089][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] processing [shard-started[shard id [[test][0]], allocation id [z78LVcKSTOWuUYQNekMARw], primary term [0], message [after new shard recovery], shard id [[test][0]], allocation id [z78LVcKSTOWuUYQNekMARw], primary term [0], message [master {xjGsg-9}{xjGsg-9xSHuExRZsmYSNxw}{nFs4lD9rTWaCFS4k7yjX5A}{local}{local[1]} marked shard as initializing, but shard state is [POST_RECOVERY], mark shard as started]]]: execute
+[11:30:17,089][DEBUG][org.elasticsearch.index.engine.Engine][elasticsearch[xjGsg-9][generic][T#3]] no translog ID present in the current generation - creating one
+[11:30:17,089][DEBUG][org.elasticsearch.cluster.action.shard.ShardStateAction][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [test][0] starting shard [test][0], node[xjGsg-9xSHuExRZsmYSNxw], [P], recovery_source[new shard recovery], s[INITIALIZING], a[id=z78LVcKSTOWuUYQNekMARw], unassigned_info[[reason=INDEX_CREATED], at[2017-01-26T10:30:16.404Z], delayed=false, allocation_status[no_attempt]] (shard started task: [shard id [[test][0]], allocation id [z78LVcKSTOWuUYQNekMARw], primary term [0], message [after new shard recovery]])
+[11:30:17,093][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] cluster state updated, version [5], source [shard-started[shard id [[test][0]], allocation id [z78LVcKSTOWuUYQNekMARw], primary term [0], message [after new shard recovery], shard id [[test][0]], allocation id [z78LVcKSTOWuUYQNekMARw], primary term [0], message [master {xjGsg-9}{xjGsg-9xSHuExRZsmYSNxw}{nFs4lD9rTWaCFS4k7yjX5A}{local}{local[1]} marked shard as initializing, but shard state is [POST_RECOVERY], mark shard as started]]]
+[11:30:17,093][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] publishing cluster state version [5]
+[11:30:17,093][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] set local cluster state to version 5
+[11:30:17,105][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][generic][T#3]] state: [RECOVERING]-&gt;[POST_RECOVERY], reason [post recovery from shard_store]
+[11:30:17,105][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][generic][T#3]] recovery completed from [shard_store], took [25ms]
+[11:30:17,106][DEBUG][org.elasticsearch.cluster.action.shard.ShardStateAction][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [test][4] sending [internal:cluster/shard/started] to [xjGsg-9xSHuExRZsmYSNxw] for shard entry [shard id [[test][4]], allocation id [J-2CbydsTECn5IDw9UhBXg], primary term [0], message [master {xjGsg-9}{xjGsg-9xSHuExRZsmYSNxw}{nFs4lD9rTWaCFS4k7yjX5A}{local}{local[1]} marked shard as initializing, but shard state is [POST_RECOVERY], mark shard as started]]
+[11:30:17,106][DEBUG][org.elasticsearch.cluster.action.shard.ShardStateAction][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [test][4] received shard started for [shard id [[test][4]], allocation id [J-2CbydsTECn5IDw9UhBXg], primary term [0], message [master {xjGsg-9}{xjGsg-9xSHuExRZsmYSNxw}{nFs4lD9rTWaCFS4k7yjX5A}{local}{local[1]} marked shard as initializing, but shard state is [POST_RECOVERY], mark shard as started]]
+[11:30:17,115][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] state: [POST_RECOVERY]-&gt;[STARTED], reason [global state is [STARTED]]
+[11:30:17,115][DEBUG][org.elasticsearch.cluster.action.shard.ShardStateAction][elasticsearch[xjGsg-9][generic][T#3]] [test][4] sending [internal:cluster/shard/started] to [xjGsg-9xSHuExRZsmYSNxw] for shard entry [shard id [[test][4]], allocation id [J-2CbydsTECn5IDw9UhBXg], primary term [0], message [after new shard recovery]]
+[11:30:17,115][DEBUG][org.elasticsearch.cluster.action.shard.ShardStateAction][elasticsearch[xjGsg-9][generic][T#3]] [test][4] received shard started for [shard id [[test][4]], allocation id [J-2CbydsTECn5IDw9UhBXg], primary term [0], message [after new shard recovery]]
+[11:30:17,120][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] processing [shard-started[shard id [[test][0]], allocation id [z78LVcKSTOWuUYQNekMARw], primary term [0], message [after new shard recovery], shard id [[test][0]], allocation id [z78LVcKSTOWuUYQNekMARw], primary term [0], message [master {xjGsg-9}{xjGsg-9xSHuExRZsmYSNxw}{nFs4lD9rTWaCFS4k7yjX5A}{local}{local[1]} marked shard as initializing, but shard state is [POST_RECOVERY], mark shard as started]]]: took [30ms] done applying updated cluster_state (version: 5, uuid: QyfZAKvASqSwPu5-A5fW0g)
+[11:30:17,121][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] processing [shard-started[shard id [[test][4]], allocation id [J-2CbydsTECn5IDw9UhBXg], primary term [0], message [master {xjGsg-9}{xjGsg-9xSHuExRZsmYSNxw}{nFs4lD9rTWaCFS4k7yjX5A}{local}{local[1]} marked shard as initializing, but shard state is [POST_RECOVERY], mark shard as started], shard id [[test][4]], allocation id [J-2CbydsTECn5IDw9UhBXg], primary term [0], message [after new shard recovery]]]: execute
+[11:30:17,122][DEBUG][org.elasticsearch.cluster.action.shard.ShardStateAction][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [test][4] starting shard [test][4], node[xjGsg-9xSHuExRZsmYSNxw], [P], recovery_source[new shard recovery], s[INITIALIZING], a[id=J-2CbydsTECn5IDw9UhBXg], unassigned_info[[reason=INDEX_CREATED], at[2017-01-26T10:30:16.404Z], delayed=false, allocation_status[deciders_throttled]] (shard started task: [shard id [[test][4]], allocation id [J-2CbydsTECn5IDw9UhBXg], primary term [0], message [master {xjGsg-9}{xjGsg-9xSHuExRZsmYSNxw}{nFs4lD9rTWaCFS4k7yjX5A}{local}{local[1]} marked shard as initializing, but shard state is [POST_RECOVERY], mark shard as started]])
+[11:30:17,126][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] cluster state updated, version [6], source [shard-started[shard id [[test][4]], allocation id [J-2CbydsTECn5IDw9UhBXg], primary term [0], message [master {xjGsg-9}{xjGsg-9xSHuExRZsmYSNxw}{nFs4lD9rTWaCFS4k7yjX5A}{local}{local[1]} marked shard as initializing, but shard state is [POST_RECOVERY], mark shard as started], shard id [[test][4]], allocation id [J-2CbydsTECn5IDw9UhBXg], primary term [0], message [after new shard recovery]]]
+[11:30:17,127][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] publishing cluster state version [6]
+[11:30:17,128][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] set local cluster state to version 6
+[11:30:17,130][DEBUG][org.elasticsearch.index.shard.IndexShard][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] state: [POST_RECOVERY]-&gt;[STARTED], reason [global state is [STARTED]]
+[11:30:17,135][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] processing [shard-started[shard id [[test][4]], allocation id [J-2CbydsTECn5IDw9UhBXg], primary term [0], message [master {xjGsg-9}{xjGsg-9xSHuExRZsmYSNxw}{nFs4lD9rTWaCFS4k7yjX5A}{local}{local[1]} marked shard as initializing, but shard state is [POST_RECOVERY], mark shard as started], shard id [[test][4]], allocation id [J-2CbydsTECn5IDw9UhBXg], primary term [0], message [after new shard recovery]]]: took [13ms] done applying updated cluster_state (version: 6, uuid: LFnl7Ex3SFa4MRmFAhPVtg)
+[11:30:45,651][INFO ][org.elasticsearch.cluster.routing.allocation.DiskThresholdMonitor][elasticsearch[xjGsg-9][management][T#2]] low disk watermark [85%] exceeded on [xjGsg-9xSHuExRZsmYSNxw][xjGsg-9][/Users/joerg/Projects/github/jprante/elasticsearch-analysis-langdetect/data/nodes/0] free: 138.3gb[14.8%], replicas will not be assigned to this node
+[11:30:47,177][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] processing [put-mapping[article]]: execute
+[11:30:47,181][DEBUG][org.elasticsearch.index.mapper.MapperService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] using dynamic[true]
+[11:30:47,351][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
+[11:30:47,702][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
+[11:30:48,009][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
+[11:30:48,010][DEBUG][org.elasticsearch.cluster.metadata.MetaDataMappingService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [test/Xm20JUvBQCGan_kpOOa9Dw] update_mapping [article] with source [{&quot;article&quot;:{&quot;properties&quot;:{&quot;content&quot;:{&quot;type&quot;:&quot;langdetect&quot;,&quot;analyzer&quot;:&quot;_keyword&quot;,&quot;include_in_all&quot;:false,&quot;languages&quot;:[&quot;de&quot;,&quot;en&quot;,&quot;fr&quot;]},&quot;title&quot;:{&quot;type&quot;:&quot;text&quot;,&quot;fields&quot;:{&quot;keyword&quot;:{&quot;type&quot;:&quot;keyword&quot;,&quot;ignore_above&quot;:256}}}}}}]
+[11:30:48,011][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] cluster state updated, version [7], source [put-mapping[article]]
+[11:30:48,011][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] publishing cluster state version [7]
+[11:30:48,012][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] set local cluster state to version 7
+[11:30:48,012][DEBUG][org.elasticsearch.index.mapper.MapperService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] [[test/Xm20JUvBQCGan_kpOOa9Dw]] updating mapping [article], source [{&quot;article&quot;:{&quot;properties&quot;:{&quot;content&quot;:{&quot;type&quot;:&quot;langdetect&quot;,&quot;analyzer&quot;:&quot;_keyword&quot;,&quot;include_in_all&quot;:false,&quot;languages&quot;:[&quot;de&quot;,&quot;en&quot;,&quot;fr&quot;]},&quot;title&quot;:{&quot;type&quot;:&quot;text&quot;,&quot;fields&quot;:{&quot;keyword&quot;:{&quot;type&quot;:&quot;keyword&quot;,&quot;ignore_above&quot;:256}}}}}}]
+[11:30:48,515][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
+[11:30:48,967][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
+[11:30:48,980][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[xjGsg-9][clusterService#updateTask][T#1]] processing [put-mapping[article]]: took [1.8s] done applying updated cluster_state (version: 7, uuid: bK5LpBuLTDiHQwYR36L__w)
+[11:30:49,295][INFO ][test                     ][Test worker] stopping nodes
+[11:30:49,296][INFO ][org.elasticsearch.node.Node][Test worker] stopping ...
+[11:30:49,299][DEBUG][org.elasticsearch.indices.IndicesService][indices_shutdown[T#1]] [test] closing ... (reason [shutdown])
+[11:30:49,299][DEBUG][org.elasticsearch.indices.IndicesService][indices_shutdown[T#1]] [test/Xm20JUvBQCGan_kpOOa9Dw] closing index service (reason [shutdown])
+[11:30:49,300][DEBUG][org.elasticsearch.index.IndexService][indices_shutdown[T#1]] [0] closing... (reason: [shutdown])
+[11:30:49,300][DEBUG][org.elasticsearch.index.shard.IndexShard][indices_shutdown[T#1]] state: [STARTED]-&gt;[CLOSED], reason [shutdown]
+[11:30:49,300][DEBUG][org.elasticsearch.index.engine.Engine][indices_shutdown[T#1]] flushing shard on close - this might take some time to sync files to disk
+[11:30:49,301][DEBUG][org.elasticsearch.index.engine.Engine][indices_shutdown[T#1]] close now acquiring writeLock
+[11:30:49,302][DEBUG][org.elasticsearch.index.engine.Engine][indices_shutdown[T#1]] close acquired writeLock
+[11:30:49,302][DEBUG][org.elasticsearch.index.translog.Translog][indices_shutdown[T#1]] translog closed
+[11:30:49,305][DEBUG][org.elasticsearch.index.engine.Engine][indices_shutdown[T#1]] engine closed [api]
+[11:30:49,306][DEBUG][org.elasticsearch.index.store.Store][indices_shutdown[T#1]] store reference count on close: 0
+[11:30:49,306][DEBUG][org.elasticsearch.index.IndexService][indices_shutdown[T#1]] [0] closed (reason: [shutdown])
+[11:30:49,306][DEBUG][org.elasticsearch.index.IndexService][indices_shutdown[T#1]] [1] closing... (reason: [shutdown])
+[11:30:49,306][DEBUG][org.elasticsearch.index.shard.IndexShard][indices_shutdown[T#1]] state: [STARTED]-&gt;[CLOSED], reason [shutdown]
+[11:30:49,306][DEBUG][org.elasticsearch.index.engine.Engine][indices_shutdown[T#1]] flushing shard on close - this might take some time to sync files to disk
+[11:30:49,306][DEBUG][org.elasticsearch.index.engine.Engine][indices_shutdown[T#1]] close now acquiring writeLock
+[11:30:49,307][DEBUG][org.elasticsearch.index.engine.Engine][indices_shutdown[T#1]] close acquired writeLock
+[11:30:49,307][DEBUG][org.elasticsearch.index.translog.Translog][indices_shutdown[T#1]] translog closed
+[11:30:49,310][DEBUG][org.elasticsearch.index.engine.Engine][indices_shutdown[T#1]] engine closed [api]
+[11:30:49,311][DEBUG][org.elasticsearch.index.store.Store][indices_shutdown[T#1]] store reference count on close: 0
+[11:30:49,311][DEBUG][org.elasticsearch.index.IndexService][indices_shutdown[T#1]] [1] closed (reason: [shutdown])
+[11:30:49,311][DEBUG][org.elasticsearch.index.IndexService][indices_shutdown[T#1]] [2] closing... (reason: [shutdown])
+[11:30:49,311][DEBUG][org.elasticsearch.index.shard.IndexShard][indices_shutdown[T#1]] state: [STARTED]-&gt;[CLOSED], reason [shutdown]
+[11:30:49,311][DEBUG][org.elasticsearch.index.engine.Engine][indices_shutdown[T#1]] flushing shard on close - this might take some time to sync files to disk
+[11:30:49,345][DEBUG][org.elasticsearch.index.engine.Engine][indices_shutdown[T#1]] close now acquiring writeLock
+[11:30:49,345][DEBUG][org.elasticsearch.index.engine.Engine][indices_shutdown[T#1]] close acquired writeLock
+[11:30:49,346][DEBUG][org.elasticsearch.index.translog.Translog][indices_shutdown[T#1]] translog closed
+[11:30:49,348][DEBUG][org.elasticsearch.index.engine.Engine][indices_shutdown[T#1]] engine closed [api]
+[11:30:49,348][DEBUG][org.elasticsearch.index.store.Store][indices_shutdown[T#1]] store reference count on close: 0
+[11:30:49,348][DEBUG][org.elasticsearch.index.IndexService][indices_shutdown[T#1]] [2] closed (reason: [shutdown])
+[11:30:49,348][DEBUG][org.elasticsearch.index.IndexService][indices_shutdown[T#1]] [3] closing... (reason: [shutdown])
+[11:30:49,349][DEBUG][org.elasticsearch.index.shard.IndexShard][indices_shutdown[T#1]] state: [STARTED]-&gt;[CLOSED], reason [shutdown]
+[11:30:49,349][DEBUG][org.elasticsearch.index.engine.Engine][indices_shutdown[T#1]] flushing shard on close - this might take some time to sync files to disk
+[11:30:49,359][DEBUG][org.elasticsearch.index.engine.Engine][indices_shutdown[T#1]] close now acquiring writeLock
+[11:30:49,360][DEBUG][org.elasticsearch.index.engine.Engine][indices_shutdown[T#1]] close acquired writeLock
+[11:30:49,360][DEBUG][org.elasticsearch.index.translog.Translog][indices_shutdown[T#1]] translog closed
+[11:30:49,362][DEBUG][org.elasticsearch.index.engine.Engine][indices_shutdown[T#1]] engine closed [api]
+[11:30:49,362][DEBUG][org.elasticsearch.index.store.Store][indices_shutdown[T#1]] store reference count on close: 0
+[11:30:49,362][DEBUG][org.elasticsearch.index.IndexService][indices_shutdown[T#1]] [3] closed (reason: [shutdown])
+[11:30:49,362][DEBUG][org.elasticsearch.index.IndexService][indices_shutdown[T#1]] [4] closing... (reason: [shutdown])
+[11:30:49,362][DEBUG][org.elasticsearch.index.shard.IndexShard][indices_shutdown[T#1]] state: [STARTED]-&gt;[CLOSED], reason [shutdown]
+[11:30:49,362][DEBUG][org.elasticsearch.index.engine.Engine][indices_shutdown[T#1]] flushing shard on close - this might take some time to sync files to disk
+[11:30:49,369][DEBUG][org.elasticsearch.index.engine.Engine][indices_shutdown[T#1]] close now acquiring writeLock
+[11:30:49,370][DEBUG][org.elasticsearch.index.engine.Engine][indices_shutdown[T#1]] close acquired writeLock
+[11:30:49,370][DEBUG][org.elasticsearch.index.translog.Translog][indices_shutdown[T#1]] translog closed
+[11:30:49,372][DEBUG][org.elasticsearch.index.engine.Engine][indices_shutdown[T#1]] engine closed [api]
+[11:30:49,372][DEBUG][org.elasticsearch.index.store.Store][indices_shutdown[T#1]] store reference count on close: 0
+[11:30:49,373][DEBUG][org.elasticsearch.index.IndexService][indices_shutdown[T#1]] [4] closed (reason: [shutdown])
+[11:30:49,373][DEBUG][org.elasticsearch.index.cache.bitset.BitsetFilterCache][indices_shutdown[T#1]] clearing all bitsets because [close]
+[11:30:49,374][DEBUG][org.elasticsearch.index.cache.query.IndexQueryCache][indices_shutdown[T#1]] full cache clear, reason [close]
+[11:30:49,375][DEBUG][org.elasticsearch.index.cache.bitset.BitsetFilterCache][indices_shutdown[T#1]] clearing all bitsets because [close]
+[11:30:49,378][DEBUG][org.elasticsearch.indices.IndicesService][indices_shutdown[T#1]] [test/Xm20JUvBQCGan_kpOOa9Dw] closed... (reason [shutdown])
+[11:30:49,378][INFO ][org.elasticsearch.node.Node][Test worker] stopped
+[11:30:49,379][INFO ][org.elasticsearch.node.Node][Test worker] closing ...
+[11:30:49,386][INFO ][org.elasticsearch.node.Node][Test worker] closed
+[11:30:49,392][INFO ][test                     ][Test worker] data files wiped
+[11:30:51,394][INFO ][test                     ][Test worker] settings cluster name
+[11:30:51,394][INFO ][test                     ][Test worker] starting nodes
+[11:30:51,395][INFO ][test                     ][Test worker] settings={cluster.name=test-helper-cluster--joerg-1, http.enabled=false, path.home=/Users/joerg/Projects/github/jprante/elasticsearch-analysis-langdetect, transport.type=local}
+[11:30:51,397][INFO ][org.elasticsearch.node.Node][Test worker] initializing ...
+[11:30:51,400][DEBUG][org.elasticsearch.env.NodeEnvironment][Test worker] using node location [[NodePath{path=/Users/joerg/Projects/github/jprante/elasticsearch-analysis-langdetect/data/nodes/0, spins=null}]], local_lock_id [0]
+[11:30:51,401][DEBUG][org.elasticsearch.env.NodeEnvironment][Test worker] node data locations details:
+ -&gt; /Users/joerg/Projects/github/jprante/elasticsearch-analysis-langdetect/data/nodes/0, free_space [138.5gb], usable_space [138.3gb], total_space [931gb], spins? [unknown], mount [/ (/dev/disk0s2)], type [hfs]
+[11:30:51,401][INFO ][org.elasticsearch.env.NodeEnvironment][Test worker] heap size [3.5gb], compressed ordinary object pointers [true]
+[11:30:51,402][INFO ][org.elasticsearch.node.Node][Test worker] node name [QHkWj5x] derived from node ID [QHkWj5xaR6WKhgt-6zzIZw]; set [node.name] to override
+[11:30:51,402][INFO ][org.elasticsearch.node.Node][Test worker] version[5.1.2], pid[7248], build[c8c4c16/2017-01-11T20:18:39.146Z], OS[Mac OS X/10.9.5/x86_64], JVM[Azul Systems, Inc./OpenJDK 64-Bit Server VM/1.8.0_112/25.112-b16]
+[11:30:51,402][DEBUG][org.elasticsearch.node.Node][Test worker] using config [/Users/joerg/Projects/github/jprante/elasticsearch-analysis-langdetect/config], data [[/Users/joerg/Projects/github/jprante/elasticsearch-analysis-langdetect/data]], logs [/Users/joerg/Projects/github/jprante/elasticsearch-analysis-langdetect/logs], plugins [/Users/joerg/Projects/github/jprante/elasticsearch-analysis-langdetect/plugins]
+[11:30:51,402][DEBUG][org.elasticsearch.plugins.PluginsService][Test worker] [/Users/joerg/Projects/github/jprante/elasticsearch-analysis-langdetect/plugins] directory does not exist.
+[11:30:51,403][INFO ][org.elasticsearch.plugins.PluginsService][Test worker] no modules loaded
+[11:30:51,403][INFO ][org.elasticsearch.plugins.PluginsService][Test worker] loaded plugin [org.xbib.elasticsearch.plugin.langdetect.LangdetectPlugin]
+[11:30:51,408][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [force_merge], size [1], queue size [unbounded]
+[11:30:51,408][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [fetch_shard_started], core [1], max [16], keep alive [5m]
+[11:30:51,409][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [listener], size [4], queue size [unbounded]
+[11:30:51,409][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [index], size [8], queue size [200]
+[11:30:51,409][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [refresh], core [1], max [4], keep alive [5m]
+[11:30:51,409][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [generic], core [4], max [128], keep alive [30s]
+[11:30:51,409][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [warmer], core [1], max [4], keep alive [5m]
+[11:30:51,410][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [search], size [13], queue size [1k]
+[11:30:51,410][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [flush], core [1], max [4], keep alive [5m]
+[11:30:51,410][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [fetch_shard_store], core [1], max [16], keep alive [5m]
+[11:30:51,410][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [management], core [1], max [5], keep alive [5m]
+[11:30:51,411][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [get], size [8], queue size [1k]
+[11:30:51,411][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [bulk], size [8], queue size [50]
+[11:30:51,411][DEBUG][org.elasticsearch.threadpool.ThreadPool][Test worker] created thread pool: name [snapshot], core [1], max [4], keep alive [5m]
+[11:30:51,412][DEBUG][org.elasticsearch.script.ScriptService][Test worker] using script cache with max_size [100], expire [0s]
+[11:30:51,417][DEBUG][org.elasticsearch.common.network.IfConfig][Test worker] configuration:
+
+lo0
+        inet 127.0.0.1 netmask:255.0.0.0 scope:host
+        inet6 fe80::1 prefixlen:64 scope:link
+        inet6 ::1 prefixlen:128 scope:host
+        UP MULTICAST LOOPBACK mtu:16384 index:1
+
+en4
+        inet 10.1.1.42 netmask:255.255.0.0 broadcast:10.1.255.255 scope:site
+        inet6 fe80::6a5b:35ff:febc:4672 prefixlen:64 scope:link
+        hardware 68:5B:35:BC:46:72
+        UP MULTICAST mtu:1500 index:9
+
+[11:30:51,419][DEBUG][org.elasticsearch.monitor.jvm.JvmGcMonitorService][Test worker] enabled [true], interval [1s], gc_threshold [{default=GcThreshold{name='default', warnThreshold=10000, infoThreshold=5000, debugThreshold=2000}, young=GcThreshold{name='young', warnThreshold=1000, infoThreshold=700, debugThreshold=400}, old=GcThreshold{name='old', warnThreshold=10000, infoThreshold=5000, debugThreshold=2000}}], overhead [50, 25, 10]
+[11:30:51,420][DEBUG][org.elasticsearch.monitor.os.OsService][Test worker] using refresh_interval [1s]
+[11:30:51,421][DEBUG][org.elasticsearch.monitor.process.ProcessService][Test worker] using refresh_interval [1s]
+[11:30:51,422][DEBUG][org.elasticsearch.monitor.jvm.JvmService][Test worker] using refresh_interval [1s]
+[11:30:51,423][DEBUG][org.elasticsearch.monitor.fs.FsService][Test worker] using refresh_interval [1s]
+[11:30:51,424][DEBUG][org.elasticsearch.cluster.routing.allocation.decider.ClusterRebalanceAllocationDecider][Test worker] using [cluster.routing.allocation.allow_rebalance] with [indices_all_active]
+[11:30:51,425][DEBUG][org.elasticsearch.cluster.routing.allocation.decider.ConcurrentRebalanceAllocationDecider][Test worker] using [cluster_concurrent_rebalance] with [2]
+[11:30:51,426][DEBUG][org.elasticsearch.cluster.routing.allocation.decider.ThrottlingAllocationDecider][Test worker] using node_concurrent_outgoing_recoveries [2], node_concurrent_incoming_recoveries [2], node_initial_primaries_recoveries [4]
+[11:30:51,431][DEBUG][org.elasticsearch.index.store.IndexStoreConfig][Test worker] using indices.store.throttle.type [NONE], with index.store.throttle.max_bytes_per_sec [0b]
+[11:30:51,431][DEBUG][org.elasticsearch.indices.IndicesQueryCache][Test worker] using [node] query cache with size [364mb] max filter count [10000]
+[11:30:51,432][DEBUG][org.elasticsearch.indices.IndexingMemoryController][Test worker] using indexing buffer size [364mb] with indices.memory.shard_inactive_time [5m], indices.memory.interval [5s]
+[11:30:51,432][DEBUG][org.elasticsearch.transport.local.LocalTransport][Test worker] creating [8] workers, queue_size [-1]
+[11:30:51,433][DEBUG][org.elasticsearch.discovery.zen.UnicastZenPing][Test worker] using initial hosts [0.0.0.0], with concurrent_connects [10], resolve_timeout [5s]
+[11:30:51,434][DEBUG][org.elasticsearch.discovery.zen.ElectMasterService][Test worker] using minimum_master_nodes [-1]
+[11:30:51,434][DEBUG][org.elasticsearch.discovery.zen.ZenDiscovery][Test worker] using ping_timeout [3s], join.timeout [1m], master_election.ignore_non_master [false]
+[11:30:51,434][DEBUG][org.elasticsearch.discovery.zen.MasterFaultDetection][Test worker] [master] uses ping_interval [1s], ping_timeout [30s], ping_retries [3]
+[11:30:51,434][DEBUG][org.elasticsearch.discovery.zen.NodesFaultDetection][Test worker] [node  ] uses ping_interval [1s], ping_timeout [30s], ping_retries [3]
+[11:30:51,470][DEBUG][org.elasticsearch.indices.recovery.RecoverySettings][Test worker] using max_bytes_per_sec[40mb]
+[11:30:51,485][DEBUG][org.elasticsearch.gateway.GatewayAllocator$InternalPrimaryShardAllocator][Test worker] using initial_shards [quorum]
+[11:30:51,659][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][Test worker] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
+[11:30:51,665][DEBUG][org.elasticsearch.gateway.GatewayMetaState][Test worker] took 0s to load state
+[11:30:51,667][INFO ][org.elasticsearch.node.Node][Test worker] initialized
+[11:30:51,667][INFO ][org.elasticsearch.node.Node][Test worker] starting ...
+[11:30:51,668][INFO ][org.elasticsearch.transport.TransportService][Test worker] publish_address {local[2]}, bound_addresses {local[2]}
+[11:30:51,668][DEBUG][org.elasticsearch.node.Node][Test worker] waiting to join the cluster. timeout [30s]
+[11:30:51,669][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[QHkWj5x][clusterService#updateTask][T#1]] processing [initial_join]: execute
+[11:30:51,670][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[QHkWj5x][clusterService#updateTask][T#1]] processing [initial_join]: took [0s] no change in cluster_state
+[11:30:54,675][DEBUG][org.elasticsearch.discovery.zen.ZenDiscovery][elasticsearch[QHkWj5x][generic][T#1]] filtered ping responses: (ignore_non_masters [false])
+	--&gt; ping_response{node [{QHkWj5x}{QHkWj5xaR6WKhgt-6zzIZw}{j8xbWB8JRiKlk56pTses4g}{local}{local[2]}], id[14], master [null],cluster_state_version [-1], cluster_name[test-helper-cluster--joerg-1]}
+[11:30:54,676][DEBUG][org.elasticsearch.discovery.zen.ZenDiscovery][elasticsearch[QHkWj5x][generic][T#1]] elected as master, waiting for incoming joins ([0] needed)
+[11:30:54,677][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[QHkWj5x][clusterService#updateTask][T#1]] processing [zen-disco-elected-as-master ([0] nodes joined)]: execute
+[11:30:54,678][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[QHkWj5x][clusterService#updateTask][T#1]] cluster state updated, version [1], source [zen-disco-elected-as-master ([0] nodes joined)]
+[11:30:54,678][INFO ][org.elasticsearch.cluster.service.ClusterService][elasticsearch[QHkWj5x][clusterService#updateTask][T#1]] new_master {QHkWj5x}{QHkWj5xaR6WKhgt-6zzIZw}{j8xbWB8JRiKlk56pTses4g}{local}{local[2]}, reason: zen-disco-elected-as-master ([0] nodes joined)
+[11:30:54,678][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[QHkWj5x][clusterService#updateTask][T#1]] publishing cluster state version [1]
+[11:30:54,678][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[QHkWj5x][clusterService#updateTask][T#1]] set local cluster state to version 1
+[11:30:54,679][INFO ][org.elasticsearch.node.Node][Test worker] started
+[11:30:54,679][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[QHkWj5x][clusterService#updateTask][T#1]] processing [zen-disco-elected-as-master ([0] nodes joined)]: took [2ms] done applying updated cluster_state (version: 1, uuid: 0k0iTRoKTU2uk7EQjjO4Xg)
+[11:30:54,681][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[QHkWj5x][clusterService#updateTask][T#1]] processing [local-gateway-elected-state]: execute
+[11:30:54,681][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[QHkWj5x][clusterService#updateTask][T#1]] cluster state updated, version [2], source [local-gateway-elected-state]
+[11:30:54,682][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[QHkWj5x][clusterService#updateTask][T#1]] publishing cluster state version [2]
+[11:30:54,682][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[QHkWj5x][clusterService#updateTask][T#1]] set local cluster state to version 2
+[11:30:54,684][INFO ][org.elasticsearch.gateway.GatewayService][elasticsearch[QHkWj5x][clusterService#updateTask][T#1]] recovered [0] indices into cluster_state
+[11:30:54,685][INFO ][test                     ][Test worker] nodes are started
+[11:30:54,685][DEBUG][org.elasticsearch.cluster.service.ClusterService][elasticsearch[QHkWj5x][clusterService#updateTask][T#1]] processing [local-gateway-elected-state]: took [3ms] done applying updated cluster_state (version: 2, uuid: r5OBMZm5SYKlSfoDj4izKA)
+[11:30:55,185][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][Test worker] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
+[11:30:55,186][INFO ][test                     ][Test worker] stopping nodes
+[11:30:55,186][INFO ][org.elasticsearch.node.Node][Test worker] stopping ...
+[11:30:55,188][INFO ][org.elasticsearch.node.Node][Test worker] stopped
+[11:30:55,188][INFO ][org.elasticsearch.node.Node][Test worker] closing ...
+[11:30:55,191][INFO ][org.elasticsearch.node.Node][Test worker] closed
+[11:30:55,192][INFO ][test                     ][Test worker] data files wiped
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 3.2.1</a> at 26.01.2017 11:31:14</p>
+</div>
+</div>
+</body>
+</html>
