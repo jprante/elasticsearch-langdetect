@@ -8,8 +8,8 @@ image:https://img.shields.io/twitter/url/https/twitter.com/xbib.svg?style=social
 
 image:https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_%28Rotterdam%29_-_Google_Art_Project.jpg/299px-Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_%28Rotterdam%29_-_Google_Art_Project.jpg["Tower of Babel"]
 
-This is an implementation of a plugin for [Elasticsearch](http://github.com/elasticsearch/elasticsearch) using the 
-implementation of Nakatani Shuyo's [language detector](http://code.google.com/p/language-detection/).
+This is an implementation of a plugin for http://github.com/elasticsearch/elasticsearch[Elasticsearch] using the
+implementation of Nakatani Shuyo's http://code.google.com/p/language-detection/[language detector].
 
 It uses 3-gram character and a Bayesian filter with various normalizations and feature sampling.
 The precision is over 99% for 53 languages.
