@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">3.185s</div>
+<div class="counter">2.649s</div>
 <p>duration</p>
 </div>
 </td>
@@ -79,32 +79,32 @@
 </thead>
 <tr>
 <td class="success">testBinary</td>
-<td>0.477s</td>
+<td>0.373s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">testBinary2</td>
-<td>0.492s</td>
+<td>0.374s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">testCustomMappings</td>
-<td>0.229s</td>
+<td>0.183s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">testShortTextProfile</td>
-<td>1.129s</td>
+<td>1.011s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">testSimpleMappings</td>
-<td>0.424s</td>
+<td>0.342s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">testToFields</td>
-<td>0.434s</td>
+<td>0.366s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -112,16 +112,16 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>[11:31:10,617][DEBUG][org.elasticsearch.index.mapper.MapperService][Test worker] using dynamic[true]
-[11:31:10,834][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][Test worker] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
-[11:31:10,838][DEBUG][org.elasticsearch.index.mapper.MapperService][Test worker] using dynamic[true]
-[11:31:11,047][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][Test worker] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
-[11:31:11,051][DEBUG][org.elasticsearch.index.mapper.MapperService][Test worker] using dynamic[true]
-[11:31:11,294][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][Test worker] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
-[11:31:11,298][ERROR][org.xbib.elasticsearch.index.mapper.langdetect.LangdetectMapper][Test worker] Illegal character '&quot;' (code 0x22) in base64 content
- at [Source: org.elasticsearch.common.bytes.BytesReference$MarkSupportingStreamInputWrapper@bbff788; line: 1, column: 73]
+<pre>[16:16:12,060][DEBUG][org.elasticsearch.index.mapper.MapperService][Test worker] using dynamic[true]
+[16:16:12,248][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][Test worker] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
+[16:16:12,251][DEBUG][org.elasticsearch.index.mapper.MapperService][Test worker] using dynamic[true]
+[16:16:12,413][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][Test worker] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
+[16:16:12,419][DEBUG][org.elasticsearch.index.mapper.MapperService][Test worker] using dynamic[true]
+[16:16:12,591][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][Test worker] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
+[16:16:12,595][ERROR][org.xbib.elasticsearch.index.mapper.langdetect.LangdetectMapper][Test worker] Illegal character '&quot;' (code 0x22) in base64 content
+ at [Source: org.elasticsearch.common.bytes.BytesReference$MarkSupportingStreamInputWrapper@5559ab11; line: 1, column: 73]
 com.fasterxml.jackson.core.JsonParseException: Illegal character '&quot;' (code 0x22) in base64 content
- at [Source: org.elasticsearch.common.bytes.BytesReference$MarkSupportingStreamInputWrapper@bbff788; line: 1, column: 73]
+ at [Source: org.elasticsearch.common.bytes.BytesReference$MarkSupportingStreamInputWrapper@5559ab11; line: 1, column: 73]
 	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1702) ~[jackson-core-2.8.1.jar:2.8.1]
 	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:558) ~[jackson-core-2.8.1.jar:2.8.1]
 	at com.fasterxml.jackson.core.base.ParserMinimalBase._decodeBase64(ParserMinimalBase.java:422) ~[jackson-core-2.8.1.jar:2.8.1]
@@ -184,12 +184,12 @@ com.fasterxml.jackson.core.JsonParseException: Illegal character '&quot;' (code 
 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142) [?:1.8.0_112]
 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617) [?:1.8.0_112]
 	at java.lang.Thread.run(Thread.java:745) [?:1.8.0_112]
-[11:31:11,305][DEBUG][org.elasticsearch.index.mapper.MapperService][Test worker] using dynamic[true]
-[11:31:11,534][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][Test worker] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
-[11:31:11,537][ERROR][org.xbib.elasticsearch.index.mapper.langdetect.LangdetectMapper][Test worker] Illegal character '&quot;' (code 0x22) in base64 content
- at [Source: org.elasticsearch.common.bytes.BytesReference$MarkSupportingStreamInputWrapper@7bfa36da; line: 1, column: 73]
+[16:16:12,604][DEBUG][org.elasticsearch.index.mapper.MapperService][Test worker] using dynamic[true]
+[16:16:12,787][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][Test worker] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
+[16:16:12,788][ERROR][org.xbib.elasticsearch.index.mapper.langdetect.LangdetectMapper][Test worker] Illegal character '&quot;' (code 0x22) in base64 content
+ at [Source: org.elasticsearch.common.bytes.BytesReference$MarkSupportingStreamInputWrapper@3ee35472; line: 1, column: 73]
 com.fasterxml.jackson.core.JsonParseException: Illegal character '&quot;' (code 0x22) in base64 content
- at [Source: org.elasticsearch.common.bytes.BytesReference$MarkSupportingStreamInputWrapper@7bfa36da; line: 1, column: 73]
+ at [Source: org.elasticsearch.common.bytes.BytesReference$MarkSupportingStreamInputWrapper@3ee35472; line: 1, column: 73]
 	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1702) ~[jackson-core-2.8.1.jar:2.8.1]
 	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:558) ~[jackson-core-2.8.1.jar:2.8.1]
 	at com.fasterxml.jackson.core.base.ParserMinimalBase._decodeBase64(ParserMinimalBase.java:422) ~[jackson-core-2.8.1.jar:2.8.1]
@@ -252,20 +252,20 @@ com.fasterxml.jackson.core.JsonParseException: Illegal character '&quot;' (code 
 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142) [?:1.8.0_112]
 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617) [?:1.8.0_112]
 	at java.lang.Thread.run(Thread.java:745) [?:1.8.0_112]
-[11:31:11,547][DEBUG][org.elasticsearch.index.mapper.MapperService][Test worker] using dynamic[true]
-[11:31:11,744][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][Test worker] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
-[11:31:11,748][DEBUG][org.elasticsearch.index.mapper.MapperService][Test worker] using dynamic[true]
-[11:31:11,963][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][Test worker] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
-[11:31:11,969][DEBUG][org.elasticsearch.index.mapper.MapperService][Test worker] using dynamic[true]
-[11:31:12,191][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][Test worker] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
-[11:31:12,199][DEBUG][org.elasticsearch.index.mapper.MapperService][Test worker] using dynamic[true]
-[11:31:12,386][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][Test worker] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
-[11:31:12,390][DEBUG][org.elasticsearch.index.mapper.MapperService][Test worker] using dynamic[true]
-[11:31:12,668][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][Test worker] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
-[11:31:12,669][ERROR][org.xbib.elasticsearch.index.mapper.langdetect.LangdetectMapper][Test worker] Illegal white space character (code 0x20) as character #3 of 4-char base64 unit: can only used between units
- at [Source: org.elasticsearch.common.bytes.BytesReference$MarkSupportingStreamInputWrapper@4bc95c8f; line: 1, column: 61]
+[16:16:12,794][DEBUG][org.elasticsearch.index.mapper.MapperService][Test worker] using dynamic[true]
+[16:16:12,961][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][Test worker] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
+[16:16:12,964][DEBUG][org.elasticsearch.index.mapper.MapperService][Test worker] using dynamic[true]
+[16:16:13,130][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][Test worker] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
+[16:16:13,137][DEBUG][org.elasticsearch.index.mapper.MapperService][Test worker] using dynamic[true]
+[16:16:13,312][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][Test worker] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
+[16:16:13,320][DEBUG][org.elasticsearch.index.mapper.MapperService][Test worker] using dynamic[true]
+[16:16:13,491][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][Test worker] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
+[16:16:13,497][DEBUG][org.elasticsearch.index.mapper.MapperService][Test worker] using dynamic[true]
+[16:16:13,685][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][Test worker] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
+[16:16:13,686][ERROR][org.xbib.elasticsearch.index.mapper.langdetect.LangdetectMapper][Test worker] Illegal white space character (code 0x20) as character #3 of 4-char base64 unit: can only used between units
+ at [Source: org.elasticsearch.common.bytes.BytesReference$MarkSupportingStreamInputWrapper@1f53f724; line: 1, column: 61]
 com.fasterxml.jackson.core.JsonParseException: Illegal white space character (code 0x20) as character #3 of 4-char base64 unit: can only used between units
- at [Source: org.elasticsearch.common.bytes.BytesReference$MarkSupportingStreamInputWrapper@4bc95c8f; line: 1, column: 61]
+ at [Source: org.elasticsearch.common.bytes.BytesReference$MarkSupportingStreamInputWrapper@1f53f724; line: 1, column: 61]
 	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1702) ~[jackson-core-2.8.1.jar:2.8.1]
 	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:558) ~[jackson-core-2.8.1.jar:2.8.1]
 	at com.fasterxml.jackson.core.base.ParserMinimalBase._decodeBase64(ParserMinimalBase.java:422) ~[jackson-core-2.8.1.jar:2.8.1]
@@ -326,10 +326,10 @@ com.fasterxml.jackson.core.JsonParseException: Illegal white space character (co
 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142) [?:1.8.0_112]
 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617) [?:1.8.0_112]
 	at java.lang.Thread.run(Thread.java:745) [?:1.8.0_112]
-[11:31:12,675][DEBUG][org.elasticsearch.index.mapper.MapperService][Test worker] using dynamic[true]
-[11:31:13,276][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][Test worker] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
-[11:31:13,281][DEBUG][org.elasticsearch.index.mapper.MapperService][Test worker] using dynamic[true]
-[11:31:13,798][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][Test worker] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
+[16:16:13,691][DEBUG][org.elasticsearch.index.mapper.MapperService][Test worker] using dynamic[true]
+[16:16:14,218][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][Test worker] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
+[16:16:14,223][DEBUG][org.elasticsearch.index.mapper.MapperService][Test worker] using dynamic[true]
+[16:16:14,698][DEBUG][org.xbib.elasticsearch.common.langdetect.LangdetectService][Test worker] language detection service installed for [ar, bg, bn, cs, da, de, el, en, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, ko, lt, lv, mk, ml, nl, no, pa, pl, pt, ro, ru, sq, sv, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw]
 </pre>
 </span>
 </div>
@@ -341,7 +341,7 @@ com.fasterxml.jackson.core.JsonParseException: Illegal white space character (co
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 3.2.1</a> at 26.01.2017 11:31:14</p>
+<a href="http://www.gradle.org">Gradle 3.2.1</a> at 26.01.2017 16:16:15</p>
 </div>
 </div>
 </body>
