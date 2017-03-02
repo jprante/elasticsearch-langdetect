@@ -16,22 +16,6 @@ printf "Host: %s\nOS: %s %s %s\nJVM: %s %s %s %s\nGroovy: %s\nGradle: %s\n" +
         GroovySystem.getVersion(),
         gradle.gradleVersion
 
-ext {
-    pluginName = 'langdetect'
-    pluginClassname  = 'org.xbib.elasticsearch.plugin.langdetect.LangdetectPlugin'
-    pluginDescription = 'Language detection for Elasticsearch'
-    user = 'jprante'
-    name = 'elasticsearch-langdetect'
-    scmUrl = 'https://github.com/' + user + '/' + name
-    scmConnection = 'scm:git:git://github.com/' + user + '/' + name + '.git'
-    scmDeveloperConnection = 'scm:git:git://github.com/' + user + '/' + name + '.git'
-    versions = [
-            'elasticsearch' : '5.1.2',
-            'log4j': '2.7',
-            'junit' : '4.12'
-    ]
-}
-
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'signing'
@@ -42,7 +26,6 @@ apply plugin: "jacoco"
 apply plugin: 'org.xbib.gradle.plugin.asciidoctor'
 
 repositories {
-    mavenLocal()
     mavenCentral()
 }
 
@@ -62,13 +45,18 @@ configurations {
     }
 }
 
+apply from: 'gradle/ext.gradle'
+apply from: 'gradle/sonarqube.gradle'
+apply from: 'gradle/publish.gradle'
+
+
 dependencies {
-    compile "org.elasticsearch:elasticsearch:${versions.elasticsearch}"
-    compileOnly "org.apache.logging.log4j:log4j-core:${versions.log4j}"
-    testCompile "junit:junit:${versions.junit}"
-    testCompile "org.apache.logging.log4j:log4j-core:${versions.log4j}"
-    asciidoclet 'org.asciidoctor:asciidoclet:1.5.4'
-    wagon 'org.apache.maven.wagon:wagon-ssh-external:2.10'
+    compile "org.elasticsearch:elasticsearch:${project.property('elasticsearch.version')}"
+    compileOnly "org.apache.logging.log4j:log4j-core:${project.property('log4j.version')}"
+    testCompile "junit:junit:${project.property('junit.version')}"
+    testCompile "org.apache.logging.log4j:log4j-core:${project.property('log4j.version')}"
+    asciidoclet "org.asciidoctor:asciidoclet:${project.property('asciidoclet.version')}"
+    wagon "org.apache.maven.wagon:wagon-ssh-external:${project.property('wagon-ssh-external.version')}"
     distJars "${project.group}:${project.name}:${project.version}"
 }
 
@@ -77,9 +65,8 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 tasks.withType(JavaCompile) {
-    options.compilerArgs << "-Xlint:all" << "-profile" << "compact2"
+    options.compilerArgs << "-Xlint:all" << "-profile" << "compact1"
 }
-
 
 test {
     systemProperties['path.home'] = System.getProperty("user.dir")
@@ -87,7 +74,6 @@ test {
         showStandardStreams = false
         exceptionFormat = 'full'
     }
-    reports.html.destination = "docs/test"
 }
 
 task makePluginDescriptor(type: Copy) {
@@ -103,7 +89,7 @@ task makePluginDescriptor(type: Copy) {
                 'isolated': true,
                 'version': project.property('version'),
                 'javaVersion': project.property('targetCompatibility'),
-                'elasticsearchVersion' : versions.elasticsearch
+                'elasticsearchVersion' : project.property('elasticsearch.version')
             ]
     ])
 }
@@ -129,7 +115,6 @@ clean {
 
 asciidoctor {
     backends 'html5'
-    outputDir = file('docs')
     separateOutputDirs = false
     attributes 'source-highlighter': 'coderay',
             toc                 : '',
@@ -145,7 +130,6 @@ javadoc {
     options.addStringOption "-base-dir", "${projectDir}"
     options.addStringOption "-attribute",
             "name=${project.name},version=${project.version},title-link=https://github.com/${user}/${project.name}"
-    options.destinationDirectory(file("${projectDir}/docs/javadoc"))
     configure(options) {
         noTimestamp = true
     }
@@ -172,6 +156,3 @@ if (project.hasProperty('signing.keyId')) {
         sign configurations.archives
     }
 }
-
-apply from: 'gradle/sonarqube.gradle'
-apply from: 'gradle/publish.gradle'

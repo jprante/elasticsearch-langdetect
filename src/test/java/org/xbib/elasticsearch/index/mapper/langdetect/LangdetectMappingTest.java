@@ -43,7 +43,7 @@ public class LangdetectMappingTest extends Assert {
         String sampleText = copyToStringFromClasspath("base64-decoded.txt");
         BytesReference json = jsonBuilder().startObject().field("someField", sampleBinary).endObject().bytes();
         ParseContext.Document doc = docMapper.parse("someIndex", "someType", "1", json).rootDoc();
-        assertEquals(1, doc.getFields("someField").length);
+        assertEquals(2, doc.getFields("someField").length);
         assertEquals("en", doc.getFields("someField")[0].stringValue());
         // re-parse it
         String builtMapping = docMapper.mappingSource().string();

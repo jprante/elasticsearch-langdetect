@@ -133,9 +133,9 @@ public class LangdetectService {
             return;
         }
         try {
-            String[] keys = DEFAULT_LANGUAGES;
-            if (settings.get("languages") != null) {
-                keys = settings.get("languages").split(",");
+            String[] keys = settings.getAsArray("languages");
+            if (keys.length == 0) {
+                keys = DEFAULT_LANGUAGES;
             }
             int index = 0;
             int size = keys.length;
@@ -151,10 +151,7 @@ public class LangdetectService {
         }
         try {
             // map by settings
-            Settings map = Settings.EMPTY;
-            if (settings.getByPrefix("map.") != null) {
-                map = Settings.builder().put(settings.getByPrefix("map.")).build();
-            }
+            Settings map = Settings.builder().put(settings.getByPrefix("map.")).build();
             if (map.getAsMap().isEmpty()) {
                 // is in "map" a resource name?
                 String s = settings.get("map") != null ?

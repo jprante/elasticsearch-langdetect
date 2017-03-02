@@ -68,7 +68,7 @@ public class LangProfile {
 
     @SuppressWarnings("unchecked")
     public void read(InputStream input) throws IOException {
-        XContentParser parser = XContentFactory.xContent(XContentType.JSON).createParser(input);
+        XContentParser parser = XContentFactory.xContent(XContentType.JSON).createParser(null, input);
         Map<String, Object> map = parser.map();
         freq = (Map<String, Integer>) map.get("freq");
         name = (String) map.get("name");

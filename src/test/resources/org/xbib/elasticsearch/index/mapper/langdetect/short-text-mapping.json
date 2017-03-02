@@ -1,10 +1,10 @@
 {
-    "someType" : {
-        "properties" : {
-            "someField" : {
-                 "type" : "langdetect",
-                 "profile" : "short-text"
-            }
-        }
+  "someType" : {
+    "properties" : {
+      "someField" : {
+        "type" : "langdetect",
+        "profile" : "short-text"
+      }
     }
+  }
 }

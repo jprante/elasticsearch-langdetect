@@ -1,0 +1,10 @@
+ext {
+    pluginName = 'langdetect'
+    pluginClassname  = 'org.xbib.elasticsearch.plugin.langdetect.LangdetectPlugin'
+    pluginDescription = 'Language detection for Elasticsearch'
+    user = 'jprante'
+    name = 'elasticsearch-langdetect'
+    scmUrl = 'https://github.com/' + user + '/' + name
+    scmConnection = 'scm:git:git://github.com/' + user + '/' + name + '.git'
+    scmDeveloperConnection = 'scm:git:git://github.com/' + user + '/' + name + '.git'
+}

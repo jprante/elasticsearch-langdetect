@@ -1,10 +1,10 @@
 {
-    "someType" : {
-        "properties" : {
-            "someField": {
-                "type" : "langdetect",
-                "languages" : [ "de", "en", "fr", "nl", "it" ]
-            }
-        }
+  "someType" : {
+    "properties" : {
+      "someField": {
+        "type" : "langdetect",
+        "languages" : [ "de", "en", "fr", "nl", "it" ]
+      }
     }
+  }
 }
