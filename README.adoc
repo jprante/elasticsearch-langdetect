@@ -118,7 +118,7 @@ Here is a list of languages code recognized:
 
 [source]
 ----
-./bin/elasticsearch-plugin install http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/5.1.2.0/elasticsearch-langdetect-5.1.2.0-plugin.zip
+./bin/elasticsearch-plugin install http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/5.2.1.0/elasticsearch-langdetect-5.2.1.0-plugin.zip
 ----
 
 ### Elasticsearch 2.x
