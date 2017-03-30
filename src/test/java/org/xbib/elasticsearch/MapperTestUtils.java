@@ -38,7 +38,7 @@ public class MapperTestUtils {
 
     public static AnalysisRegistry analysisService(Settings customSettings) throws IOException {
         Settings settings = Settings.builder()
-                .put("path.home", System.getProperty("path.home", "/tmp"))
+                .put("path.home", System.getProperty("path.home", System.getProperty("user.dir")))
                 .put(IndexMetaData.SETTING_VERSION_CREATED, Version.CURRENT)
                 .put(customSettings)
                 .build();
@@ -53,7 +53,7 @@ public class MapperTestUtils {
 
     public static DocumentMapperParser newDocumentMapperParser(Settings customSettings, String index) throws IOException {
         Settings settings = Settings.builder()
-                .put("path.home", System.getProperty("path.home", "/tmp"))
+                .put("path.home", System.getProperty("path.home", System.getProperty("user.dir")))
                 .put(IndexMetaData.SETTING_VERSION_CREATED, Version.CURRENT)
                 .put(customSettings)
                 .build();
@@ -90,7 +90,7 @@ public class MapperTestUtils {
     public static Analyzer analyzer(String name) throws IOException {
         Settings settings = Settings.builder()
                 .put(IndexMetaData.SETTING_VERSION_CREATED, Version.CURRENT)
-                .put("path.home", System.getProperty("path.home"))
+                .put("path.home", System.getProperty("path.home", System.getProperty("user.dir")))
                 .build();
         AnalysisRegistry analysisRegistry = analysisService(settings);
         IndexMetaData indexMetaData = IndexMetaData.builder("test")
@@ -114,7 +114,7 @@ public class MapperTestUtils {
     public static Analyzer analyzer(Settings customSettings, String name) throws IOException {
         Settings settings = Settings.builder()
                 .put(IndexMetaData.SETTING_VERSION_CREATED, Version.CURRENT)
-                .put("path.home", System.getProperty("path.home", "/tmp"))
+                .put("path.home", System.getProperty("path.home", System.getProperty("user.dir")))
                 .put(customSettings)
                 .build();
         AnalysisRegistry analysisRegistry = analysisService(settings);
@@ -139,7 +139,7 @@ public class MapperTestUtils {
     public static Analyzer analyzer(String resource, String name) throws IOException {
         Settings settings = Settings.builder()
                 .put(IndexMetaData.SETTING_VERSION_CREATED, Version.CURRENT)
-                .put("path.home", System.getProperty("path.home", "/tmp"))
+                .put("path.home", System.getProperty("path.home", System.getProperty("user.dir")))
                 .loadFromStream(resource, MapperTestUtils.class.getClassLoader().getResource(resource).openStream())
                 .build();
         AnalysisRegistry analysisRegistry = analysisService(settings);
@@ -164,7 +164,7 @@ public class MapperTestUtils {
     public static TokenizerFactory tokenizerFactory(String name) throws IOException {
         Settings settings = Settings.builder()
                 .put(IndexMetaData.SETTING_VERSION_CREATED, Version.CURRENT)
-                .put("path.home", System.getProperty("path.home", "/tmp"))
+                .put("path.home", System.getProperty("path.home", System.getProperty("user.dir")))
                 .build();
         AnalysisRegistry analysisRegistry = analysisService(settings);
         IndexMetaData indexMetaData = IndexMetaData.builder("test")
@@ -183,7 +183,7 @@ public class MapperTestUtils {
     public static TokenizerFactory tokenizerFactory(String resource, String name) throws IOException {
         Settings settings = Settings.builder()
                 .put(IndexMetaData.SETTING_VERSION_CREATED, Version.CURRENT)
-                .put("path.home", System.getProperty("path.home"))
+                .put("path.home", System.getProperty("path.home", System.getProperty("user.dir")))
                 .loadFromStream(resource, MapperTestUtils.class.getClassLoader().getResource(resource).openStream())
                 .build();
         Environment environment = new Environment(settings);
@@ -204,7 +204,7 @@ public class MapperTestUtils {
     public static TokenFilterFactory tokenFilterFactory(String name) throws IOException {
         Settings settings = Settings.builder()
                 .put(IndexMetaData.SETTING_VERSION_CREATED, Version.CURRENT)
-                .put("path.home", System.getProperty("path.home", "/tmp"))
+                .put("path.home", System.getProperty("path.home", System.getProperty("user.dir")))
                 .build();
         Environment environment = new Environment(settings);
         AnalysisRegistry analysisRegistry = analysisService(settings);
@@ -222,7 +222,7 @@ public class MapperTestUtils {
     public static TokenFilterFactory tokenFilterFactory(String resource, String name) throws IOException {
         Settings settings = Settings.builder()
                 .put(IndexMetaData.SETTING_VERSION_CREATED, Version.CURRENT)
-                .put("path.home", System.getProperty("path.home", "/tmp"))
+                .put("path.home", System.getProperty("path.home", System.getProperty("user.dir")))
                 .loadFromStream(resource, MapperTestUtils.class.getClassLoader().getResource(resource).openStream())
                 .build();
         Environment environment = new Environment(settings);
@@ -241,7 +241,7 @@ public class MapperTestUtils {
     public static CharFilterFactory charFilterFactory(String name) throws IOException {
         Settings settings = Settings.builder()
                 .put(IndexMetaData.SETTING_VERSION_CREATED, Version.CURRENT)
-                .put("path.home", System.getProperty("path.home", "/tmp"))
+                .put("path.home", System.getProperty("path.home", System.getProperty("user.dir")))
                 .build();
         Environment environment = new Environment(settings);
         AnalysisRegistry analysisRegistry = analysisService(settings);
@@ -259,7 +259,7 @@ public class MapperTestUtils {
     public static CharFilterFactory charFilterFactory(String resource, String name) throws IOException {
         Settings settings = Settings.builder()
                 .put(IndexMetaData.SETTING_VERSION_CREATED, Version.CURRENT)
-                .put("path.home", System.getProperty("path.home", "/tmp"))
+                .put("path.home", System.getProperty("path.home", System.getProperty("user.dir")))
                 .loadFromStream(resource, MapperTestUtils.class.getClassLoader().getResource(resource).openStream())
                 .build();
         Environment environment = new Environment(settings);

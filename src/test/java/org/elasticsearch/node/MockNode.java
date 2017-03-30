@@ -1,7 +1,6 @@
 package org.elasticsearch.node;
 
 import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.node.internal.InternalSettingsPreparer;
 import org.elasticsearch.plugins.Plugin;
 
 import java.util.ArrayList;

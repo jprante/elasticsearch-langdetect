@@ -185,8 +185,8 @@ public class NodeTestUtils {
     }
 
 
-    private static void deleteFiles() throws IOException {
-        Path directory = Paths.get(System.getProperty("path.home") + "/data");
+    private void deleteFiles() throws IOException {
+        Path directory = Paths.get(getHome() + "/data");
         Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
