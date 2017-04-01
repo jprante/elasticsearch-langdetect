@@ -43,6 +43,7 @@ public class LangdetectResponse extends ActionResponse implements StatusToXConte
 
     @Override
     public XContentBuilder toXContent(XContentBuilder builder, ToXContent.Params params) throws IOException {
+        builder.startObject();
         if (!Strings.isNullOrEmpty(profile)) {
             builder.field("profile", profile);
         }
@@ -52,6 +53,7 @@ public class LangdetectResponse extends ActionResponse implements StatusToXConte
                     .field("probability", lang.getProbability()).endObject();
         }
         builder.endArray();
+        builder.endObject();
         return builder;
     }
 

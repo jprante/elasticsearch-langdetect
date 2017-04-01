@@ -12,6 +12,7 @@ import org.xbib.elasticsearch.action.langdetect.LangdetectRequest;
 
 import java.io.IOException;
 
+import static org.elasticsearch.rest.RestRequest.Method.GET;
 import static org.elasticsearch.rest.RestRequest.Method.POST;
 
 /**
@@ -22,6 +23,7 @@ public class RestLangdetectAction extends BaseRestHandler {
     @Inject
     public RestLangdetectAction(Settings settings, RestController controller) {
         super(settings);
+        controller.registerHandler(GET, "/_langdetect", this);
         controller.registerHandler(POST, "/_langdetect", this);
     }
 
