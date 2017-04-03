@@ -55,6 +55,7 @@ dependencies {
     compileOnly "org.apache.logging.log4j:log4j-core:${project.property('log4j.version')}"
     testCompile "junit:junit:${project.property('junit.version')}"
     testCompile "org.apache.logging.log4j:log4j-core:${project.property('log4j.version')}"
+    testCompile "org.elasticsearch.plugin:transport-netty4-client:${project.property('elasticsearch.version')}"
     asciidoclet "org.asciidoctor:asciidoclet:${project.property('asciidoclet.version')}"
     wagon "org.apache.maven.wagon:wagon-ssh-external:${project.property('wagon-ssh-external.version')}"
     distJars "${project.group}:${project.name}:${project.version}"
@@ -84,9 +85,6 @@ task makePluginDescriptor(type: Copy) {
                 'name': pluginName,
                 'classname': pluginClassname,
                 'description': pluginDescription,
-                'jvm': true,
-                'site': false,
-                'isolated': true,
                 'version': project.property('version'),
                 'javaVersion': project.property('targetCompatibility'),
                 'elasticsearchVersion' : project.property('elasticsearch.version')
