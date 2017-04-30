@@ -186,7 +186,7 @@ public class LangdetectService {
         String thisProfile = "/langdetect/" + (this.profile != null ? this.profile + "/" : "");
         InputStream in = getClass().getResourceAsStream(thisProfile + resource);
         if (in == null) {
-            throw new IOException("profile '" + resource + "' not found");
+            throw new IOException("profile '" + resource + "' not found, path = " + thisProfile + resource);
         }
         LangProfile langProfile = new LangProfile();
         langProfile.read(in);

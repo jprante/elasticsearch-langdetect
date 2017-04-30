@@ -1,6 +1,7 @@
 plugins {
     id "org.sonarqube" version "2.2"
     id "org.xbib.gradle.plugin.asciidoctor" version "1.5.4.1.0"
+    id "io.codearte.nexus-staging" version "0.7.0"
 }
 
 printf "Host: %s\nOS: %s %s %s\nJVM: %s %s %s %s\nGroovy: %s\nGradle: %s\n" +
@@ -24,6 +25,7 @@ apply plugin: 'pmd'
 apply plugin: 'checkstyle'
 apply plugin: "jacoco"
 apply plugin: 'org.xbib.gradle.plugin.asciidoctor'
+apply plugin: "io.codearte.nexus-staging"
 
 repositories {
     mavenCentral()
@@ -57,7 +59,7 @@ dependencies {
     testCompile "org.apache.logging.log4j:log4j-core:${project.property('log4j.version')}"
     testCompile "org.elasticsearch.plugin:transport-netty4-client:${project.property('elasticsearch.version')}"
     asciidoclet "org.asciidoctor:asciidoclet:${project.property('asciidoclet.version')}"
-    wagon "org.apache.maven.wagon:wagon-ssh-external:${project.property('wagon-ssh-external.version')}"
+    wagon "org.apache.maven.wagon:wagon-ssh:${project.property('wagon.version')}"
     distJars "${project.group}:${project.name}:${project.version}"
 }
 
