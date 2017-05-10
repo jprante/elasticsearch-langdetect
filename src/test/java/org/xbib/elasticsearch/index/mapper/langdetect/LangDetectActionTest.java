@@ -102,21 +102,21 @@ public class LangDetectActionTest extends NodeTestUtils {
             SearchResponse searchResponse = client().prepareSearch()
                     .setQuery(QueryBuilders.termQuery("content", "en"))
                     .execute().actionGet();
-            assertEquals(1L, searchResponse.getHits().totalHits());
+            assertEquals(1L, searchResponse.getHits().getTotalHits());
             assertEquals("Oh, say can you see by the dawn`s early light, What so proudly we hailed at the twilight`s last gleaming?",
                     searchResponse.getHits().getAt(0).getSource().get("content").toString());
 
             searchResponse = client().prepareSearch()
                     .setQuery(QueryBuilders.termQuery("content", "de"))
                     .execute().actionGet();
-            assertEquals(1L, searchResponse.getHits().totalHits());
+            assertEquals(1L, searchResponse.getHits().getTotalHits());
             assertEquals("Einigkeit und Recht und Freiheit für das deutsche Vaterland!",
                     searchResponse.getHits().getAt(0).getSource().get("content").toString());
 
             searchResponse = client().prepareSearch()
                     .setQuery(QueryBuilders.termQuery("content", "fr"))
                     .execute().actionGet();
-            assertEquals(1L, searchResponse.getHits().totalHits());
+            assertEquals(1L, searchResponse.getHits().getTotalHits());
             assertEquals("Allons enfants de la Patrie, Le jour de gloire est arrivé!",
                     searchResponse.getHits().getAt(0).getSource().get("content").toString());
         } finally {

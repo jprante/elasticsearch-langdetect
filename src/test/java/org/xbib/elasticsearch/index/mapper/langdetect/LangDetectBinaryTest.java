@@ -54,7 +54,7 @@ public class LangDetectBinaryTest extends NodeTestUtils {
                             .addStoredField("content.language");
             SearchResponse searchResponse = searchRequestBuilder.execute().actionGet();
             assertEquals(1L, searchResponse.getHits().getTotalHits());
-            assertEquals("en", searchResponse.getHits().getAt(0).field("content.language").getValue());
+            assertEquals("en", searchResponse.getHits().getAt(0).getField("content.language").getValue());
         } finally {
             stopCluster();
         }

@@ -55,7 +55,7 @@ public class LangDetectChineseTest extends NodeTestUtils {
                             .addStoredField("content.language");
             SearchResponse searchResponse = searchRequestBuilder.execute().actionGet();
             assertEquals(1L, searchResponse.getHits().getTotalHits());
-            assertEquals("zh-cn", searchResponse.getHits().getAt(0).field("content.language").getValue());
+            assertEquals("zh-cn", searchResponse.getHits().getAt(0).getField("content.language").getValue());
         } finally {
             stopCluster();
         }
