@@ -119,4 +119,148 @@ public class NGramTest extends Assert {
         assertEquals(ngram.get(3), null);
 
     }
+
+    /**
+     * Test method for {@link NGram#normalize(char)} with Romanian characters
+     */
+    @Test
+    public final void testNormalizeForRomanian() {
+        assertEquals(NGram.normalize('\u015f'), '\u015f');
+        assertEquals(NGram.normalize('\u0163'), '\u0163');
+        assertEquals(NGram.normalize('\u0219'), '\u015f');
+        assertEquals(NGram.normalize('\u021b'), '\u0163');
+    }
+
+    @Test
+    public final void testNormalizeVietnamese() {
+        assertEquals(NGram.normalizeVietnamese(""), "");
+        assertEquals(NGram.normalizeVietnamese("ABC"), "ABC");
+        assertEquals(NGram.normalizeVietnamese("012"), "012");
+        assertEquals(NGram.normalizeVietnamese("\u00c0"), "\u00c0");
+
+        assertEquals(NGram.normalizeVietnamese("\u0041\u0300"), "\u00C0");
+        assertEquals(NGram.normalizeVietnamese("\u0045\u0300"), "\u00C8");
+        assertEquals(NGram.normalizeVietnamese("\u0049\u0300"), "\u00CC");
+        assertEquals(NGram.normalizeVietnamese("\u004F\u0300"), "\u00D2");
+        assertEquals(NGram.normalizeVietnamese("\u0055\u0300"), "\u00D9");
+        assertEquals(NGram.normalizeVietnamese("\u0059\u0300"), "\u1EF2");
+        assertEquals(NGram.normalizeVietnamese("\u0061\u0300"), "\u00E0");
+        assertEquals(NGram.normalizeVietnamese("\u0065\u0300"), "\u00E8");
+        assertEquals(NGram.normalizeVietnamese("\u0069\u0300"), "\u00EC");
+        assertEquals(NGram.normalizeVietnamese("\u006F\u0300"), "\u00F2");
+        assertEquals(NGram.normalizeVietnamese("\u0075\u0300"), "\u00F9");
+        assertEquals(NGram.normalizeVietnamese("\u0079\u0300"), "\u1EF3");
+        assertEquals(NGram.normalizeVietnamese("\u00C2\u0300"), "\u1EA6");
+        assertEquals(NGram.normalizeVietnamese("\u00CA\u0300"), "\u1EC0");
+        assertEquals(NGram.normalizeVietnamese("\u00D4\u0300"), "\u1ED2");
+        assertEquals(NGram.normalizeVietnamese("\u00E2\u0300"), "\u1EA7");
+        assertEquals(NGram.normalizeVietnamese("\u00EA\u0300"), "\u1EC1");
+        assertEquals(NGram.normalizeVietnamese("\u00F4\u0300"), "\u1ED3");
+        assertEquals(NGram.normalizeVietnamese("\u0102\u0300"), "\u1EB0");
+        assertEquals(NGram.normalizeVietnamese("\u0103\u0300"), "\u1EB1");
+        assertEquals(NGram.normalizeVietnamese("\u01A0\u0300"), "\u1EDC");
+        assertEquals(NGram.normalizeVietnamese("\u01A1\u0300"), "\u1EDD");
+        assertEquals(NGram.normalizeVietnamese("\u01AF\u0300"), "\u1EEA");
+        assertEquals(NGram.normalizeVietnamese("\u01B0\u0300"), "\u1EEB");
+
+        assertEquals(NGram.normalizeVietnamese("\u0041\u0301"), "\u00C1");
+        assertEquals(NGram.normalizeVietnamese("\u0045\u0301"), "\u00C9");
+        assertEquals(NGram.normalizeVietnamese("\u0049\u0301"), "\u00CD");
+        assertEquals(NGram.normalizeVietnamese("\u004F\u0301"), "\u00D3");
+        assertEquals(NGram.normalizeVietnamese("\u0055\u0301"), "\u00DA");
+        assertEquals(NGram.normalizeVietnamese("\u0059\u0301"), "\u00DD");
+        assertEquals(NGram.normalizeVietnamese("\u0061\u0301"), "\u00E1");
+        assertEquals(NGram.normalizeVietnamese("\u0065\u0301"), "\u00E9");
+        assertEquals(NGram.normalizeVietnamese("\u0069\u0301"), "\u00ED");
+        assertEquals(NGram.normalizeVietnamese("\u006F\u0301"), "\u00F3");
+        assertEquals(NGram.normalizeVietnamese("\u0075\u0301"), "\u00FA");
+        assertEquals(NGram.normalizeVietnamese("\u0079\u0301"), "\u00FD");
+        assertEquals(NGram.normalizeVietnamese("\u00C2\u0301"), "\u1EA4");
+        assertEquals(NGram.normalizeVietnamese("\u00CA\u0301"), "\u1EBE");
+        assertEquals(NGram.normalizeVietnamese("\u00D4\u0301"), "\u1ED0");
+        assertEquals(NGram.normalizeVietnamese("\u00E2\u0301"), "\u1EA5");
+        assertEquals(NGram.normalizeVietnamese("\u00EA\u0301"), "\u1EBF");
+        assertEquals(NGram.normalizeVietnamese("\u00F4\u0301"), "\u1ED1");
+        assertEquals(NGram.normalizeVietnamese("\u0102\u0301"), "\u1EAE");
+        assertEquals(NGram.normalizeVietnamese("\u0103\u0301"), "\u1EAF");
+        assertEquals(NGram.normalizeVietnamese("\u01A0\u0301"), "\u1EDA");
+        assertEquals(NGram.normalizeVietnamese("\u01A1\u0301"), "\u1EDB");
+        assertEquals(NGram.normalizeVietnamese("\u01AF\u0301"), "\u1EE8");
+        assertEquals(NGram.normalizeVietnamese("\u01B0\u0301"), "\u1EE9");
+
+        assertEquals(NGram.normalizeVietnamese("\u0041\u0303"), "\u00C3");
+        assertEquals(NGram.normalizeVietnamese("\u0045\u0303"), "\u1EBC");
+        assertEquals(NGram.normalizeVietnamese("\u0049\u0303"), "\u0128");
+        assertEquals(NGram.normalizeVietnamese("\u004F\u0303"), "\u00D5");
+        assertEquals(NGram.normalizeVietnamese("\u0055\u0303"), "\u0168");
+        assertEquals(NGram.normalizeVietnamese("\u0059\u0303"), "\u1EF8");
+        assertEquals(NGram.normalizeVietnamese("\u0061\u0303"), "\u00E3");
+        assertEquals(NGram.normalizeVietnamese("\u0065\u0303"), "\u1EBD");
+        assertEquals(NGram.normalizeVietnamese("\u0069\u0303"), "\u0129");
+        assertEquals(NGram.normalizeVietnamese("\u006F\u0303"), "\u00F5");
+        assertEquals(NGram.normalizeVietnamese("\u0075\u0303"), "\u0169");
+        assertEquals(NGram.normalizeVietnamese("\u0079\u0303"), "\u1EF9");
+        assertEquals(NGram.normalizeVietnamese("\u00C2\u0303"), "\u1EAA");
+        assertEquals(NGram.normalizeVietnamese("\u00CA\u0303"), "\u1EC4");
+        assertEquals(NGram.normalizeVietnamese("\u00D4\u0303"), "\u1ED6");
+        assertEquals(NGram.normalizeVietnamese("\u00E2\u0303"), "\u1EAB");
+        assertEquals(NGram.normalizeVietnamese("\u00EA\u0303"), "\u1EC5");
+        assertEquals(NGram.normalizeVietnamese("\u00F4\u0303"), "\u1ED7");
+        assertEquals(NGram.normalizeVietnamese("\u0102\u0303"), "\u1EB4");
+        assertEquals(NGram.normalizeVietnamese("\u0103\u0303"), "\u1EB5");
+        assertEquals(NGram.normalizeVietnamese("\u01A0\u0303"), "\u1EE0");
+        assertEquals(NGram.normalizeVietnamese("\u01A1\u0303"), "\u1EE1");
+        assertEquals(NGram.normalizeVietnamese("\u01AF\u0303"), "\u1EEE");
+        assertEquals(NGram.normalizeVietnamese("\u01B0\u0303"), "\u1EEF");
+
+        assertEquals(NGram.normalizeVietnamese("\u0041\u0309"), "\u1EA2");
+        assertEquals(NGram.normalizeVietnamese("\u0045\u0309"), "\u1EBA");
+        assertEquals(NGram.normalizeVietnamese("\u0049\u0309"), "\u1EC8");
+        assertEquals(NGram.normalizeVietnamese("\u004F\u0309"), "\u1ECE");
+        assertEquals(NGram.normalizeVietnamese("\u0055\u0309"), "\u1EE6");
+        assertEquals(NGram.normalizeVietnamese("\u0059\u0309"), "\u1EF6");
+        assertEquals(NGram.normalizeVietnamese("\u0061\u0309"), "\u1EA3");
+        assertEquals(NGram.normalizeVietnamese("\u0065\u0309"), "\u1EBB");
+        assertEquals(NGram.normalizeVietnamese("\u0069\u0309"), "\u1EC9");
+        assertEquals(NGram.normalizeVietnamese("\u006F\u0309"), "\u1ECF");
+        assertEquals(NGram.normalizeVietnamese("\u0075\u0309"), "\u1EE7");
+        assertEquals(NGram.normalizeVietnamese("\u0079\u0309"), "\u1EF7");
+        assertEquals(NGram.normalizeVietnamese("\u00C2\u0309"), "\u1EA8");
+        assertEquals(NGram.normalizeVietnamese("\u00CA\u0309"), "\u1EC2");
+        assertEquals(NGram.normalizeVietnamese("\u00D4\u0309"), "\u1ED4");
+        assertEquals(NGram.normalizeVietnamese("\u00E2\u0309"), "\u1EA9");
+        assertEquals(NGram.normalizeVietnamese("\u00EA\u0309"), "\u1EC3");
+        assertEquals(NGram.normalizeVietnamese("\u00F4\u0309"), "\u1ED5");
+        assertEquals(NGram.normalizeVietnamese("\u0102\u0309"), "\u1EB2");
+        assertEquals(NGram.normalizeVietnamese("\u0103\u0309"), "\u1EB3");
+        assertEquals(NGram.normalizeVietnamese("\u01A0\u0309"), "\u1EDE");
+        assertEquals(NGram.normalizeVietnamese("\u01A1\u0309"), "\u1EDF");
+        assertEquals(NGram.normalizeVietnamese("\u01AF\u0309"), "\u1EEC");
+        assertEquals(NGram.normalizeVietnamese("\u01B0\u0309"), "\u1EED");
+
+        assertEquals(NGram.normalizeVietnamese("\u0041\u0323"), "\u1EA0");
+        assertEquals(NGram.normalizeVietnamese("\u0045\u0323"), "\u1EB8");
+        assertEquals(NGram.normalizeVietnamese("\u0049\u0323"), "\u1ECA");
+        assertEquals(NGram.normalizeVietnamese("\u004F\u0323"), "\u1ECC");
+        assertEquals(NGram.normalizeVietnamese("\u0055\u0323"), "\u1EE4");
+        assertEquals(NGram.normalizeVietnamese("\u0059\u0323"), "\u1EF4");
+        assertEquals(NGram.normalizeVietnamese("\u0061\u0323"), "\u1EA1");
+        assertEquals(NGram.normalizeVietnamese("\u0065\u0323"), "\u1EB9");
+        assertEquals(NGram.normalizeVietnamese("\u0069\u0323"), "\u1ECB");
+        assertEquals(NGram.normalizeVietnamese("\u006F\u0323"), "\u1ECD");
+        assertEquals(NGram.normalizeVietnamese("\u0075\u0323"), "\u1EE5");
+        assertEquals(NGram.normalizeVietnamese("\u0079\u0323"), "\u1EF5");
+        assertEquals(NGram.normalizeVietnamese("\u00C2\u0323"), "\u1EAC");
+        assertEquals(NGram.normalizeVietnamese("\u00CA\u0323"), "\u1EC6");
+        assertEquals(NGram.normalizeVietnamese("\u00D4\u0323"), "\u1ED8");
+        assertEquals(NGram.normalizeVietnamese("\u00E2\u0323"), "\u1EAD");
+        assertEquals(NGram.normalizeVietnamese("\u00EA\u0323"), "\u1EC7");
+        assertEquals(NGram.normalizeVietnamese("\u00F4\u0323"), "\u1ED9");
+        assertEquals(NGram.normalizeVietnamese("\u0102\u0323"), "\u1EB6");
+        assertEquals(NGram.normalizeVietnamese("\u0103\u0323"), "\u1EB7");
+        assertEquals(NGram.normalizeVietnamese("\u01A0\u0323"), "\u1EE2");
+        assertEquals(NGram.normalizeVietnamese("\u01A1\u0323"), "\u1EE3");
+        assertEquals(NGram.normalizeVietnamese("\u01AF\u0323"), "\u1EF0");
+        assertEquals(NGram.normalizeVietnamese("\u01B0\u0323"), "\u1EF1");
+    }
 }
