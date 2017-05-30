@@ -1,25 +1,27 @@
 package org.xbib.elasticsearch.common.langdetect;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.elasticsearch.ElasticsearchException;
-import org.elasticsearch.common.logging.ESLogger;
-import org.elasticsearch.common.logging.ESLoggerFactory;
 import org.elasticsearch.common.settings.Settings;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.regex.Pattern;
 
+/**
+ *
+ */
 public class LangdetectService {
 
-    private final static ESLogger logger = ESLoggerFactory.getLogger(LangdetectService.class.getName());
-
-    private final Settings settings;
-
-    private final static Pattern word = Pattern.compile("[\\P{IsWord}]", Pattern.UNICODE_CHARACTER_CLASS);
-
-    public final static String[] DEFAULT_LANGUAGES = new String[] {
-           // "af",
+    public static final String[] DEFAULT_LANGUAGES = new String[]{
+            // "af",
             "ar",
             "bg",
             "bn",
@@ -41,14 +43,14 @@ public class LangdetectService {
             "id",
             "it",
             "ja",
-           // "kn",
+            // "kn",
             "ko",
             "lt",
             "lv",
             "mk",
             "ml",
-           // "mr",
-           // "ne",
+            // "mr",
+            // "ne",
             "nl",
             "no",
             "pa",
@@ -56,12 +58,12 @@ public class LangdetectService {
             "pt",
             "ro",
             "ru",
-           // "sk",
+            // "sk",
             //"sl",
-           // "so",
+            // "so",
             "sq",
             "sv",
-           // "sw",
+            // "sw",
             "ta",
             "te",
             "th",
@@ -73,34 +75,35 @@ public class LangdetectService {
             "zh-cn",
             "zh-tw"
     };
-
-    private final static Settings DEFAULT_SETTINGS = Settings.builder()
+    private static final Logger logger = LogManager.getLogger(LangdetectService.class.getName());
+    private static final Pattern word = Pattern.compile("[\\P{IsWord}]", Pattern.UNICODE_CHARACTER_CLASS);
+    private static final Settings DEFAULT_SETTINGS = Settings.builder()
             .putArray("languages", DEFAULT_LANGUAGES)
             .build();
-
+    private final Settings settings;
     private Map<String, double[]> wordLangProbMap = new HashMap<>();
 
     private List<String> langlist = new LinkedList<>();
 
-    private Map<String,String> langmap = new HashMap<>();
+    private Map<String, String> langmap = new HashMap<>();
 
     private String profile;
 
     private double alpha;
 
-    private double alpha_width;
+    private double alphaWidth;
 
-    private int n_trial;
+    private int nTrial;
 
     private double[] priorMap;
 
-    private int iteration_limit;
+    private int iterationLimit;
 
-    private double prob_threshold;
+    private double probThreshold;
 
-    private double conv_threshold;
+    private double convThreshold;
 
-    private int base_freq;
+    private int baseFreq;
 
     private Pattern filterPattern;
 
@@ -116,7 +119,7 @@ public class LangdetectService {
 
     public LangdetectService(Settings settings, String profile) {
         this.settings = settings;
-        this.profile = settings.get("profile", profile) ;
+        this.profile = settings.get("profile", profile);
         load(settings);
         init();
     }
@@ -130,9 +133,9 @@ public class LangdetectService {
             return;
         }
         try {
-            String[] keys = DEFAULT_LANGUAGES;
-            if (settings.get("languages") != null) {
-                keys = settings.get("languages").split(",");
+            String[] keys = settings.getAsArray("languages");
+            if (keys.length == 0) {
+                keys = DEFAULT_LANGUAGES;
             }
             int index = 0;
             int size = keys.length;
@@ -148,17 +151,14 @@ public class LangdetectService {
         }
         try {
             // map by settings
-            Settings map = Settings.EMPTY;
-            if (settings.getByPrefix("map.") != null) {
-                map = Settings.settingsBuilder().put(settings.getByPrefix("map.")).build();
-            }
+            Settings map = Settings.builder().put(settings.getByPrefix("map.")).build();
             if (map.getAsMap().isEmpty()) {
                 // is in "map" a resource name?
                 String s = settings.get("map") != null ?
                         settings.get("map") : this.profile + "language.json";
                 InputStream in = getClass().getResourceAsStream(s);
                 if (in != null) {
-                    map = Settings.settingsBuilder().loadFromStream(s, in).build();
+                    map = Settings.builder().loadFromStream(s, in).build();
                 }
             }
             this.langmap = map.getAsMap();
@@ -170,23 +170,23 @@ public class LangdetectService {
 
     private void init() {
         this.priorMap = null;
-        this.n_trial = settings.getAsInt("number_of_trials", 7);
+        this.nTrial = settings.getAsInt("number_of_trials", 7);
         this.alpha = settings.getAsDouble("alpha", 0.5);
-        this.alpha_width = settings.getAsDouble("alpha_width", 0.05);
-        this.iteration_limit = settings.getAsInt("iteration_limit", 10000);
-        this.prob_threshold = settings.getAsDouble("prob_threshold", 0.1);
-        this.conv_threshold = settings.getAsDouble("conv_threshold",  0.99999);
-        this.base_freq = settings.getAsInt("base_freq", 10000);
+        this.alphaWidth = settings.getAsDouble("alpha_width", 0.05);
+        this.iterationLimit = settings.getAsInt("iteration_limit", 10000);
+        this.probThreshold = settings.getAsDouble("prob_threshold", 0.1);
+        this.convThreshold = settings.getAsDouble("conv_threshold", 0.99999);
+        this.baseFreq = settings.getAsInt("base_freq", 10000);
         this.filterPattern = settings.get("pattern") != null ?
-                Pattern.compile(settings.get("pattern"),Pattern.UNICODE_CHARACTER_CLASS) : null;
+                Pattern.compile(settings.get("pattern"), Pattern.UNICODE_CHARACTER_CLASS) : null;
         isStarted = true;
     }
 
-    public void loadProfileFromResource(String resource,  int index, int langsize) throws IOException {
-        String profile = "/langdetect/" + (this.profile != null ? this.profile + "/" : "");
-        InputStream in = getClass().getResourceAsStream(profile + resource);
+    public void loadProfileFromResource(String resource, int index, int langsize) throws IOException {
+        String thisProfile = "/langdetect/" + (this.profile != null ? this.profile + "/" : "");
+        InputStream in = getClass().getResourceAsStream(thisProfile + resource);
         if (in == null) {
-            throw new IOException("profile '" + resource + "' not found");
+            throw new IOException("profile '" + resource + "' not found, path = " + thisProfile + resource);
         }
         addProfile(new LangProfile(in), index, langsize);
     }
@@ -197,14 +197,14 @@ public class LangdetectService {
             throw new IOException("duplicate of the same language profile: " + lang);
         }
         langlist.add(lang);
-        for (String word : profile.getFreq().keySet()) {
-            if (!wordLangProbMap.containsKey(word)) {
-                wordLangProbMap.put(word, new double[langsize]);
+        for (String s : profile.getFreq().keySet()) {
+            if (!wordLangProbMap.containsKey(s)) {
+                wordLangProbMap.put(s, new double[langsize]);
             }
-            int length = word.length();
+            int length = s.length();
             if (length >= 1 && length <= 3) {
-                double prob = profile.getFreq().get(word).doubleValue() / profile.getNWords().get(length - 1);
-                wordLangProbMap.get(word)[index] = prob;
+                double prob = profile.getFreq().get(s).doubleValue() / profile.getNWords().get(length - 1);
+                wordLangProbMap.get(s)[index] = prob;
             }
         }
     }
@@ -228,32 +228,29 @@ public class LangdetectService {
         return languages.subList(0, Math.min(languages.size(), settings.getAsInt("max", languages.size())));
     }
 
-    private double[] detectBlock(List<String> list, String text) throws LanguageDetectionException {
+    private double[] detectBlock(List<String> list, String string) throws LanguageDetectionException {
         // clean all non-work characters from text
-        text = text.replaceAll(word.pattern(), " ");
+        String text = string.replaceAll(word.pattern(), " ");
         extractNGrams(list, text);
         double[] langprob = new double[langlist.size()];
         if (list.isEmpty()) {
-            //throw new LanguageDetectionException("no features in text");
             return langprob;
         }
         Random rand = new Random();
         Long seed = 0L;
         rand.setSeed(seed);
-        for (int t = 0; t < n_trial; ++t) {
+        for (int t = 0; t < nTrial; ++t) {
             double[] prob = initProbability();
-            double a = this.alpha + rand.nextGaussian() * alpha_width;
+            double a = this.alpha + rand.nextGaussian() * alphaWidth;
             for (int i = 0; ; ++i) {
                 int r = rand.nextInt(list.size());
                 updateLangProb(prob, list.get(r), a);
-                if (i % 5 == 0) {
-                    if (normalizeProb(prob) > conv_threshold || i >= iteration_limit) {
-                        break;
-                    }
+                if (i % 5 == 0 && normalizeProb(prob) > convThreshold || i >= iterationLimit) {
+                    break;
                 }
             }
             for (int j = 0; j < langprob.length; ++j) {
-                langprob[j] += prob[j] / n_trial;
+                langprob[j] += prob[j] / nTrial;
             }
         }
         return langprob;
@@ -289,7 +286,7 @@ public class LangdetectService {
             return false;
         }
         double[] langProbMap = wordLangProbMap.get(word);
-        double weight = alpha / base_freq;
+        double weight = alpha / baseFreq;
         for (int i = 0; i < prob.length; ++i) {
             prob[i] *= weight + langProbMap[i];
         }
@@ -297,11 +294,15 @@ public class LangdetectService {
     }
 
     private double normalizeProb(double[] prob) {
-        double maxp = 0, sump = 0;
-        for (double aProb : prob) {
-            sump += aProb;
+        if (prob.length == 0) {
+            return 0d;
         }
-        for (int i = 0; i < prob.length; ++i) {
+        double sump = prob[0];
+        for (int i = 1; i < prob.length; i++) {
+            sump += prob[i];
+        }
+        double maxp = 0d;
+        for (int i = 0; i < prob.length; i++) {
             double p = prob[i] / sump;
             if (maxp < p) {
                 maxp = p;
@@ -314,7 +315,7 @@ public class LangdetectService {
     private List<Language> sortProbability(List<Language> list, double[] prob) {
         for (int j = 0; j < prob.length; ++j) {
             double p = prob[j];
-            if (p > prob_threshold) {
+            if (p > probThreshold) {
                 for (int i = 0; i <= list.size(); ++i) {
                     if (i == list.size() || list.get(i).getProbability() < p) {
                         String code = langlist.get(j);

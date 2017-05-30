@@ -14,7 +14,7 @@ import java.util.Map;
 public class LangProfile {
     private final String name;
     private final Map<String, Long> freq = new HashMap<>();
-    private final List<Long> n_words = new ArrayList<>(NGram.N_GRAM);
+    private final List<Long> nWords = new ArrayList<>(NGram.N_GRAM);
 
     /**
      * Create an empty language profile.
@@ -22,7 +22,7 @@ public class LangProfile {
     public LangProfile(String name) {
         this.name = name;
         for (int i = 0; i < NGram.N_GRAM; i++) {
-            n_words.add(0L);
+            nWords.add(0L);
         }
     }
 
@@ -31,15 +31,15 @@ public class LangProfile {
      */
     @SuppressWarnings("unchecked")
     public LangProfile(InputStream input) throws IOException {
-        XContentParser parser = XContentFactory.xContent(XContentType.JSON).createParser(input);
+        XContentParser parser = XContentFactory.xContent(XContentType.JSON).createParser(null, input);
         Map<String, Object> map = parser.map();
         this.name = (String) map.get("name");
-        // Explicity convert the numbers because they may get parsed as Integers or Longs.
+        // Explicitly convert the numbers because they may get parsed as Integers or Longs.
         for (Map.Entry<String, Number> entry : ((Map<String, Number>) map.get("freq")).entrySet()) {
             freq.put(entry.getKey(), entry.getValue().longValue());
         }
         for (Number n : (List<Number>) map.get("n_words")) {
-            n_words.add(n.longValue());
+            nWords.add(n.longValue());
         }
     }
 
@@ -51,7 +51,7 @@ public class LangProfile {
         if (len < 1 || len > NGram.N_GRAM) {
             return;
         }
-        n_words.set(len - 1, n_words.get(len -1) + 1);
+        nWords.set(len - 1, nWords.get(len -1) + 1);
         if (freq.containsKey(gram)) {
             freq.put(gram, freq.get(gram) + 1);
         } else {
@@ -64,7 +64,7 @@ public class LangProfile {
     }
 
     public List<Long> getNWords() {
-        return n_words;
+        return nWords;
     }
 
     public Map<String, Long> getFreq() {

@@ -2,11 +2,8 @@
   "someType" : {
     "properties": {
       "content": {
-        "type": "multi_field",
+        "type": "text",
         "fields": {
-          "content": {
-            "type": "string"
-          },
           "language": {
             "type": "langdetect",
             "binary" : true

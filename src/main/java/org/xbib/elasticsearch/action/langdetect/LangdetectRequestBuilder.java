@@ -3,6 +3,9 @@ package org.xbib.elasticsearch.action.langdetect;
 import org.elasticsearch.action.ActionRequestBuilder;
 import org.elasticsearch.client.ElasticsearchClient;
 
+/**
+ *
+ */
 public class LangdetectRequestBuilder extends ActionRequestBuilder<LangdetectRequest, LangdetectResponse, LangdetectRequestBuilder> {
 
     public LangdetectRequestBuilder(ElasticsearchClient client) {

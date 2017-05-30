@@ -1,49 +1,37 @@
-apply plugin: 'io.codearte.nexus-staging'
-
-
-/*
-nexus {
-    attachJavadoc = true
-    attachSources = true
-    attachTests = true
-    sign = true
-    repositoryUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
-    snapshotRepositoryUrl = 'https://oss.sonatype.org/content/repositories/snapshots'
-}
-*/
-
-nexusStaging {
-    packageGroup = "org.xbib"
-}
 
 task xbibUpload(type: Upload) {
     configuration = configurations.archives
     uploadDescriptor = true
     repositories {
-        if (project.hasProperty("xbibUsername")) {
+        if (project.hasProperty('xbibUsername')) {
             mavenDeployer {
                 configuration = configurations.wagon
-                repository(id: 'xbib.org',
-                        url: uri('scpexe://xbib.org/repository'),
-                        authentication: [userName: xbibUsername, privateKey: xbibPrivateKey])
+                repository(url: uri('sftp://xbib.org/repository')) {
+                    authentication(userName: xbibUsername, privateKey: xbibPrivateKey)
+                }
             }
         }
     }
 }
 
-task mavenCentralUpload(type: Upload) {
+task sonatypeUpload(type: Upload) {
     configuration = configurations.archives
     uploadDescriptor = true
     repositories {
         if (project.hasProperty('ossrhUsername')) {
             mavenDeployer {
                 beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-                repository(id: 'ossrh', url: uri(ossrhReleaseUrl),
-                        authentication: [userName: ossrhUsername, password: ossrhPassword])
-                snapshotRepository(id: 'ossrh', url: uri(ossrhSnapshotUrl),
-                        authentication: [userName: ossrhUsername, password: ossrhPassword])
+                repository(url: uri(ossrhReleaseUrl)) {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
+                snapshotRepository(url: uri(ossrhSnapshotUrl)) {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
                 pom.project {
-                    name pluginName
+                    groupId project.group
+                    artifactId project.name
+                    version project.version
+                    name project.name
                     description pluginDescription
                     packaging 'jar'
                     inceptionYear '2012'
@@ -77,19 +65,6 @@ task mavenCentralUpload(type: Upload) {
     }
 }
 
-if (project.hasProperty('githubToken')) {
-    github {
-        owner = user
-        token = githubToken
-        repo = project.name
-        name = project.version
-        tagName = project.version
-        targetCommitish = 'master'
-        assets = [
-                "build/distributions/${project.name}-${project.version}-plugin.zip"
-        ]
-    }
-    githubRelease {
-        dependsOn gitRelease, buildPluginZip
-    }
+nexusStaging {
+    packageGroup = "org.xbib"
 }

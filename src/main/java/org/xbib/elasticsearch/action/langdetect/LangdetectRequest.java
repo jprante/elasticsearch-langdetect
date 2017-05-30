@@ -9,14 +9,14 @@ import java.io.IOException;
 
 import static org.elasticsearch.action.ValidateActions.addValidationError;
 
-public class LangdetectRequest extends ActionRequest<LangdetectRequest> {
+/**
+ *
+ */
+public class LangdetectRequest extends ActionRequest {
 
     private String profile;
 
     private String text;
-
-    public LangdetectRequest() {
-    }
 
     @Override
     public ActionRequestValidationException validate() {
@@ -27,23 +27,22 @@ public class LangdetectRequest extends ActionRequest<LangdetectRequest> {
         return validationException;
     }
 
+    public String getProfile() {
+        return profile;
+    }
+
     public LangdetectRequest setProfile(String profile) {
         this.profile = profile;
         return this;
     }
 
-    public String getProfile() {
-        return profile;
+    public String getText() {
+        return text;
     }
-
 
     public LangdetectRequest setText(String text) {
         this.text = text;
         return this;
-    }
-
-    public String getText() {
-        return text;
     }
 
     @Override

@@ -39,7 +39,7 @@ public class DetectLanguageTest extends Assert {
      */
     private void testLanguage(String path, String lang) throws IOException {
         try (Reader reader = new InputStreamReader(getClass().getResourceAsStream(path), StandardCharsets.UTF_8)) {
-            assertEquals(getTopLanguageCode(new LangdetectService(), Streams.copyToString(reader)), lang);
+            assertEquals(lang, getTopLanguageCode(new LangdetectService(), Streams.copyToString(reader)));
         }
     }
 

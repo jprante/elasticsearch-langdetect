@@ -1,6 +1,5 @@
 package org.xbib.elasticsearch.index.mapper.langdetect;
 
-import com.google.common.base.Joiner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.common.settings.Settings;
@@ -40,7 +39,7 @@ public class DetectLanguageAccuracyTest extends Assert {
     private static final String ALL_LANGUAGES =
         "af,ar,bg,bn,ca,cs,da,de,el,en,es,et,fa,fi,fr,gu,he,hi,hr,hu,id,it,ja,kn,ko,lt,lv,mk,ml,mr,ne,nl,no,pa,pl,pt," +
             "ro,ru,si,sk,sl,so,sq,sv,sw,ta,te,th,tl,tr,uk,ur,vi,zh-cn,zh-tw";
-    private static final String DEFAULT_LANGUAGES = Joiner.on(",").join(LangdetectService.DEFAULT_LANGUAGES);
+    private static final String DEFAULT_LANGUAGES = String.join(",", LangdetectService.DEFAULT_LANGUAGES);
     private static final String ALL_DEFAULT_PROFILE_LANGUAGES =
         "af,ar,bg,bn,cs,da,de,el,en,es,et,fa,fi,fr,gu,he,hi,hr,hu,id,it,ja,kn,ko,lt,lv,mk,ml,mr,ne,nl,no,pa,pl,pt,ro," +
             "ru,sk,sl,so,sq,sv,sw,ta,te,th,tl,tr,uk,ur,vi,zh-cn,zh-tw";
@@ -166,13 +165,18 @@ public class DetectLanguageAccuracyTest extends Assert {
                 assertEquals(languageToExpectedAccuracy.get(entry.getKey()), entry.getValue(), ACCURACY_DELTA);
             }
         } else {
-            List<Object> row = new ArrayList<>();
-            Collections.addAll(row, datasetName, substringLength, sampleSize, profileParam, useAllLanguages);
+            List<String> row = new ArrayList<>();
+            Collections.addAll(row,
+                               datasetName,
+                               String.valueOf(substringLength),
+                               String.valueOf(sampleSize),
+                               profileParam,
+                               String.valueOf(useAllLanguages));
             for (String language : ALL_LANGUAGES.split(",")) {
-                row.add(languageToAccuracy.containsKey(language) ? languageToAccuracy.get(language) : Double.NaN);
+                row.add(languageToAccuracy.getOrDefault(language, Double.NaN).toString());
             }
             Files.write(outputPath,
-                        Collections.singletonList(Joiner.on(",").join(row)),
+                        Collections.singletonList(String.join(",", row)),
                         StandardCharsets.UTF_8,
                         StandardOpenOption.APPEND);
         }

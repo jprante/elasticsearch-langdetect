@@ -6,9 +6,13 @@ import org.elasticsearch.common.io.stream.Streamable;
 
 import java.io.IOException;
 
+/**
+ *
+ */
 public class Language implements Streamable {
 
     private String lang;
+
     private double prob;
 
     public Language(String lang, double prob) {
@@ -36,8 +40,8 @@ public class Language implements Streamable {
         out.writeDouble(prob);
     }
 
+    @Override
     public String toString() {
         return lang + " (prob=" + prob + ")";
     }
-
 }

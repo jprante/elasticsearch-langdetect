@@ -8,140 +8,11 @@ import java.util.regex.Pattern;
 
 public class NGram {
 
-    public final static Map<Character, Character> cjk_map = new HashMap<>();
+    private static final Map<Character, Character> cjk_map = new HashMap<>();
 
-    public final static int N_GRAM = 3;
+    public static final int N_GRAM = 3;
 
-    private final static String LATIN1_EXCLUDED = "\u00A0\u00AB\u00B0\u00BB";
-
-    private StringBuilder grams;
-
-    private boolean capitalword;
-
-    public NGram() {
-        grams = new StringBuilder(" ");
-        capitalword = false;
-    }
-
-    public void addChar(char ch) {
-        ch = normalize(ch);
-        char lastchar = grams.charAt(grams.length() - 1);
-        if (lastchar == ' ') {
-            grams = new StringBuilder(" ");
-            capitalword = false;
-            if (ch == ' ') {
-                return;
-            }
-        } else if (grams.length() >= N_GRAM) {
-            grams.deleteCharAt(0);
-        }
-        grams.append(ch);
-        if (Character.isUpperCase(ch)) {
-            if (Character.isUpperCase(lastchar)) {
-                capitalword = true;
-            }
-        } else {
-            capitalword = false;
-        }
-    }
-
-    public String get(int n) {
-        if (capitalword) {
-            return null;
-        }
-        int len = grams.length();
-        if (n < 1 || n > 3 || len < n) {
-            return null;
-        }
-        if (n == 1) {
-            char ch = grams.charAt(len - 1);
-            if (ch == ' ') {
-                return null;
-            }
-            return Character.toString(ch);
-        } else {
-            return grams.substring(len - n, len);
-        }
-    }
-
-    public static char normalize(char ch) {
-        Character.UnicodeBlock block = Character.UnicodeBlock.of(ch);
-        if (block == UnicodeBlock.BASIC_LATIN) {
-            if (ch < 'A' || (ch < 'a' && ch > 'Z') || ch > 'z') {
-                ch = ' ';
-            }
-        } else if (block == UnicodeBlock.LATIN_1_SUPPLEMENT) {
-            if (LATIN1_EXCLUDED.indexOf(ch) >= 0) {
-                ch = ' ';
-            }
-        } else if (block == UnicodeBlock.LATIN_EXTENDED_B) {
-            // Normalization for Romanian
-            if (ch == '\u0219') {
-                // Small S with comma below => with cedilla
-                ch = '\u015f';
-            } else if (ch == '\u021b') {
-                // Small T with comma below => with cedilla
-                ch = '\u0163';
-            }
-        } else if (block == UnicodeBlock.GENERAL_PUNCTUATION) {
-            ch = ' ';
-        } else if (block == UnicodeBlock.ARABIC) {
-            // Farsi yeh => Arabic yeh
-            if (ch == '\u06cc') {
-                ch = '\u064a';
-            }
-        } else if (block == UnicodeBlock.LATIN_EXTENDED_ADDITIONAL) {
-            if (ch >= '\u1ea0') {
-                ch = '\u1ec3';
-            }
-        } else if (block == UnicodeBlock.HIRAGANA) {
-            ch = '\u3042';
-        } else if (block == UnicodeBlock.KATAKANA) {
-            ch = '\u30a2';
-        } else if (block == UnicodeBlock.BOPOMOFO || block == UnicodeBlock.BOPOMOFO_EXTENDED) {
-            ch = '\u3105';
-        } else if (block == UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS) {
-            if (cjk_map.containsKey(ch)) {
-                ch = cjk_map.get(ch);
-            }
-        } else if (block == UnicodeBlock.HANGUL_SYLLABLES) {
-            ch = '\uac00';
-        }
-        return ch;
-    }
-
-    private static final String[] VI_NORMALIZED_CHARS = {
-            "\u00C0\u00C8\u00CC\u00D2\u00D9\u1EF2\u00E0\u00E8\u00EC\u00F2\u00F9\u1EF3\u1EA6\u1EC0\u1ED2\u1EA7\u1EC1\u1ED3\u1EB0\u1EB1\u1EDC\u1EDD\u1EEA\u1EEB",
-            "\u00C1\u00C9\u00CD\u00D3\u00DA\u00DD\u00E1\u00E9\u00ED\u00F3\u00FA\u00FD\u1EA4\u1EBE\u1ED0\u1EA5\u1EBF\u1ED1\u1EAE\u1EAF\u1EDA\u1EDB\u1EE8\u1EE9",
-            "\u00C3\u1EBC\u0128\u00D5\u0168\u1EF8\u00E3\u1EBD\u0129\u00F5\u0169\u1EF9\u1EAA\u1EC4\u1ED6\u1EAB\u1EC5\u1ED7\u1EB4\u1EB5\u1EE0\u1EE1\u1EEE\u1EEF",
-            "\u1EA2\u1EBA\u1EC8\u1ECE\u1EE6\u1EF6\u1EA3\u1EBB\u1EC9\u1ECF\u1EE7\u1EF7\u1EA8\u1EC2\u1ED4\u1EA9\u1EC3\u1ED5\u1EB2\u1EB3\u1EDE\u1EDF\u1EEC\u1EED",
-            "\u1EA0\u1EB8\u1ECA\u1ECC\u1EE4\u1EF4\u1EA1\u1EB9\u1ECB\u1ECD\u1EE5\u1EF5\u1EAC\u1EC6\u1ED8\u1EAD\u1EC7\u1ED9\u1EB6\u1EB7\u1EE2\u1EE3\u1EF0\u1EF1"
-    };
-    private static final String VI_CHARS = "AEIOUYaeiouy\u00c2\u00ca\u00d4\u00e2\u00ea\u00f4\u0102\u0103\u01a0\u01a1\u01af\u01b0";
-    private static final String VI_DIACRITICS = "\u0300\u0301\u0303\u0309\u0323";
-    private static final Pattern VI_CHARS_WITH_DIACRITIC_PATTERN = Pattern.compile("([" + VI_CHARS + "])([" + VI_DIACRITICS + "])");
-
-    /**
-     * Normalize Vietnamese letter + diacritical mark (U+03xx) to a single character (U+1Exx).
-     */
-    public static String normalizeVietnamese(String text) {
-        Matcher matcher = VI_CHARS_WITH_DIACRITIC_PATTERN.matcher(text);
-        StringBuffer buf = new StringBuffer();
-        while (matcher.find()) {
-            int charIndex = VI_CHARS.indexOf(matcher.group(1));
-            matcher.appendReplacement(
-                buf,
-                VI_NORMALIZED_CHARS[VI_DIACRITICS.indexOf(matcher.group(2))].substring(charIndex, charIndex + 1)
-            );
-        }
-        if (buf.length() == 0) {
-            return text;
-        }
-        matcher.appendTail(buf);
-        return buf.toString();
-    }
-
-    static final String[] CJK_CLASS = {
+    private static final String[] CJK_CLASS = {
             "\u4F7C\u6934",
             "\u88CF\u95B2",
             "\u7027\u7DCB",
@@ -269,7 +140,7 @@ public class NGram {
             "\u55C5\u57A2\u58D5\u59E5\u637A\u74E2\u7CE0\u895F",
             "\u4E19\u4E32\u4E4F\u4E91\u4EC7\u4ED4\u4F0D\u5141\u51E1\u51F6\u51F8\u52AB\u535C\u53C9\u53DB\u540A\u5410\u54C0\u559D\u5750\u5751\u576A\u57E0\u5824\u582A\u5830\u5835\u5851\u5858\u586B\u5954\u59FB\u5A46\u5B5F\u5BB4\u5BD3\u5C16\u5C60\u5CFB\u5D16\u5E16\u5E3D\u5E7D\u5E87\u5ECA\u5FD9\u60DC\u60F9\u6155\u6167\u6234\u626E\u6276\u6284\u633A\u6377\u6492\u649E\u64B0\u6562\u6591\u65A5\u65E6\u65FA\u6602\u670B\u676D\u68AF\u695A\u6B23\u6BC5\u6C70\u6C83\u6CE1\u6D8C\u6DD8\u6E20\u71D5\u72D0\u72D7\u73B2\u73CA\u7433\u7483\u74DC\u74F6\u7554\u764C\u7761\u77DB\u78A7\u7A46\u7A7F\u7A84\u7C97\u7D2F\u7FC1\u7FE0\u8000\u8017\u808C\u80AF\u8404\u8461\u8463\u8475\u8513\u85AA\u8679\u86CB\u871C\u87BA\u88F8\u8C8C\u8DF3\u8FC4\u901D\u9022\u906E\u9075\u9192\u91C7\u966A\u971E\u9910\u9B41\u9F0E\u9F20"
     };
-
+    private static final String LATIN1_EXCLUDED = "\u00A0\u00AB\u00B0\u00BB";
 
     static {
         for (String cjk_list : CJK_CLASS) {
@@ -278,5 +149,131 @@ public class NGram {
                 cjk_map.put(cjk_list.charAt(i), representative);
             }
         }
+    }
+
+    private StringBuilder grams;
+    private boolean capitalword;
+
+    public NGram() {
+        grams = new StringBuilder(" ");
+        capitalword = false;
+    }
+
+    public static char normalize(char ch) {
+        UnicodeBlock block = UnicodeBlock.of(ch);
+        if (block == UnicodeBlock.BASIC_LATIN) {
+            if (ch < 'A' || (ch < 'a' && ch > 'Z') || ch > 'z') {
+                ch = ' ';
+            }
+        } else if (block == UnicodeBlock.LATIN_1_SUPPLEMENT) {
+            if (LATIN1_EXCLUDED.indexOf(ch) >= 0) {
+                ch = ' ';
+            }
+        } else if (block == UnicodeBlock.LATIN_EXTENDED_B) {
+            // Normalization for Romanian
+            if (ch == '\u0219') {
+                // Small S with comma below => with cedilla
+                ch = '\u015f';
+            } else if (ch == '\u021b') {
+                // Small T with comma below => with cedilla
+                ch = '\u0163';
+            }
+        } else if (block == UnicodeBlock.GENERAL_PUNCTUATION) {
+            ch = ' ';
+        } else if (block == UnicodeBlock.ARABIC) {
+            // Farsi yeh => Arabic yeh
+            if (ch == '\u06cc') {
+                ch = '\u064a';
+            }
+        } else if (block == UnicodeBlock.LATIN_EXTENDED_ADDITIONAL) {
+            if (ch >= '\u1ea0') {
+                ch = '\u1ec3';
+            }
+        } else if (block == UnicodeBlock.HIRAGANA) {
+            ch = '\u3042';
+        } else if (block == UnicodeBlock.KATAKANA) {
+            ch = '\u30a2';
+        } else if (block == UnicodeBlock.BOPOMOFO || block == UnicodeBlock.BOPOMOFO_EXTENDED) {
+            ch = '\u3105';
+        } else if (block == UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS) {
+            if (cjk_map.containsKey(ch)) {
+                ch = cjk_map.get(ch);
+            }
+        } else if (block == UnicodeBlock.HANGUL_SYLLABLES) {
+            ch = '\uac00';
+        }
+        return ch;
+    }
+
+    public void addChar(char ch) {
+        ch = normalize(ch);
+        char lastchar = grams.charAt(grams.length() - 1);
+        if (lastchar == ' ') {
+            grams = new StringBuilder(" ");
+            capitalword = false;
+            if (ch == ' ') {
+                return;
+            }
+        } else if (grams.length() >= N_GRAM) {
+            grams.deleteCharAt(0);
+        }
+        grams.append(ch);
+        if (Character.isUpperCase(ch)) {
+            if (Character.isUpperCase(lastchar)) {
+                capitalword = true;
+            }
+        } else {
+            capitalword = false;
+        }
+    }
+
+    public String get(int n) {
+        if (capitalword) {
+            return null;
+        }
+        int len = grams.length();
+        if (n < 1 || n > 3 || len < n) {
+            return null;
+        }
+        if (n == 1) {
+            char ch = grams.charAt(len - 1);
+            if (ch == ' ') {
+                return null;
+            }
+            return Character.toString(ch);
+        } else {
+            return grams.substring(len - n, len);
+        }
+    }
+
+    private static final String[] VI_NORMALIZED_CHARS = {
+        "\u00C0\u00C8\u00CC\u00D2\u00D9\u1EF2\u00E0\u00E8\u00EC\u00F2\u00F9\u1EF3\u1EA6\u1EC0\u1ED2\u1EA7\u1EC1\u1ED3\u1EB0\u1EB1\u1EDC\u1EDD\u1EEA\u1EEB",
+        "\u00C1\u00C9\u00CD\u00D3\u00DA\u00DD\u00E1\u00E9\u00ED\u00F3\u00FA\u00FD\u1EA4\u1EBE\u1ED0\u1EA5\u1EBF\u1ED1\u1EAE\u1EAF\u1EDA\u1EDB\u1EE8\u1EE9",
+        "\u00C3\u1EBC\u0128\u00D5\u0168\u1EF8\u00E3\u1EBD\u0129\u00F5\u0169\u1EF9\u1EAA\u1EC4\u1ED6\u1EAB\u1EC5\u1ED7\u1EB4\u1EB5\u1EE0\u1EE1\u1EEE\u1EEF",
+        "\u1EA2\u1EBA\u1EC8\u1ECE\u1EE6\u1EF6\u1EA3\u1EBB\u1EC9\u1ECF\u1EE7\u1EF7\u1EA8\u1EC2\u1ED4\u1EA9\u1EC3\u1ED5\u1EB2\u1EB3\u1EDE\u1EDF\u1EEC\u1EED",
+        "\u1EA0\u1EB8\u1ECA\u1ECC\u1EE4\u1EF4\u1EA1\u1EB9\u1ECB\u1ECD\u1EE5\u1EF5\u1EAC\u1EC6\u1ED8\u1EAD\u1EC7\u1ED9\u1EB6\u1EB7\u1EE2\u1EE3\u1EF0\u1EF1"
+    };
+    private static final String VI_CHARS = "AEIOUYaeiouy\u00c2\u00ca\u00d4\u00e2\u00ea\u00f4\u0102\u0103\u01a0\u01a1\u01af\u01b0";
+    private static final String VI_DIACRITICS = "\u0300\u0301\u0303\u0309\u0323";
+    private static final Pattern VI_CHARS_WITH_DIACRITIC_PATTERN = Pattern.compile("([" + VI_CHARS + "])([" + VI_DIACRITICS + "])");
+
+    /**
+     * Normalize Vietnamese letter + diacritical mark (U+03xx) to a single character (U+1Exx).
+     */
+    public static String normalizeVietnamese(String text) {
+        Matcher matcher = VI_CHARS_WITH_DIACRITIC_PATTERN.matcher(text);
+        StringBuffer buf = new StringBuffer();
+        while (matcher.find()) {
+            int charIndex = VI_CHARS.indexOf(matcher.group(1));
+            matcher.appendReplacement(
+                buf,
+                VI_NORMALIZED_CHARS[VI_DIACRITICS.indexOf(matcher.group(2))].substring(charIndex, charIndex + 1)
+            );
+        }
+        if (buf.length() == 0) {
+            return text;
+        }
+        matcher.appendTail(buf);
+        return buf.toString();
     }
 }

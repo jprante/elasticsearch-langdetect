@@ -3,6 +3,9 @@ package org.xbib.elasticsearch.action.langdetect;
 import org.elasticsearch.action.Action;
 import org.elasticsearch.client.ElasticsearchClient;
 
+/**
+ *
+ */
 public class LangdetectAction extends Action<LangdetectRequest, LangdetectResponse, LangdetectRequestBuilder> {
 
     public static final String NAME = "langdetect";
@@ -22,5 +25,4 @@ public class LangdetectAction extends Action<LangdetectRequest, LangdetectRespon
     public LangdetectResponse newResponse() {
         return new LangdetectResponse();
     }
-
 }
