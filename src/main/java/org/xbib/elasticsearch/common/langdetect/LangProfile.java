@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ *
+ */
 public class LangProfile {
     private final String name;
     private final Map<String, Long> freq = new HashMap<>();
@@ -51,7 +54,7 @@ public class LangProfile {
         if (len < 1 || len > NGram.N_GRAM) {
             return;
         }
-        nWords.set(len - 1, nWords.get(len -1) + 1);
+        nWords.set(len - 1, nWords.get(len - 1) + 1);
         if (freq.containsKey(gram)) {
             freq.put(gram, freq.get(gram) + 1);
         } else {

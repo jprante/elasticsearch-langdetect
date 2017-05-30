@@ -40,7 +40,7 @@ public class SimpleHttpTest extends NodeTestUtils {
                     new OutputStreamWriter(connection.getOutputStream(), StandardCharsets.UTF_8));
             StringWriter response = new StringWriter();
             Streams.copy(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8), response);
-            assertEquals("{\"languages\":[{\"language\":\"de\",\"probability\":0.9999958804394111}]}",
+            assertEquals("{\"languages\":[{\"language\":\"de\",\"probability\":0.9999958626688854}]}",
                     response.toString());
         } finally {
             stopCluster();
@@ -67,7 +67,7 @@ public class SimpleHttpTest extends NodeTestUtils {
                     new OutputStreamWriter(connection.getOutputStream(), StandardCharsets.UTF_8));
             StringWriter response = new StringWriter();
             Streams.copy(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8), response);
-            assertEquals("{\"profile\":\"short-text\",\"languages\":[{\"language\":\"de\",\"probability\":0.9999968539079941}]}",
+            assertEquals("{\"profile\":\"short-text\",\"languages\":[{\"language\":\"de\",\"probability\":0.999996853902916}]}",
                     response.toString());
         } finally {
             stopCluster();
@@ -94,7 +94,7 @@ public class SimpleHttpTest extends NodeTestUtils {
                     new OutputStreamWriter(connection.getOutputStream(), StandardCharsets.UTF_8));
             StringWriter response = new StringWriter();
             Streams.copy(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8), response);
-            assertEquals("{\"profile\":\"short-text\",\"languages\":[{\"language\":\"de\",\"probability\":0.9999968539079941}]}",
+            assertEquals("{\"profile\":\"short-text\",\"languages\":[{\"language\":\"de\",\"probability\":0.999996853902916}]}",
                     response.toString());
         } finally {
             stopCluster();

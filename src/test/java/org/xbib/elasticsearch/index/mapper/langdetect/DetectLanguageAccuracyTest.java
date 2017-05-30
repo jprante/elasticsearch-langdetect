@@ -31,6 +31,10 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
 
+/**
+ * This class tests classification accuracy on various datasets and parameters, as specified in the accuracies.csv
+ * resource file.
+ */
 @RunWith(Parameterized.class)
 public class DetectLanguageAccuracyTest extends Assert {
     private static final Logger logger = LogManager.getLogger();
@@ -39,7 +43,9 @@ public class DetectLanguageAccuracyTest extends Assert {
     private static final String ALL_LANGUAGES =
         "af,ar,bg,bn,ca,cs,da,de,el,en,es,et,fa,fi,fr,gu,he,hi,hr,hu,id,it,ja,kn,ko,lt,lv,mk,ml,mr,ne,nl,no,pa,pl,pt," +
             "ro,ru,si,sk,sl,so,sq,sv,sw,ta,te,th,tl,tr,uk,ur,vi,zh-cn,zh-tw";
-    private static final String DEFAULT_LANGUAGES = String.join(",", LangdetectService.DEFAULT_LANGUAGES);
+    private static final String OLD_DEFAULT_LANGUAGES =
+        "ar,bg,bn,cs,da,de,el,en,es,et,fa,fi,fr,gu,he,hi,hr,hu,id,it,ja,ko,lt,lv,mk,ml,nl,no,pa,pl,pt,ro,ru,sq,sv,ta," +
+        "te,th,tl,tr,uk,ur,vi,zh-cn,zh-tw";
     private static final String ALL_DEFAULT_PROFILE_LANGUAGES =
         "af,ar,bg,bn,cs,da,de,el,en,es,et,fa,fi,fr,gu,he,hi,hr,hu,id,it,ja,kn,ko,lt,lv,mk,ml,mr,ne,nl,no,pa,pl,pt,ro," +
             "ru,sk,sl,so,sq,sv,sw,ta,te,th,tl,tr,uk,ur,vi,zh-cn,zh-tw";
@@ -118,9 +124,8 @@ public class DetectLanguageAccuracyTest extends Assert {
     @Test
     public void test() throws IOException {
         // Set up the detection service according to the test's parameters
-        String languageSetting = DEFAULT_LANGUAGES;
+        String languageSetting = OLD_DEFAULT_LANGUAGES;
         if (useAllLanguages) {
-            // TODO: This is a bit clunky. LangdetectService should support "all" as a language setting.
             if (profileParam.isEmpty()) {
                 languageSetting = ALL_DEFAULT_PROFILE_LANGUAGES;
             } else if (profileParam.equals("short-text")) {
@@ -187,7 +192,7 @@ public class DetectLanguageAccuracyTest extends Assert {
      *
      * @return the parsed parameters
      */
-    @Parameterized.Parameters(name="{0}: substringLength={1} sampleSize={2} profileParam={3} useAllLanguages={4}")
+    @Parameterized.Parameters(name = "{0}: substringLength={1} sampleSize={2} profileParam={3} useAllLanguages={4}")
     public static Collection<Object[]> data() throws IOException {
         List<Object[]> data = new ArrayList<>();
         try (BufferedReader br = getResourceReader("accuracies.csv")) {

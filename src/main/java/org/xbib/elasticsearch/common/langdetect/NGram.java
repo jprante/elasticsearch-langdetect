@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ *
+ */
 public class NGram {
 
     private static final Map<Character, Character> cjk_map = new HashMap<>();

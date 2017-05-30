@@ -13,6 +13,9 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+/**
+ * Sanity checks to ensure long distinct texts are classified correctly.
+ */
 public class DetectLanguageTest extends Assert {
     @Test
     public void testEnglish() throws IOException {

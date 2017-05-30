@@ -4,8 +4,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.xbib.elasticsearch.common.langdetect.NGram;
 
+/**
+ * Tests for {@link NGram}.
+ */
 public class NGramTest extends Assert {
-
     @Test
     public final void testConstants() {
         assertEquals(NGram.N_GRAM, 3);
@@ -32,7 +34,7 @@ public class NGramTest extends Assert {
     }
 
     /**
-     * Test method for {@link NGram#normalize(char)} with CJK Kanji characters
+     * Test method for {@link NGram#normalize(char)} with CJK Kanji characters.
      */
     @Test
     public final void testNormalizeWithCJKKanji() {
@@ -64,7 +66,7 @@ public class NGramTest extends Assert {
     }
 
     /**
-     * Test method for {@link NGram#get(int)} and {@link NGram#addChar(char)}
+     * Test method for {@link NGram#get(int)} and {@link NGram#addChar(char)}.
      */
     @Test
     public final void testNGram() {
@@ -120,7 +122,7 @@ public class NGramTest extends Assert {
     }
 
     /**
-     * Test method for {@link NGram#normalize(char)} with Romanian characters
+     * Test method for {@link NGram#normalize(char)} with Romanian characters.
      */
     @Test
     public final void testNormalizeForRomanian() {
