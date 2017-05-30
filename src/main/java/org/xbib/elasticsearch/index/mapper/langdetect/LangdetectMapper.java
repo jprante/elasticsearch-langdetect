@@ -435,7 +435,7 @@ public class LangdetectMapper extends TextFieldMapper {
         }
 
         private static boolean parseStore(String store) throws MapperParsingException {
-            return !"no".equals(store) && ("yes".equals(store) || lenientNodeBooleanValue(null, store, false));
+            return !"no".equals(store) && ("yes".equals(store) || lenientNodeBooleanValue(null, store, true));
         }
     }
 

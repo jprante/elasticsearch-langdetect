@@ -69,6 +69,20 @@ public class LangdetectMappingTest extends Assert {
     }
 
     @Test
+    public void testStoreMappings() throws Exception {
+        Settings settings = Settings.builder()
+                .put("path.home", System.getProperty("path.home"))
+                .loadFromStream("settings.json", getClass().getResourceAsStream("settings.json")).build();
+        String mapping = copyToStringFromClasspath("mapping-stored.json");
+        DocumentMapper docMapper = MapperTestUtils.newDocumentMapperParser(settings, "someIndex").parse("someType", new CompressedXContent(mapping));
+        String sampleText = copyToStringFromClasspath("german.txt");
+        BytesReference json = jsonBuilder().startObject().field("someField", sampleText).endObject().bytes();
+        ParseContext.Document doc = docMapper.parse("someIndex", "someType", "1", json).rootDoc();
+        assertEquals(1, doc.getFields("someField").length);
+        assertTrue(doc.getFields("someField")[0].fieldType().stored());
+    }
+
+    @Test
     public void testBinary2() throws Exception {
         String mapping = copyToStringFromClasspath("base64-2-mapping.json");
         DocumentMapper docMapper = MapperTestUtils.newDocumentMapperParser("someIndex").parse("someType", new CompressedXContent(mapping));
