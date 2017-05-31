@@ -45,7 +45,7 @@ public class DetectLanguageAccuracyTest extends Assert {
             "ro,ru,si,sk,sl,so,sq,sv,sw,ta,te,th,tl,tr,uk,ur,vi,zh-cn,zh-tw";
     private static final String OLD_DEFAULT_LANGUAGES =
         "ar,bg,bn,cs,da,de,el,en,es,et,fa,fi,fr,gu,he,hi,hr,hu,id,it,ja,ko,lt,lv,mk,ml,nl,no,pa,pl,pt,ro,ru,sq,sv,ta," +
-        "te,th,tl,tr,uk,ur,vi,zh-cn,zh-tw";
+            "te,th,tl,tr,uk,ur,vi,zh-cn,zh-tw";
     private static final String ALL_DEFAULT_PROFILE_LANGUAGES =
         "af,ar,bg,bn,cs,da,de,el,en,es,et,fa,fi,fr,gu,he,hi,hr,hu,id,it,ja,kn,ko,lt,lv,mk,ml,mr,ne,nl,no,pa,pl,pt,ro," +
             "ru,sk,sl,so,sq,sv,sw,ta,te,th,tl,tr,uk,ur,vi,zh-cn,zh-tw";
@@ -75,7 +75,7 @@ public class DetectLanguageAccuracyTest extends Assert {
      * @param substringLength substring length to test (see {@link #generateSubstringSample(String, int, int)})
      * @param sampleSize number of substrings to test (see {@link #generateSubstringSample(String, int, int)})
      * @param profileParam profile name parameter to pass to the detection service 
-     * @param useAllLanguages if true, all supported languages will be used instead of  just the default ones
+     * @param useAllLanguages if true, all supported languages will be used instead of just the old default ones
      * @param languageToExpectedAccuracy mapping from language code to expected accuracy 
      */
     public DetectLanguageAccuracyTest(String datasetName,
