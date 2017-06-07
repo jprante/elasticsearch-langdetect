@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
@@ -37,7 +38,7 @@ import java.util.TreeSet;
  */
 @RunWith(Parameterized.class)
 public class DetectLanguageAccuracyTest extends Assert {
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger(DetectLanguageAccuracyTest.class);
 
     private static final double ACCURACY_DELTA = 1e-6;
     private static final String ALL_LANGUAGES =
@@ -200,7 +201,7 @@ public class DetectLanguageAccuracyTest extends Assert {
             br.readLine();
             String line;
             while ((line = br.readLine()) != null) {
-                Scanner scanner = new Scanner(line).useDelimiter(",");
+                Scanner scanner = new Scanner(line).useLocale(Locale.US).useDelimiter(",");
                 data.add(new Object[] {
                     // datasetName
                     scanner.next(),

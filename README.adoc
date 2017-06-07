@@ -89,6 +89,7 @@ Here is a list of languages code recognized:
 [frame="all"]
 |===
 | Plugin version | Elasticsearch version | Release date
+| 5.4.0.2        | 5.4.0 | Jun  8, 2017
 | 5.4.0.1        | 5.4.0 | May 30, 2017
 | 5.4.0.0        | 5.4.0 | May 10, 2017
 | 5.3.2.0        | 5.3.2 | Apr 30, 2017
@@ -126,7 +127,7 @@ Here is a list of languages code recognized:
 
 [source]
 ----
-./bin/elasticsearch-plugin install http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/5.4.0.1/elasticsearch-langdetect-5.4.0.1-plugin.zip
+./bin/elasticsearch-plugin install http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-langdetect/5.4.0.2/elasticsearch-langdetect-5.4.0.2-plugin.zip
 ----
 
 ### Elasticsearch 2.x

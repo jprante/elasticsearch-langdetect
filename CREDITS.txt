@@ -1,0 +1,3 @@
+Thanks to Yanir Seroussi https://yanirseroussi.com/ for a fabulous pull reqeust to improve this plugin:
+
+https://github.com/jprante/elasticsearch-langdetect/pull/69
