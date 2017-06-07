@@ -4,16 +4,19 @@ import org.elasticsearch.common.io.Streams;
 import org.junit.Assert;
 import org.junit.Test;
 import org.xbib.elasticsearch.common.langdetect.LangdetectService;
+import org.xbib.elasticsearch.common.langdetect.Language;
+import org.xbib.elasticsearch.common.langdetect.LanguageDetectionException;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
+/**
+ * Sanity checks to ensure long distinct texts are classified correctly.
+ */
 public class DetectLanguageTest extends Assert {
-
     @Test
     public void testEnglish() throws IOException {
         testLanguage("english.txt", "en");
@@ -34,14 +37,20 @@ public class DetectLanguageTest extends Assert {
         testLanguage("korean.txt", "ko");
     }
 
+    /**
+     * Test that the contents of the file at the provided path are correctly detected as being in language lang. 
+     */
     private void testLanguage(String path, String lang) throws IOException {
-        Reader reader = new InputStreamReader(getClass().getResourceAsStream(path), StandardCharsets.UTF_8);
-        Writer writer = new StringWriter();
-        Streams.copy(reader, writer);
-        reader.close();
-        writer.close();
-        LangdetectService detect = new LangdetectService();
-        assertEquals(lang, detect.detectAll(writer.toString()).get(0).getLanguage());
+        try (Reader reader = new InputStreamReader(getClass().getResourceAsStream(path), StandardCharsets.UTF_8)) {
+            assertEquals(lang, getTopLanguageCode(new LangdetectService(), Streams.copyToString(reader)));
+        }
     }
 
+    /**
+     * Return the text's language as detected by the given service object (may be null if no languages are returned).
+     */
+    static String getTopLanguageCode(LangdetectService service, String text) throws LanguageDetectionException {
+        List<Language> languages = service.detectAll(text);
+        return languages.size() > 0 ? languages.get(0).getLanguage() : null;
+    }
 }

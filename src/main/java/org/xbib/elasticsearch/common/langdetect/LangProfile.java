@@ -15,18 +15,34 @@ import java.util.Map;
  *
  */
 public class LangProfile {
+    private final String name;
+    private final Map<String, Long> freq = new HashMap<>();
+    private final List<Long> nWords = new ArrayList<>(NGram.N_GRAM);
 
-    private String name;
-
-    private Map<String, Integer> freq;
-
-    private List<Integer> nWords;
-
-    public LangProfile() {
-        this.freq = new HashMap<>();
-        this.nWords = new ArrayList<>(NGram.N_GRAM);
+    /**
+     * Create an empty language profile.
+     */
+    public LangProfile(String name) {
+        this.name = name;
         for (int i = 0; i < NGram.N_GRAM; i++) {
-            nWords.add(0);
+            nWords.add(0L);
+        }
+    }
+
+    /**
+     * Create a language profile from a JSON input stream.
+     */
+    @SuppressWarnings("unchecked")
+    public LangProfile(InputStream input) throws IOException {
+        XContentParser parser = XContentFactory.xContent(XContentType.JSON).createParser(null, input);
+        Map<String, Object> map = parser.map();
+        this.name = (String) map.get("name");
+        // Explicitly convert the numbers because they may get parsed as Integers or Longs.
+        for (Map.Entry<String, Number> entry : ((Map<String, Number>) map.get("freq")).entrySet()) {
+            freq.put(entry.getKey(), entry.getValue().longValue());
+        }
+        for (Number n : (List<Number>) map.get("n_words")) {
+            nWords.add(n.longValue());
         }
     }
 
@@ -42,7 +58,7 @@ public class LangProfile {
         if (freq.containsKey(gram)) {
             freq.put(gram, freq.get(gram) + 1);
         } else {
-            freq.put(gram, 1);
+            freq.put(gram, 1L);
         }
     }
 
@@ -50,29 +66,11 @@ public class LangProfile {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<Integer> getNWords() {
+    public List<Long> getNWords() {
         return nWords;
     }
 
-    public Map<String, Integer> getFreq() {
+    public Map<String, Long> getFreq() {
         return freq;
     }
-
-    public void setFreq(Map<String, Integer> freq) {
-        this.freq = freq;
-    }
-
-    @SuppressWarnings("unchecked")
-    public void read(InputStream input) throws IOException {
-        XContentParser parser = XContentFactory.xContent(XContentType.JSON).createParser(null, input);
-        Map<String, Object> map = parser.map();
-        freq = (Map<String, Integer>) map.get("freq");
-        name = (String) map.get("name");
-        nWords = (List<Integer>) map.get("n_words");
-    }
-
 }

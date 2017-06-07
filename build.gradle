@@ -73,6 +73,7 @@ tasks.withType(JavaCompile) {
 
 test {
     systemProperties['path.home'] = System.getProperty("user.dir")
+    systemProperties['path.accuracies.out'] = System.getProperty("path.accuracies.out")
     testLogging {
         showStandardStreams = false
         exceptionFormat = 'full'

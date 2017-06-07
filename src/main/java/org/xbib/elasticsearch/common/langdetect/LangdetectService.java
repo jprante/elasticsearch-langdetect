@@ -19,67 +19,14 @@ import java.util.regex.Pattern;
  *
  */
 public class LangdetectService {
-
-    private static final String[] DEFAULT_LANGUAGES = new String[]{
-            // "af",
-            "ar",
-            "bg",
-            "bn",
-            "cs",
-            "da",
-            "de",
-            "el",
-            "en",
-            "es",
-            "et",
-            "fa",
-            "fi",
-            "fr",
-            "gu",
-            "he",
-            "hi",
-            "hr",
-            "hu",
-            "id",
-            "it",
-            "ja",
-            // "kn",
-            "ko",
-            "lt",
-            "lv",
-            "mk",
-            "ml",
-            // "mr",
-            // "ne",
-            "nl",
-            "no",
-            "pa",
-            "pl",
-            "pt",
-            "ro",
-            "ru",
-            // "sk",
-            //"sl",
-            // "so",
-            "sq",
-            "sv",
-            // "sw",
-            "ta",
-            "te",
-            "th",
-            "tl",
-            "tr",
-            "uk",
-            "ur",
-            "vi",
-            "zh-cn",
-            "zh-tw"
-    };
+    private static final String ALL_LANGUAGES =
+        "af,ar,bg,bn,ca,cs,da,de,el,en,es,et,fa,fi,fr,gu,he,hi,hr,hu,id,it,ja,kn,ko,lt,lv,mk,ml,mr,ne,nl,no,pa,pl,pt," +
+            "ro,ru,si,sk,sl,so,sq,sv,sw,ta,te,th,tl,tr,uk,ur,vi,zh-cn,zh-tw";
     private static final Logger logger = LogManager.getLogger(LangdetectService.class.getName());
     private static final Pattern word = Pattern.compile("[\\P{IsWord}]", Pattern.UNICODE_CHARACTER_CLASS);
-    private static final Settings DEFAULT_SETTINGS = Settings.builder()
-            .putArray("languages", DEFAULT_LANGUAGES)
-            .build();
+    private static final Settings DEFAULT_SETTINGS = Settings.builder().put("profile", "merged-average")
+                                                                       .put("languages", ALL_LANGUAGES)
+                                                                       .build();
     private final Settings settings;
     private Map<String, double[]> wordLangProbMap = new HashMap<>();
 
@@ -133,18 +80,7 @@ public class LangdetectService {
             return;
         }
         try {
-            String[] keys = settings.getAsArray("languages");
-            if (keys.length == 0) {
-                keys = DEFAULT_LANGUAGES;
-            }
-            int index = 0;
-            int size = keys.length;
-            for (String key : keys) {
-                if (key != null && !key.isEmpty()) {
-                    loadProfileFromResource(key, index++, size);
-                }
-            }
-            logger.debug("language detection service installed for {}", langlist);
+            addProfiles();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             throw new ElasticsearchException(e.getMessage() + " profile=" + profile);
@@ -182,15 +118,32 @@ public class LangdetectService {
         isStarted = true;
     }
 
-    public void loadProfileFromResource(String resource, int index, int langsize) throws IOException {
-        String thisProfile = "/langdetect/" + (this.profile != null ? this.profile + "/" : "");
-        InputStream in = getClass().getResourceAsStream(thisProfile + resource);
-        if (in == null) {
-            throw new IOException("profile '" + resource + "' not found, path = " + thisProfile + resource);
+    private void addProfiles() throws IOException {
+        String[] langKeys = settings.getAsArray("languages");
+        boolean ignoreNullResources = false;
+        if (langKeys.length == 0) {
+            langKeys = ALL_LANGUAGES.split(",");
+            ignoreNullResources = true;
         }
-        LangProfile langProfile = new LangProfile();
-        langProfile.read(in);
-        addProfile(langProfile, index, langsize);
+        List<LangProfile> langProfiles = new ArrayList<>(langKeys.length);
+        for (String langKey : langKeys) {
+            if (langKey == null || langKey.isEmpty()) {
+                continue;
+            }
+            String langPath = "/langdetect/" + (this.profile == null ? "" : this.profile + "/") + langKey;
+            InputStream in = getClass().getResourceAsStream(langPath);
+            if (in == null) {
+                if (ignoreNullResources) {
+                    continue;
+                }
+                throw new IOException("profile '" + langKey + "' not found, path = " + langPath);
+            }
+            langProfiles.add(new LangProfile(in));
+        }
+        for (int i = 0; i < langProfiles.size(); i++) {
+            addProfile(langProfiles.get(i), i, langProfiles.size());
+        }
+        logger.debug("language detection service installed for {}", langlist);
     }
 
     public void addProfile(LangProfile profile, int index, int langsize) throws IOException {
@@ -216,6 +169,7 @@ public class LangdetectService {
     }
 
     public List<Language> detectAll(String text) throws LanguageDetectionException {
+        text = NGram.normalizeVietnamese(text);
         if (!isStarted) {
             load(settings);
             init();
@@ -243,7 +197,7 @@ public class LangdetectService {
         for (int t = 0; t < nTrial; ++t) {
             double[] prob = initProbability();
             double a = this.alpha + rand.nextGaussian() * alphaWidth;
-            for (int i = 0; ; ++i) {
+            for (int i = 0;; ++i) {
                 int r = rand.nextInt(list.size());
                 updateLangProb(prob, list.get(r), a);
                 if (i % 5 == 0 && normalizeProb(prob) > convThreshold || i >= iterationLimit) {
