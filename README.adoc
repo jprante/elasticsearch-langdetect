@@ -89,6 +89,7 @@ Here is a list of languages code recognized:
 [frame="all"]
 |===
 | Plugin version | Elasticsearch version | Release date
+| 5.6.0.0        | 5.6.5 | Dec 12, 2017
 | 5.4.0.2        | 5.4.0 | Jun  8, 2017
 | 5.4.0.1        | 5.4.0 | May 30, 2017
 | 5.4.0.0        | 5.4.0 | May 10, 2017
